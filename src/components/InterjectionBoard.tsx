@@ -110,12 +110,8 @@ export default function InterjectionBoard({ char, onUpdate }: InterjectionBoardP
             <span className="text-slate-400 font-mono text-xs">◆ 案件记录</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase text-slate-900 font-sans">
-            思维技能「插叙」戏剧事件板
+            插叙
           </h1>
-          <p className="text-slate-500 text-sm leading-relaxed max-w-2xl font-sans">
-            “技能从不沉默。它们总会在最不合时宜的时刻突然浮现。当你处于特定情景，
-            允许其他玩家通过递给你指示物来触发你内化技能的特殊见解，或者由你自主发起这声音。”
-          </p>
         </div>
         <div className="bg-amber-500 text-slate-950 px-4 py-2 font-black text-xs uppercase tracking-widest font-mono">
           旧事如新 1.2

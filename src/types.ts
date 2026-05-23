@@ -291,6 +291,7 @@ export interface Character {
   states: State[]; // Negative tags representing damage / conditions
   tokens: number; // Overrides and narrative opportunities
   appearance: Appearance;
+  avatar?: string; // Data URL for uploaded avatar
   endingStatement?: string; // Narrative explanation of retirement or death when health or morale is 0
   customGears?: Gear[];
   customDrugs?: Drug[];

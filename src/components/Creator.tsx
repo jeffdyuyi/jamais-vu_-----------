@@ -607,9 +607,31 @@ export default function Creator({ onComplete }: CreatorProps) {
                 
                 <div className="relative z-10 space-y-10">
                   <div className="flex items-center gap-6">
-                    <div className="w-24 h-24 bg-white text-geo-dark border-2 border-slate-200 flex items-center justify-center font-black text-4xl leading-none shadow-sm">
-                      {char.name[0] || "?"}
-                    </div>
+                    <label className="relative w-24 h-24 bg-white text-geo-dark border-2 border-slate-200 flex items-center justify-center font-black text-4xl leading-none shadow-sm cursor-pointer hover:border-geo-accent transition-colors group overflow-hidden">
+                      {char.avatar ? (
+                        <img src={char.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{char.name[0] || "?"}</span>
+                      )}
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-white text-[10px] uppercase tracking-widest">上传</span>
+                      </div>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (ev) => {
+                              setChar(prev => ({ ...prev, avatar: ev.target?.result as string }));
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }} 
+                      />
+                    </label>
                     <div className="space-y-1">
                       <h3 className="text-4xl font-black uppercase tracking-tighter">{char.name || "无名调查员"}</h3>
                       <div className="flex items-center gap-2">
@@ -625,10 +647,23 @@ export default function Creator({ onComplete }: CreatorProps) {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 py-8 border-y border-dashed border-slate-300">
                       <div className="space-y-4">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">主要特质倾向</p>
-                        <div className="text-2xl font-black text-geo-dark uppercase flex flex-col">
-                          <span>{SKILLS.find(s => s.id === Object.entries(char.skills).sort((a,b) => (b[1] as number) - (a[1] as number))[0][0])?.name || "尚未觉醒"}</span>
-                          <span className="text-[10px] text-geo-accent mt-1">CORE PSYCHOLOGY</span>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">技能组分布</p>
+                        <div className="flex flex-col gap-2">
+                          {Object.entries(char.skills)
+                            .filter(([_, val]) => (val as number) > 0)
+                            .sort((a, b) => (b[1] as number) - (a[1] as number))
+                            .map(([id, val]) => {
+                               const skill = SKILLS.find(s => s.id === id);
+                               return (
+                                 <div key={id} className="flex justify-between items-center border-b border-slate-100 pb-1">
+                                    <span className="text-sm font-black uppercase text-slate-800">{skill?.name}</span>
+                                    <span className="font-black text-geo-accent bg-blue-50 px-2 py-0.5">{val as number}</span>
+                                 </div>
+                               );
+                            })}
+                          {Object.values(char.skills).every(v => (v as number) === 0) && (
+                            <div className="text-2xl font-black text-slate-300 uppercase">尚未觉醒</div>
+                          )}
                         </div>
                         <div className="mt-4 pt-4 border-t border-slate-200">
                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">背景档案</p>

@@ -1,0 +1,8 @@
+{
+  "name": "Jamais Vu: 旧事如新 调查员档案",
+  "description": "基于《Jamais Vu》（极乐迪斯科同人桌游）的流程性角色创建与管理工具，支持属性管理、装备追踪及规则速查。",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

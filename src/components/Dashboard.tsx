@@ -2153,7 +2153,7 @@ export default function Dashboard({
                     {showAddThought ? (
                       <div className="max-w-2xl bg-slate-50 border-2 border-slate-200 p-4 space-y-4 animate-in fade-in duration-200 text-slate-800">
                         <div className="text-xs font-black text-amber-700 uppercase tracking-widest border-b border-slate-200 pb-2">
-                          脑部注入：构建脑部执念
+                          思维注入：构建思维执念
                         </div>
 
                         <div className="space-y-1">
@@ -2192,7 +2192,7 @@ export default function Dashboard({
                             <div className="space-y-1">
                               <input 
                                 type="text" 
-                                placeholder="思维念头名称 (如：末日崇愿/孤狼意志)"
+                                placeholder="思维名称 (如：末日崇愿/孤狼意志)"
                                 value={customThoughtName}
                                 onChange={(e) => setCustomThoughtName(e.target.value)}
                                 className="w-full text-xs font-bold py-1.5 px-2 bg-white text-slate-900 border border-slate-300 outline-none focus:border-slate-800"
@@ -2208,7 +2208,7 @@ export default function Dashboard({
                             </div>
                             <div className="space-y-1">
                               <textarea
-                                placeholder="【心智难题】描述 (你正为什么而苦苦纠结不安)"
+                                placeholder="【思维难题】描述 (你正为什么而苦苦纠结不安)"
                                 value={customThoughtProblem}
                                 onChange={(e) => setCustomThoughtProblem(e.target.value)}
                                 className="w-full h-16 text-[10px] py-1 px-2 bg-white text-slate-900 border border-slate-300 outline-none resize-none font-sans focus:border-slate-800"
@@ -2225,7 +2225,7 @@ export default function Dashboard({
                             onClick={handleAddThought}
                             className="flex-1 py-1.5 bg-amber-500 hover:bg-amber-400 text-amber-950 text-[10px] font-black uppercase tracking-widest cursor-pointer shadow-[2px_2px_0px_#78350f]"
                           >
-                            筑起此心智之茧
+                            筑起此思维之茧
                           </button>
                           <button
                             onClick={() => {

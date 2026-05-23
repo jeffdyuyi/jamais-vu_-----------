@@ -313,7 +313,7 @@ export default function InterjectionBoard({ char, onUpdate }: InterjectionBoardP
                 onClick={handleAddInterjection}
                 className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase font-sans tracking-widest shadow-[3px_3px_0px_#020617] active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                📝 记录此思维碎语入该调查员脑内
+                📝 记录
               </button>
             </div>
           </div>

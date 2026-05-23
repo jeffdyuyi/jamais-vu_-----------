@@ -31,8 +31,8 @@ interface DashboardProps {
   char: Character;
   onUpdate: (char: Character) => void;
   openRulebook: () => void;
-  activeSubTab?: "attributes" | "gear" | "thoughts" | "clues";
-  setActiveSubTab?: (tab: "attributes" | "gear" | "thoughts" | "clues") => void;
+  activeSubTab?: "attributes" | "gear" | "thoughts" | "clues" | "appearance";
+  setActiveSubTab?: (tab: "attributes" | "gear" | "thoughts" | "clues" | "appearance") => void;
   characters?: Character[];
 }
 
@@ -136,7 +136,7 @@ export default function Dashboard({
   setActiveSubTab,
   characters
 }: DashboardProps) {
-  const [localActiveSubTab, setLocalActiveSubTab] = useState<"attributes" | "gear" | "thoughts" | "clues">("attributes");
+  const [localActiveSubTab, setLocalActiveSubTab] = useState<"attributes" | "gear" | "thoughts" | "clues" | "appearance">("attributes");
   const currentTab = activeSubTab || localActiveSubTab;
   const setCurrentTab = setActiveSubTab || setLocalActiveSubTab;
 
@@ -957,27 +957,7 @@ export default function Dashboard({
             </div>
           </div>
 
-          <div className="border-2 border-geo-border bg-white p-4 space-y-3">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">外观描述</p>
-            <div className="grid grid-cols-2 gap-2 text-[10px] font-bold">
-              <div className="flex flex-col">
-                 <span className="text-slate-400 uppercase">发型/色</span>
-                 <span className="truncate">{char.appearance?.hairStyle} ({char.appearance?.hairColor})</span>
-              </div>
-              <div className="flex flex-col">
-                 <span className="text-slate-400 uppercase">瞳色</span>
-                 <span className="truncate">{char.appearance?.eyeColor}</span>
-              </div>
-              <div className="flex flex-col">
-                 <span className="text-slate-400 uppercase">风格</span>
-                 <span className="truncate">{char.appearance?.clothingStyle}</span>
-              </div>
-              <div className="flex flex-col">
-                 <span className="text-slate-400 uppercase">配饰</span>
-                 <span className="truncate">{char.appearance?.accessories}</span>
-              </div>
-            </div>
-          </div>
+
 
           {/* 负面状态管理 (States) */}
           <div className="space-y-4">
@@ -1388,16 +1368,18 @@ export default function Dashboard({
                {currentTab === "gear" && "装备与随行药剂"}
                {currentTab === "thoughts" && "思维内阁"}
                {currentTab === "clues" && "案情黑板"}
+               {currentTab === "appearance" && "外观与印象"}
              </h1>
              <p className="text-slate-500 font-mono text-sm italic">
                {currentTab === "attributes" && "“在你失忆的废墟上，二十四个细小声音正在窃窃私语。”"}
                {currentTab === "gear" && "“物品弥补肉体的有限。通过化学反应，你与虚空的关联被临时放大或阻扼。”"}
                {currentTab === "thoughts" && "“内化一个新念头是一项极其耗费心灵能量的工程。而那些心智的执念在时刻回荡。”"}
                {currentTab === "clues" && "“每一枚碎片，都是一个未死星辰的引力源。串联它们，让事实重见天日。”"}
+               {currentTab === "appearance" && "“外在是内心的折射。你凝视深渊，深渊也同样报以回望。”"}
              </p>
            </div>
            <div className="bg-geo-accent text-white px-4 py-2 font-black text-xs uppercase tracking-widest">
-             既视感与认知回路 // {currentTab === "attributes" ? "属性与技能" : currentTab === "gear" ? "行囊配备" : currentTab === "thoughts" ? "思维内阁" : "案情拼图"}
+             既视感与认知回路 // {currentTab === "attributes" ? "属性与技能" : currentTab === "gear" ? "行囊配备" : currentTab === "thoughts" ? "思维内阁" : currentTab === "clues" ? "案情拼图" : "外观印象"}
            </div>
         </div>
 
@@ -1442,6 +1424,16 @@ export default function Dashboard({
             }`}
           >
             🔎 线索拼图
+          </button>
+          <button
+            onClick={() => setCurrentTab("appearance")}
+            className={`flex-1 py-3 text-xs font-black uppercase tracking-wider transition-all select-none border-t border-b cursor-pointer text-center ${
+              currentTab === "appearance"
+                ? "bg-geo-dark text-white border-slate-900 shadow-sm"
+                : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
+            }`}
+          >
+            👁️ 外观印象
           </button>
         </div>
 
@@ -1989,25 +1981,11 @@ export default function Dashboard({
               {/* Row 1: 思维内阁 Thought Cabinet */}
               <div className="space-y-6 relative z-10">
                  <div className="flex items-center gap-4">
-                   <h3 className="text-xl font-black uppercase">思维内阁 Cabinet</h3>
+                   <h3 className="text-xl font-black uppercase">思维内阁</h3>
                    <div className="h-0.5 flex-1 bg-slate-200" />
                  </div>
                
                  <div className="bg-white border-2 border-slate-200 text-slate-800 p-6 space-y-6 shadow-sm">
-                    <div className="flex items-center justify-between border-b border-slate-150 pb-4">
-                       <div className="flex flex-col">
-                         <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">已内化与研究中的执念</span>
-                         <span className="text-[8px] text-amber-600 font-mono">INTERNALIZED CABINET</span>
-                       </div>
-                       <Brain className="w-4 h-4 text-amber-500 animate-pulse" />
-                    </div>
-
-                    {/* Rule reminder */}
-                    <div className="bg-slate-50/80 border border-slate-200/60 p-3 text-[10px] text-slate-500 leading-snug font-mono space-y-1">
-                      <div>💡 <span className="font-bold text-amber-700">经验结算黄金法：</span></div>
-                      <div className="text-[9px] opacity-90">“场景结束时是最佳的经验值结算（消耗与提升）时机，既可及时奖励，又不会打断场景剧情的绝佳节奏。”</div>
-                    </div>
-
                     {/* Thoughts Container rendered in a beautiful grid of cards instead of being vertical and squished */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto pr-1">
                       {(!char.thoughts || char.thoughts.length === 0) ? (
@@ -2303,6 +2281,41 @@ export default function Dashboard({
               
                <div className="border border-slate-200 bg-white/95 backdrop-blur-sm p-1 relative z-10">
                  <InvestigationBoard char={char} onUpdate={onUpdate} />
+               </div>
+            </div>
+          )}
+          {/* TAB 5: APPEARANCE */}
+          {currentTab === "appearance" && (
+            <div className="w-full animate-in fade-in duration-200 relative overflow-hidden min-h-[600px] space-y-8">
+              {/* WATERMARK */}
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center -rotate-12 opacity-[0.03] z-0 select-none">
+                <span className="text-[15rem] font-black uppercase tracking-tighter whitespace-nowrap text-slate-900">IDENTITY</span>
+              </div>
+              
+               <div className="flex items-center gap-4 relative z-10">
+                 <h3 className="text-xl font-black uppercase">外观描述</h3>
+                 <div className="h-0.5 flex-1 bg-slate-200" />
+               </div>
+
+               <div className="border-2 border-slate-200 bg-white p-8 relative z-10 shadow-sm">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm font-bold text-slate-800">
+                   <div className="flex flex-col space-y-2 pb-4 border-b border-slate-100">
+                      <span className="text-slate-400 uppercase text-xs tracking-widest font-black">发型/色</span>
+                      <span className="text-xl">{char.appearance?.hairStyle || "未知"} ({char.appearance?.hairColor || "未知"})</span>
+                   </div>
+                   <div className="flex flex-col space-y-2 pb-4 border-b border-slate-100">
+                      <span className="text-slate-400 uppercase text-xs tracking-widest font-black">瞳色</span>
+                      <span className="text-xl">{char.appearance?.eyeColor || "未知"}</span>
+                   </div>
+                   <div className="flex flex-col space-y-2 pt-2">
+                      <span className="text-slate-400 uppercase text-xs tracking-widest font-black">风格</span>
+                      <span className="text-xl">{char.appearance?.clothingStyle || "未知"}</span>
+                   </div>
+                   <div className="flex flex-col space-y-2 pt-2">
+                      <span className="text-slate-400 uppercase text-xs tracking-widest font-black">配饰</span>
+                      <span className="text-xl">{char.appearance?.accessories || "未知"}</span>
+                   </div>
+                 </div>
                </div>
             </div>
           )}

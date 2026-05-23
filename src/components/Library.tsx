@@ -189,11 +189,7 @@ export default function Library({
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-200 text-center">
-            <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">
-              GEOMETRIC DETECTIVE REGISTRY
-            </span>
-          </div>
+
           </>
         ) : (
           <div className="hidden md:flex flex-col items-center justify-start h-full gap-8">
@@ -219,8 +215,7 @@ export default function Library({
         {/* Dynamic header */}
         <div className="flex justify-between items-center pb-4 border-b border-slate-200">
           <div>
-            <span className="text-[10px] text-blue-600 font-black tracking-widest uppercase">INVESTIGATOR CATALOG</span>
-            <h3 className="text-xl font-bold font-serif italic text-slate-800">所有已就绪的历史档案</h3>
+            <h3 className="text-xl font-black text-slate-800">角色档案</h3>
           </div>
           <span className="text-xs font-mono font-semibold bg-white border border-slate-300 rounded-full px-3 py-1">
             当前激活：{activeCharId ? characters.find(c => c.id === activeCharId)?.name || "无名氏" : "未加载"}

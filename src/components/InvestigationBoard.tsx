@@ -350,22 +350,10 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
       )}
 
       {/* Main Title Banner */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b-4 border-slate-200 pb-6 shrink-0">
-        <div className="space-y-1.5 w-full">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 bg-geo-accent text-white text-[10px] font-black uppercase tracking-wider">
-              调查工作台
-            </span>
-            <span className="text-slate-500 font-mono text-xs">◆ 线索与直觉历史</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase text-slate-900 font-sans">
-            线索搜集与直觉推理黑板
-          </h1>
-          <p className="text-slate-600 font-serif text-sm leading-relaxed max-w-2xl">
-            “线索是由那些不落片尘的痕迹、荒诞的巧合与口若悬河构筑起来的瓦砾。
-            当你在黑板上将起码两类不同的三枚碎屑搭起关联时，你的思维直觉便会跨越深渊——揭开被遗弃的宿命。”
-          </p>
-        </div>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-4 shrink-0">
+        <h1 className="text-2xl md:text-3xl font-black tracking-tighter uppercase text-slate-900 font-sans">
+          线索搜集与直觉推理黑板
+        </h1>
       </div>
 
       {/* TOP SECTION: Atmospheric Direction & Scene control */}

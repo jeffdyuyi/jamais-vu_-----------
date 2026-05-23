@@ -17,7 +17,7 @@ import { X, Book, Plus, ChevronDown, Palette } from "lucide-react";
 export default function App() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [activeCharId, setActiveCharId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"library" | "attributes" | "gear" | "thoughts" | "clues" | "rulebook">("library");
+  const [activeTab, setActiveTab] = useState<"library" | "attributes" | "gear" | "thoughts" | "clues" | "rulebook" | "appearance">("library");
   const [isCreating, setIsCreating] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [theme, setTheme] = useState<"default" | "sunset">("default");
@@ -218,8 +218,13 @@ export default function App() {
       {/* Top Header from Design */}
       <nav className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-4 md:px-8 z-10 shrink-0 shadow-sm">
         <div className="flex items-center space-x-2 md:space-x-4">
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-geo-dark flex items-center justify-center text-white font-bold text-lg md:text-xl leading-none">档案</div>
-          <h1 className="text-sm md:text-xl font-black tracking-tight uppercase truncate max-w-[200px] md:max-w-none">调查员档案管理系统 <span className="font-normal opacity-50 text-[10px] md:text-xs">v1.2</span></h1>
+          <button 
+            onClick={() => setShowAbout(true)}
+            className="w-8 h-8 md:w-10 md:h-10 bg-geo-dark flex items-center justify-center text-white font-bold text-lg md:text-xl leading-none cursor-pointer hover:bg-slate-800 transition-colors"
+            title="关于与版权信息"
+          >
+            档案
+          </button>
         </div>
         <div className="flex items-center space-x-2 md:space-x-12">
           <div className="hidden md:flex space-x-6 text-sm font-bold uppercase tracking-wider">
@@ -261,10 +266,7 @@ export default function App() {
             >
               <Palette className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </button>
-            <div className="flex items-center space-x-2 md:space-x-3 bg-slate-100 px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-slate-200">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-tighter hidden sm:inline-block">本地存储：同步中</span>
-            </div>
+
           </div>
         </div>
       </nav>
@@ -319,12 +321,12 @@ export default function App() {
             onUpdateCharacter={handleUpdateCharacter}
             onCreateNew={() => setIsCreating(true)}
           />
-        ) : activeTab === "attributes" || activeTab === "gear" || activeTab === "thoughts" || activeTab === "clues" ? (
+        ) : activeTab === "attributes" || activeTab === "gear" || activeTab === "thoughts" || activeTab === "clues" || activeTab === "appearance" ? (
           <Dashboard 
             char={char!} 
             onUpdate={handleUpdateActiveCharacter} 
             openRulebook={() => { setIsCreating(false); setActiveTab("rulebook"); }}
-            activeSubTab={activeTab === "thoughts" ? "thoughts" : activeTab === "clues" ? "clues" : activeTab === "gear" ? "gear" : "attributes"}
+            activeSubTab={activeTab === "thoughts" ? "thoughts" : activeTab === "clues" ? "clues" : activeTab === "gear" ? "gear" : activeTab === "appearance" ? "appearance" : "attributes"}
             setActiveSubTab={(tab) => setActiveTab(tab)}
             characters={characters}
           />
@@ -363,15 +365,6 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Persistence Note */}
-      {char && (
-        <div className="fixed top-4 right-4 z-40">
-           <div className="flex items-center gap-2 text-[8px] font-mono uppercase bg-disco-dark text-disco-paper px-2 py-1 rotate-1 hover:rotate-0 transition-transform cursor-context-menu">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              本地存储已激活
-           </div>
-        </div>
-      )}
 
       {/* About Modal */}
       <AnimatePresence>

@@ -25,6 +25,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import InterjectionBoard from "./InterjectionBoard";
 import InvestigationBoard from "./InvestigationBoard";
+import DiamondTracker from "./DiamondTracker";
 
 interface DashboardProps {
   char: Character;
@@ -850,63 +851,23 @@ export default function Dashboard({
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <div className="flex flex-col gap-1">
-                    <div className="text-[10px] font-bold uppercase text-red-600">健康值</div>
-                    <div className="flex gap-1.5">
-                      {[1, 2, 3, 4, 5].map(i => (
-                        <div key={i} className={`w-5 h-5 border-2 flex items-center justify-center transition-all ${
-                          i <= char.health ? "bg-red-500 border-red-400 shadow-[0_0_8px_rgba(239,68,68,0.4)]" : "bg-transparent border-white/20"
-                        }`}>
-                          {i === char.health && <div className="w-1.5 h-1.5 bg-white" />}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex gap-1.5">
-                    <button 
-                      onClick={() => updateStat("health", -1)} 
-                      className="w-6 h-6 bg-red-950/60 hover:bg-red-900 border-2 border-red-500 text-red-100 flex items-center justify-center text-xs font-black transition-colors cursor-pointer"
-                      title="减少1点健康值"
-                    >
-                      -
-                    </button>
-                    <button 
-                      onClick={() => updateStat("health", 1)} 
-                      className="w-6 h-6 bg-red-600 hover:bg-red-500 border-2 border-red-400 text-white flex items-center justify-center text-xs font-black shadow-lg transition-colors cursor-pointer"
-                      title="增加1点健康值"
-                    >
-                      +
-                    </button>
+                    <div className="text-[10px] font-bold uppercase text-slate-800">健康值 (HEALTH)</div>
+                    <DiamondTracker 
+                      value={char.health} 
+                      max={5} 
+                      onChange={(newVal) => updateStat("health", newVal - char.health)} 
+                    />
                   </div>
                 </div>
 
                 <div className="flex justify-between items-end">
                   <div className="flex flex-col gap-1">
-                    <div className="text-[10px] font-bold uppercase text-blue-600">士气值</div>
-                    <div className="flex gap-1.5">
-                      {[1, 2, 3, 4, 5].map(i => (
-                        <div key={i} className={`w-5 h-5 border-2 flex items-center justify-center transition-all ${
-                          i <= char.morale ? "bg-blue-500 border-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.4)]" : "bg-transparent border-white/20"
-                        }`}>
-                          {i === char.morale && <div className="w-1.5 h-1.5 bg-white" />}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex gap-1.5">
-                    <button 
-                      onClick={() => updateStat("morale", -1)} 
-                      className="w-6 h-6 bg-blue-950/60 hover:bg-blue-900 border-2 border-blue-500 text-blue-100 flex items-center justify-center text-xs font-black transition-colors cursor-pointer"
-                      title="减少1点士气值"
-                    >
-                      -
-                    </button>
-                    <button 
-                      onClick={() => updateStat("morale", 1)} 
-                      className="w-6 h-6 bg-blue-600 hover:bg-blue-500 border-2 border-blue-400 text-white flex items-center justify-center text-xs font-black shadow-lg transition-colors cursor-pointer"
-                      title="增加1点士气值"
-                    >
-                      +
-                    </button>
+                    <div className="text-[10px] font-bold uppercase text-slate-800">士气值 (MORALE)</div>
+                    <DiamondTracker 
+                      value={char.morale} 
+                      max={5} 
+                      onChange={(newVal) => updateStat("morale", newVal - char.morale)} 
+                    />
                   </div>
                 </div>
               </div>
@@ -917,14 +878,26 @@ export default function Dashboard({
             {/* XP Section */}
             <div className="border-2 border-geo-border bg-white p-4 text-center flex flex-col justify-between">
               <div>
-                <div className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-1">经验 XP 系统</div>
-                <div className="text-4xl font-black text-slate-900 font-mono">{char.xp}</div>
+                <div className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3">经验 XP 系统</div>
+                <div className="flex justify-center mt-2">
+                  <DiamondTracker 
+                    value={char.xp % 10} // Display up to 10 for visual representation, or 5? Original design has 5 diamonds per row.
+                    max={5} 
+                    onChange={(newVal) => {
+                      // Adjust to nearest multiple of 5
+                      const base = Math.floor(char.xp / 5) * 5;
+                      const target = base + newVal;
+                      updateStat("xp", target - char.xp);
+                    }} 
+                  />
+                </div>
+                <div className="text-xl font-black text-slate-900 font-mono mt-3">总计: {char.xp}</div>
               </div>
               <div className="flex justify-center gap-2 mt-3 border-t border-slate-100 pt-2">
                 <button 
                   onClick={() => updateStat("xp", -1)} 
                   className="w-7 h-7 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-black rounded flex items-center justify-center cursor-pointer text-xs"
-                  title="消耗/减少 1点 XP"
+                  title="减少 1点 XP"
                 >
                   <Minus className="w-3 h-3" />
                 </button>
@@ -939,46 +912,32 @@ export default function Dashboard({
             </div>
 
             {/* Interjection Tokens (插叙指示物) */}
-            <div className="border-2 border-geo-border bg-amber-50/40 p-4 text-center flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute top-0 right-0 px-1 py-0.5 bg-amber-200 text-amber-950 font-mono font-bold text-[7px] leading-none uppercase tracking-tighter shadow-sm">
+            <div className="border-2 border-geo-border bg-white p-4 text-center flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 right-0 px-1 py-0.5 bg-slate-200 text-slate-600 font-mono font-bold text-[7px] leading-none uppercase tracking-tighter">
                 MAX 3
               </div>
               <div>
-                <div className="text-[10px] font-black tracking-widest text-amber-800 uppercase mb-1">
+                <div className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3">
                   插叙指示物
                 </div>
-                {/* 3 Circular slots indicating current tokens */}
-                <div className="flex justify-center gap-1.5 mt-2.5" title={`插叙指示物: ${char.tokens}/3\n持有3枚指示物的玩家不可再被递交插叙。`}>
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => {
-                        const targetVal = i + 1;
-                        const delta = targetVal - char.tokens;
-                        updateStat("tokens", delta);
-                      }}
-                      className={`w-7 h-7 rounded-full border-2 cursor-pointer flex items-center justify-center font-black transition-all ${
-                        i < char.tokens 
-                          ? "bg-amber-500 border-amber-700 text-amber-950 shadow-[2px_2px_0px_#78350f] hover:scale-110 active:scale-95 text-sm" 
-                          : "bg-white border-dashed border-amber-300 text-amber-300/60 hover:border-amber-400 hover:bg-amber-100/20 text-xs"
-                      }`}
-                    >
-                      {i < char.tokens ? "★" : ""}
-                    </button>
-                  ))}
+                <div className="flex justify-center mt-2" title={`插叙指示物: ${char.tokens}/3\n持有3枚指示物的玩家不可再被递交插叙。`}>
+                  <DiamondTracker 
+                    value={char.tokens} 
+                    max={3} 
+                    onChange={(newVal) => updateStat("tokens", newVal - char.tokens)} 
+                  />
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mt-3 pt-2 border-t border-amber-200/50">
+              <div className="flex justify-between items-center mt-3 pt-2 border-t border-slate-100">
                 <button 
                   onClick={() => updateStat("tokens", -1)} 
-                  className="w-7 h-5 bg-white hover:bg-amber-100 border border-amber-400 text-amber-800 rounded text-[10px] font-black flex items-center justify-center cursor-pointer shadow-sm"
+                  className="w-7 h-5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 rounded text-[10px] font-black flex items-center justify-center cursor-pointer"
                   title="减少1枚插叙指示物"
                 >
                   -
                 </button>
-                <span className="text-xs font-black text-amber-900 font-mono tracking-tight">
+                <span className="text-xs font-black text-slate-900 font-mono tracking-tight">
                   {char.tokens}/3
                 </span>
                 <button 
@@ -989,7 +948,7 @@ export default function Dashboard({
                       updateStat("tokens", 1);
                     }
                   }} 
-                  className="w-7 h-5 bg-amber-700 hover:bg-amber-600 border border-amber-800 text-white rounded text-[10px] font-black flex items-center justify-center cursor-pointer shadow-sm"
+                  className="w-7 h-5 bg-slate-800 hover:bg-slate-700 text-white rounded text-[10px] font-black flex items-center justify-center cursor-pointer"
                   title="增加1枚插叙指示物"
                 >
                   +
@@ -1505,50 +1464,42 @@ export default function Dashboard({
                 <h3 className="text-2xl font-black uppercase tracking-tight">{cat}技能系</h3>
                 <div className="h-1 flex-1 bg-slate-200" />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                 {SKILLS.filter(s => s.category === cat).map(skill => {
                   const total = getSkillTotal(skill.id);
                   const natural = char.skills[skill.id] || 0;
                   const mod = total - natural;
                   
                   return (
-                    <div key={skill.id} className="border-2 border-geo-border p-4 bg-white relative group flex flex-col justify-between transition-all hover:bg-slate-50 min-h-[140px]" title={skill.description}>
-                      <div>
-                        <div className="flex flex-col">
-                          <span className="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-widest">{skill.id}</span>
-                          <span className="text-xl font-black">{skill.name}</span>
-                        </div>
-                        
-                        <div className="absolute top-4 right-4 flex flex-col items-end">
-                          <div className="text-4xl font-black leading-none">{total}</div>
+                    <div key={skill.id} className="flex justify-between items-end border-b-2 border-slate-800 pb-1.5 relative group transition-all hover:bg-slate-50" title={skill.description}>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-xl font-black tracking-tight">{skill.name}</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest hidden sm:inline">{skill.id}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
+                          <span className="text-[10px] text-slate-500 font-mono">基:{natural}</span>
                           {mod !== 0 && (
-                            <div className={`text-[10px] font-black px-1.5 py-0.5 rounded-sm mt-1 ${mod > 0 ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>
+                            <span className={`text-[10px] font-black ${mod > 0 ? 'text-green-600' : 'text-red-600'}`}>
                               {mod > 0 ? `+${mod}` : mod}
-                            </div>
+                            </span>
                           )}
                         </div>
-                        
-                        <div className="mt-4 h-1 w-full bg-slate-100">
-                          <div className="h-full bg-geo-dark" style={{ width: `${(total/15)*100}%` }} />
-                        </div>
-                      </div>
-
-                      <div className="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center text-[10px]">
-                        <span className="text-slate-400 font-mono font-medium">基础: {natural}点</span>
+                        <div className="text-3xl font-black w-8 text-right font-mono text-slate-900">{total}</div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleUpgradeSkill(skill.id);
                           }}
-                          className={`px-2 py-1 font-bold text-[10px] tracking-tight uppercase transition-all flex items-center gap-1 cursor-pointer border rounded-sm ${
+                          className={`px-1.5 py-0.5 font-bold text-[9px] tracking-tight uppercase transition-all flex items-center gap-1 cursor-pointer border shadow-sm ${
                             char.xp >= 3 
-                              ? "bg-amber-150 hover:bg-amber-500 hover:text-slate-950 border-amber-300 text-amber-800 shadow-sm"
-                              : "bg-slate-50 border-slate-200 text-slate-400/80 hover:bg-slate-100"
+                              ? "bg-slate-900 hover:bg-slate-700 text-white border-slate-900"
+                              : "bg-slate-100 border-slate-300 text-slate-400 hover:bg-slate-200"
                           }`}
                           title="消耗 3 XP，提升此技能的基础等级 1 点"
                         >
-                          <Zap className="w-2.5 h-2.5" />
-                          <span>升级 (3 XP)</span>
+                          升级
                         </button>
                       </div>
                     </div>
@@ -1605,88 +1556,69 @@ export default function Dashboard({
                     <span>添加自定义装备</span>
                   </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3">
                   {char.gearIds.map(id => {
                     const g = INITIAL_GEAR.find(gear => gear.id === id) || (char.customGears || []).find(gear => gear.id === id);
                     const isActive = char.activeGearIds.includes(id);
                     if (!g) return null;
                     const isCustom = (char.customGears || []).some(cg => cg.id === id);
                     return (
-                      <div key={id} className={`border-2 p-4 flex flex-col justify-between transition-all bg-white relative ${isActive ? 'border-geo-accent shadow-md' : 'border-slate-200 opacity-60 grayscale'}`}>
-                        {/* Wear status marker */}
-                        <div className="absolute top-2 right-2 flex items-center gap-1.5">
-                          {isCustom ? (
-                            <>
-                              <button
-                                onClick={() => openEditGear(g)}
-                                className="px-1.5 py-0.5 text-[8px] bg-slate-100 border border-slate-300 text-slate-700 hover:bg-slate-200 font-extrabold uppercase tracking-tight rounded-sm transition-all shadow-sm"
-                              >
-                                修改
-                              </button>
-                              <button
-                                onClick={() => handleDeleteGear(g.id, g.name)}
-                                className="px-1.5 py-0.5 text-[8px] bg-red-50 border border-red-200 text-red-700 hover:bg-red-200 font-extrabold uppercase tracking-tight rounded-sm transition-all shadow-sm"
-                              >
-                                删除
-                              </button>
-                            </>
-                          ) : (
-                            <button
-                              onClick={() => handleRemoveGearFromInventory(g.id, g.name)}
-                              className="px-1.5 py-0.5 text-[8px] bg-slate-100 border border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-750 hover:border-red-200 font-extrabold uppercase tracking-tight rounded-sm transition-all shadow-sm"
-                              title="将该装备放回系统库"
-                            >
-                              移出行囊
-                            </button>
-                          )}
-                          <button
-                            onClick={() => {
-                              const isCurrentlyActive = char.activeGearIds.includes(id);
-                              let newActiveGears = [];
-                              if (isCurrentlyActive) {
-                                newActiveGears = char.activeGearIds.filter(gid => gid !== id);
-                              } else {
-                                newActiveGears = [...char.activeGearIds, id];
-                              }
-                              onUpdate({
-                                ...char,
-                                activeGearIds: newActiveGears
-                              });
-                              showNotification(isCurrentlyActive ? `🎒 顺利卸下 ${g.name}` : `🥋 成功穿戴/装备 ${g.name}`);
-                            }}
-                            className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-tight rounded-sm transition-all ${
-                              isActive 
-                                ? 'bg-geo-accent text-white hover:bg-red-650 shadow-sm' 
-                                : 'bg-slate-200 text-slate-700 hover:bg-geo-accent hover:text-white'
-                            }`}
-                          >
-                            {isActive ? "卸下" : "穿戴"}
-                          </button>
+                      <div key={id} className={`flex items-start gap-4 border-b-2 border-slate-200 pb-2 transition-all relative ${isActive ? '' : 'opacity-60 grayscale'}`}>
+                        {/* Diamond Checkbox */}
+                        <button
+                          onClick={() => {
+                            const isCurrentlyActive = char.activeGearIds.includes(id);
+                            let newActiveGears = [];
+                            if (isCurrentlyActive) {
+                              newActiveGears = char.activeGearIds.filter(gid => gid !== id);
+                            } else {
+                              newActiveGears = [...char.activeGearIds, id];
+                            }
+                            onUpdate({
+                              ...char,
+                              activeGearIds: newActiveGears
+                            });
+                            showNotification(isCurrentlyActive ? `🎒 顺利卸下 ${g.name}` : `🥋 成功穿戴/装备 ${g.name}`);
+                          }}
+                          className={`mt-1.5 shrink-0 w-3.5 h-3.5 border-[1.5px] flex items-center justify-center rotate-45 transition-all cursor-pointer ${
+                            isActive 
+                              ? 'bg-slate-900 border-slate-900 shadow-[2px_2px_0px_#475569]' 
+                              : 'bg-slate-50 border-slate-300 hover:border-slate-500'
+                          }`}
+                          title={isActive ? "点击卸下" : "点击穿戴"}
+                        >
+                           {isActive && <div className="w-1.5 h-1.5 bg-white" />}
+                        </button>
+
+                        <div className="flex-1 min-w-0 font-sans">
+                          <div className="flex items-baseline gap-2">
+                            <span className={`font-black text-lg uppercase tracking-tight ${isActive ? 'text-slate-900' : 'text-slate-500 line-through decoration-slate-300'}`}>{g.name}</span>
+                            {isCustom && <span className="text-[8px] bg-slate-100 text-slate-500 px-1 py-0.5 border border-slate-200">自定义</span>}
+                          </div>
+                          <p className="text-[10px] text-slate-500 italic mt-0.5 leading-relaxed">“{g.description}”</p>
+                          <div className="flex flex-wrap gap-2 mt-1.5 font-mono">
+                            {(g.modifiers || []).map(m => (
+                              <span key={m.skillId} className={`text-[9px] font-bold ${m.amount > 0 ? "text-green-700" : "text-red-700"}`}>
+                                {SKILLS.find(s => s.id === m.skillId)?.name}{m.amount > 0 ? `+${m.amount}` : m.amount}
+                              </span>
+                            ))}
+                          </div>
                         </div>
 
-                        <div>
-                          <div className="flex justify-between items-start mb-1 max-w-[65%]">
-                            <span className="font-black text-base uppercase tracking-tight">{g.name}</span>
-                          </div>
-                          <p className="text-[10px] text-slate-500 italic mt-0.5 leading-relaxed">{g.description}</p>
-                        </div>
-                        
-                        <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-bold">
-                          {isCustom && (
-                            <span className="bg-purple-100 text-purple-800 border border-purple-200 px-1.5 py-0.5 text-[9px] uppercase font-black rounded-sm">
-                              自定义
-                            </span>
+                        <div className="shrink-0 flex items-center gap-2 pt-1.5">
+                          {isCustom ? (
+                            <>
+                              <button onClick={() => openEditGear(g)} className="text-[9px] font-bold text-slate-400 hover:text-slate-800 uppercase tracking-tight transition-all">修改</button>
+                              <button onClick={() => handleDeleteGear(g.id, g.name)} className="text-[9px] font-bold text-red-300 hover:text-red-600 uppercase tracking-tight transition-all">删除</button>
+                            </>
+                          ) : (
+                            <button onClick={() => handleRemoveGearFromInventory(g.id, g.name)} className="text-[9px] font-bold text-slate-400 hover:text-red-600 uppercase tracking-tight transition-all">弃置</button>
                           )}
-                          {(g.modifiers || []).map(m => (
-                            <span key={m.skillId} className={`px-2 py-0.5 rounded border ${m.amount > 0 ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"}`}>
-                              {SKILLS.find(s => s.id === m.skillId)?.name}{m.amount > 0 ? `+${m.amount}` : m.amount}
-                            </span>
-                          ))}
                         </div>
                       </div>
                     );
                   })}
-                  {char.gearIds.length === 0 && <div className="border-2 border-dashed border-slate-200 p-8 text-center text-slate-400 text-xs italic">行囊中暂无穿戴装备...</div>}
+                  {char.gearIds.length === 0 && <div className="border-b border-dashed border-slate-200 pb-4 text-slate-400 text-xs italic">行囊中暂无穿戴装备...</div>}
                 </div>
               </div>
 
@@ -1704,7 +1636,7 @@ export default function Dashboard({
                     <span>添加自定义药剂</span>
                   </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3">
                   {(char.drugIds || []).map(id => {
                     const drug = INITIAL_DRUGS.find(d => d.id === id) || (char.customDrugs || []).find(d => d.id === id);
                     if (!drug) return null;
@@ -1712,31 +1644,33 @@ export default function Dashboard({
                     const isCustom = (char.customDrugs || []).some(cd => cd.id === id);
                     
                     return (
-                      <div key={id} className="border-2 border-slate-200 p-4 bg-white flex flex-col justify-between transition-all relative">
-                        <div className="absolute top-2 right-2 flex items-center gap-1.5">
+                      <div key={id} className="flex items-start gap-4 border-b-2 border-slate-200 pb-2 transition-all relative">
+                        <div className="flex-1 min-w-0 font-sans">
+                          <div className="flex items-baseline gap-2">
+                            <span className="font-black text-lg uppercase tracking-tight text-slate-900">{drug.name}</span>
+                            {isCustom && <span className="text-[8px] bg-purple-50 text-purple-700 px-1 py-0.5 border border-purple-200">自定义</span>}
+                          </div>
+                          <p className="text-[10px] text-slate-500 italic mt-0.5 leading-relaxed truncate">“{drug.description}”</p>
+                          <div className="flex flex-wrap gap-3 mt-1.5 font-mono">
+                            <span className="text-[9px] font-bold text-red-600">
+                               代: -1 {drug.permStat === "health" ? "HP" : "MO"}
+                            </span>
+                            {(drug.tempModifiers || []).map(m => (
+                              <span key={m.skillId} className={`text-[9px] font-bold ${m.amount > 0 ? "text-green-700" : "text-red-700"}`}>
+                                {SKILLS.find(s => s.id === m.skillId)?.name}{m.amount > 0 ? `+${m.amount}` : m.amount}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="shrink-0 flex items-center gap-2 pt-1.5">
                           {isCustom ? (
                             <>
-                              <button
-                                onClick={() => openEditDrug(drug)}
-                                className="px-1.5 py-0.5 text-[8px] bg-slate-100 border border-slate-300 text-slate-700 hover:bg-slate-200 font-extrabold uppercase tracking-tight rounded-sm transition-all shadow-sm"
-                              >
-                                修改
-                              </button>
-                              <button
-                                onClick={() => handleDeleteDrug(drug.id, drug.name)}
-                                className="px-1.5 py-0.5 text-[8px] bg-red-50 border border-red-200 text-red-700 hover:bg-red-200 font-extrabold uppercase tracking-tight rounded-sm transition-all shadow-sm"
-                              >
-                                删除
-                              </button>
+                              <button onClick={() => openEditDrug(drug)} className="text-[9px] font-bold text-slate-400 hover:text-slate-800 uppercase tracking-tight transition-all">修改</button>
+                              <button onClick={() => handleDeleteDrug(drug.id, drug.name)} className="text-[9px] font-bold text-red-300 hover:text-red-600 uppercase tracking-tight transition-all">删除</button>
                             </>
                           ) : (
-                            <button
-                              onClick={() => handleRemoveDrugFromInventory(drug.id, drug.name)}
-                              className="px-1.5 py-0.5 text-[8px] bg-slate-100 border border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-750 hover:border-red-200 font-extrabold uppercase tracking-tight rounded-sm transition-all shadow-sm"
-                              title="将该药剂放回系统库"
-                            >
-                              移出行囊
-                            </button>
+                            <button onClick={() => handleRemoveDrugFromInventory(drug.id, drug.name)} className="text-[9px] font-bold text-slate-400 hover:text-red-600 uppercase tracking-tight transition-all">弃置</button>
                           )}
                           <button
                             onClick={() => {
@@ -1772,42 +1706,16 @@ export default function Dashboard({
                               onUpdate(updatedChar);
                               showNotification(`🧪 成功服用药物 ${drug.name}！扣减 ${penalty} ${drug.permStat === 'health' ? '健康值' : '士气值'}，信号加成生效。`);
                             }}
-                            className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-tight rounded-sm transition-all bg-amber-500 text-slate-950 hover:bg-amber-600 shadow-sm`}
+                            className="px-2 py-0.5 text-[9px] font-black uppercase tracking-tight transition-all bg-amber-500 text-slate-950 hover:bg-amber-600 shadow-sm border border-amber-600"
                           >
                             服用
                           </button>
-                        </div>
-
-                        <div>
-                          <div className="flex justify-between items-start mb-1 max-w-[65%]">
-                            <span className="font-black text-base uppercase tracking-tight text-slate-800">{drug.name}</span>
-                          </div>
-                          <p className="text-[10px] text-slate-500 italic mt-0.5 leading-relaxed">{drug.description}</p>
-                        </div>
-                        
-                        <div className="mt-4 pt-2 border-t border-slate-100 flex flex-col gap-2">
-                          <div className="flex flex-wrap gap-2 text-[10px] font-bold font-sans">
-                            {isCustom && (
-                              <span className="bg-purple-100 text-purple-800 border border-purple-200 px-1 py-0.2 text-[8px] uppercase font-black rounded-sm">
-                                自定义
-                              </span>
-                            )}
-                            <span className="text-[9px] uppercase text-amber-600">本场景加成:</span>
-                            {(drug.tempModifiers || []).map(m => (
-                              <span key={m.skillId} className={`px-1.5 py-0.2 rounded border text-[9px] ${m.amount > 0 ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"}`}>
-                                {SKILLS.find(s => s.id === m.skillId)?.name}{m.amount > 0 ? `+${m.amount}` : m.amount}
-                              </span>
-                            ))}
-                          </div>
-                          <div className="text-[9px] font-bold text-red-600">
-                             代价: 永久扣减 1 点 {drug.permStat === "health" ? "生命值" : "士气值"}
-                          </div>
                         </div>
                       </div>
                     );
                   })}
                   {(char.drugIds || []).length === 0 && (
-                    <div className="border-2 border-dashed border-slate-200 p-8 text-center text-slate-400 text-xs italic">
+                    <div className="border-b border-dashed border-slate-200 pb-4 text-slate-400 text-xs italic">
                       行囊中暂无随身储存试剂...
                     </div>
                   )}
@@ -2078,9 +1986,14 @@ export default function Dashboard({
 
           {/* TAB 3: THOUGHT CABINET AND INTERJECTIONS monologues */}
           {currentTab === "thoughts" && (
-            <div className="space-y-12 pb-20 animate-in fade-in duration-200 font-sans">
+            <div className="space-y-12 pb-20 animate-in fade-in duration-200 font-sans relative overflow-hidden min-h-[600px]">
+              {/* WATERMARK */}
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center -rotate-12 opacity-[0.03] z-0 select-none">
+                <span className="text-[15rem] font-black uppercase tracking-tighter whitespace-nowrap text-slate-900">INTERNALIZED</span>
+              </div>
+              
               {/* Row 1: 思维内阁 Thought Cabinet */}
-              <div className="space-y-6">
+              <div className="space-y-6 relative z-10">
                  <div className="flex items-center gap-4">
                    <h3 className="text-xl font-black uppercase">思维内阁 Cabinet</h3>
                    <div className="h-0.5 flex-1 bg-slate-200" />
@@ -2373,7 +2286,7 @@ export default function Dashboard({
               </div>
 
               {/* Row 2: 思维插叙 Mental Monologue log */}
-              <div className="space-y-6">
+              <div className="space-y-6 relative z-10">
                  <div className="flex items-center gap-4">
                    <h3 className="text-xl font-black uppercase">脑内对话与认知碰撞</h3>
                    <div className="h-0.5 flex-1 bg-slate-200" />
@@ -2388,13 +2301,44 @@ export default function Dashboard({
 
           {/* TAB 4: CASE BLACKBOARD & INVESTIGATION CLUES */}
           {currentTab === "clues" && (
-            <div className="w-full animate-in fade-in duration-200">
-               <div className="border border-slate-200 bg-white p-1">
+            <div className="w-full animate-in fade-in duration-200 relative overflow-hidden min-h-[600px]">
+              {/* WATERMARK */}
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center -rotate-12 opacity-[0.03] z-0 select-none">
+                <span className="text-[15rem] font-black uppercase tracking-tighter whitespace-nowrap text-slate-900">CLASSIFIED</span>
+              </div>
+              
+               <div className="border border-slate-200 bg-white/95 backdrop-blur-sm p-1 relative z-10">
                  <InvestigationBoard char={char} onUpdate={onUpdate} />
                </div>
             </div>
           )}
 
+        {/* Quick Rules Reference Footer */}
+        <div className="mt-16 pt-6 border-t-2 border-slate-900 border-dashed text-slate-500 font-mono text-[10px] leading-relaxed pb-8 shrink-0 animate-in fade-in duration-500">
+           <h4 className="font-black text-slate-900 text-xs uppercase mb-3 flex items-center gap-2 tracking-widest">
+             <Book className="w-3.5 h-3.5" />
+             核心裁定速查 (CORE RULES QUICK REFERENCE)
+           </h4>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+             <div>
+               <strong className="text-slate-800 tracking-wider">◆ 技能检定 (CHECKS)</strong><br />
+               投掷 2d6 + 技能总值 + 各种修正(装备/药剂/环境等)。<br/>
+               若总和 ≥ 难度系数 (通常普通难度为10)，则该动作宣告成功。<br/>
+               掷出双6为<span className="text-green-600 font-bold">极致成功</span>，掷出双1为<span className="text-red-600 font-bold">灾难性失败</span>。
+             </div>
+             <div>
+               <strong className="text-slate-800 tracking-wider">◆ 经验与成长 (XP & GROWTH)</strong><br />
+               当你主动因“环境标签/线索”的负面效应受阻时，可获得 1点 XP。<br/>
+               消耗 3 XP 可在属性面板将任意单项技能的基础等级提升 1 点。<br/>
+               消耗 5 XP 可在思维阁执行一次内化顿悟，获得新的人格加成。
+             </div>
+             <div>
+               <strong className="text-slate-800 tracking-wider">◆ 承受损伤 (DAMAGE)</strong><br />
+               每当遭遇物理重创或精神摧残，健康/士气减1，并获得一个负面状态。<br/>
+               任一维度的状态值归零时，调查员当场倒毙或彻底陷入疯狂。<br/>
+               服用特效试剂会强行榨取潜能，永久扣除 1 点机体状态。
+             </div>
+           </div>
         </div>
       </main>
 

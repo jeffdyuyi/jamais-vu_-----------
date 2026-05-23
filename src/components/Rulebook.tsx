@@ -4,56 +4,85 @@ import { Search, Info, Book, User, Hammer, Brain, Zap, Briefcase, Tag, FlaskConi
 
 export default function Rulebook() {
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState<SkillCategory | "全部" | "规则">("全部");
+  const [activeTab, setActiveTab] = useState<"rules" | "skills" | "gears">("rules");
+  const [activeSkillCategory, setActiveSkillCategory] = useState<SkillCategory | "全部">("全部");
+  const [activeGearCategory, setActiveGearCategory] = useState<"全部" | "衣物" | "工具" | "武器" | "制剂">("全部");
 
   const filteredSkills = SKILLS.filter(s => {
     const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase()) || 
                          s.description.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = (activeCategory === "全部" || activeCategory === "规则") || s.category === activeCategory;
+    const matchesCategory = activeSkillCategory === "全部" || s.category === activeSkillCategory;
     return matchesSearch && matchesCategory;
   });
 
   return (
-    <div className="h-full flex flex-col overflow-hidden bg-slate-100">
-      <div className="p-4 md:p-8 border-b border-slate-200 bg-white space-y-4 md:space-y-6 shrink-0 z-10 shadow-sm">
-        <div>
-          <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-1">
-            调查员指南 <span className="text-geo-accent italic text-xs md:text-base font-bold ml-1 md:ml-2">精炼参考规范</span>
-          </h2>
-          <p className="text-slate-400 font-mono text-[8px] md:text-[10px] uppercase tracking-widest leading-none">失忆理智回路、精神执念碎片与案件证据黑板重构导论</p>
-        </div>
-        
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-          <input 
-            type="text" 
-            placeholder="正在检索规则库/技能描述..." 
-            className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-sans font-medium text-sm transition-all"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+    <div className="h-full w-full flex flex-col overflow-hidden bg-slate-100">
+      <div className="w-full border-b border-slate-200 bg-white shrink-0 z-10 shadow-sm">
+        <div className="max-w-7xl mx-auto w-full p-4 md:p-8 space-y-4">
+          <div className="flex gap-2">
+          <button
+            onClick={() => setActiveTab("rules")}
+            className={`px-6 py-2 text-xs font-black uppercase rounded-full transition-all ${
+              activeTab === "rules" ? "bg-slate-900 text-white shadow-md" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+            }`}
+          >
+            核心规则
+          </button>
+          <button
+            onClick={() => setActiveTab("gears")}
+            className={`px-6 py-2 text-xs font-black uppercase rounded-full transition-all ${
+              activeTab === "gears" ? "bg-slate-900 text-white shadow-md" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+            }`}
+          >
+            装备与制剂
+          </button>
+          <button
+            onClick={() => setActiveTab("skills")}
+            className={`px-6 py-2 text-xs font-black uppercase rounded-full transition-all ${
+              activeTab === "skills" ? "bg-slate-900 text-white shadow-md" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+            }`}
+          >
+            技能库
+          </button>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {["全部", "规则", ...Object.values(SkillCategory)].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat as any)}
-              className={`px-4 py-1.5 text-[11px] font-bold uppercase rounded-full transition-all ${
-                activeCategory === cat 
-                  ? "bg-slate-900 text-white shadow-md" 
-                  : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        {activeTab === "skills" && (
+          <div className="space-y-4 animate-in fade-in slide-in-from-top-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+              <input 
+                type="text" 
+                placeholder="正在检索技能名称或描述..." 
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-sans font-medium text-sm transition-all"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {["全部", ...Object.values(SkillCategory)].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveSkillCategory(cat as any)}
+                  className={`px-4 py-1.5 text-[11px] font-bold uppercase rounded-full transition-all ${
+                    activeSkillCategory === cat 
+                      ? "bg-slate-800 text-white shadow-sm" 
+                      : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 md:space-y-16">
-        {/* Core Rules Section */}
-        {(activeCategory === "全部" || activeCategory === "规则") && (
+      <div className="flex-1 overflow-y-auto w-full">
+        <div className="max-w-7xl mx-auto w-full p-4 md:p-8 space-y-8 md:space-y-16">
+          {/* Core Rules Section */}
+        {activeTab === "rules" && (
           <section className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <div className="flex items-center gap-4">
               <h3 className="text-xs font-black uppercase text-slate-500 tracking-[0.2em]">核心检定规则</h3>
@@ -62,26 +91,26 @@ export default function Rulebook() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Mechanics */}
-              <div className="bg-slate-900 text-white p-6 md:p-8 space-y-4 md:space-y-6 rounded-2xl relative overflow-hidden">
-                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-white/10 pb-2 md:pb-4">
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 shadow-sm relative overflow-hidden">
+                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-100 pb-2 md:pb-4 text-geo-dark">
                    判定机制
                 </h4>
                 <div className="space-y-4">
-                  <div className="p-3 md:p-4 bg-white/5 border border-white/10 font-mono text-xs md:text-sm leading-relaxed">
+                  <div className="p-3 md:p-4 bg-slate-50 border border-slate-200 font-mono text-xs md:text-sm leading-relaxed text-slate-600">
                     <span className="text-geo-accent font-black block md:inline mb-1 md:mb-0">2D6 + 技能值 + 修正</span>
                     <br className="hidden md:block" />
                     掷出两个六面骰，加上你的技能等级和任何环境/装备修正。若总值大于等于难度值，则行动成功。
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="p-3 border-2 border-blue-500/30 bg-blue-500/5">
-                      <div className="text-[10px] font-black text-blue-400 uppercase mb-1">极致成功</div>
-                      <div className="text-sm font-bold">6 + 6</div>
-                      <p className="text-[9px] text-slate-400 leading-tight mt-1">不论数值高低，该行动获得传奇般的超限成功。</p>
+                    <div className="p-3 border-2 border-blue-200 bg-blue-50/50">
+                      <div className="text-[10px] font-black text-blue-600 uppercase mb-1">极致成功</div>
+                      <div className="text-sm font-bold text-blue-900">6 + 6</div>
+                      <p className="text-[9px] text-slate-500 leading-tight mt-1">不论数值高低，该行动获得传奇般的超限成功。</p>
                     </div>
-                    <div className="p-3 border-2 border-red-500/30 bg-red-500/5">
-                      <div className="text-[10px] font-black text-red-400 uppercase mb-1">大检定失败</div>
-                      <div className="text-sm font-bold">1 + 1</div>
-                      <p className="text-[9px] text-slate-400 leading-tight mt-1">不论数值高低，必然遭遇灾难性的彻底失败。</p>
+                    <div className="p-3 border-2 border-red-200 bg-red-50/50">
+                      <div className="text-[10px] font-black text-red-600 uppercase mb-1">大检定失败</div>
+                      <div className="text-sm font-bold text-red-900">1 + 1</div>
+                      <p className="text-[9px] text-slate-500 leading-tight mt-1">不论数值高低，必然遭遇灾难性的彻底失败。</p>
                     </div>
                   </div>
                 </div>
@@ -212,84 +241,122 @@ export default function Rulebook() {
                 </div>
               </div>
 
-              {/* Gear & Medications Registry */}
-              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 lg:col-span-2 shadow-sm">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-2 md:pb-4">
-                  <h4 className="text-lg md:text-xl font-black uppercase tracking-tight">
-                    装备、随行箱包与生理制剂目录
-                  </h4>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-black">第四节：行囊辅助配备</span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
-                  {/* Gears Section */}
-                  <div className="space-y-4">
-                    <div className="text-xs font-black text-slate-900 border-l-4 border-slate-900 pl-2 uppercase tracking-wider flex items-center justify-between">
-                      <span>随行物理装备与常备工具</span>
-                      <span className="text-[10px] font-mono text-slate-400 font-bold">数量: {INITIAL_GEAR.length}</span>
-                    </div>
-                    <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar font-sans">
-                      {INITIAL_GEAR.map(g => (
-                        <div key={g.id} className="p-4 border border-slate-100 rounded-lg hover:border-slate-200 bg-slate-50 transition-colors">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs font-black uppercase text-slate-800">{g.name}</span>
-                            <span className="text-[8px] px-1 border border-slate-200 text-slate-400 font-black uppercase tracking-tight">{g.type}</span>
-                          </div>
-                          <p className="text-[10px] text-slate-500 italic leading-snug">“{g.description}”</p>
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {g.modifiers.map(m => (
-                              <span key={m.skillId} className="text-[10px] font-medium bg-white text-slate-600 px-2 py-0.5 rounded-full border border-slate-200 shadow-sm">
-                                 {SKILLS.find(s => s.id === m.skillId)?.name} {m.amount > 0 ? `+${m.amount}` : m.amount}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Drugs Section */}
-                  <div className="space-y-4 border-t md:border-t-0 md:border-l border-dashed border-slate-200 md:pl-6">
-                    <div className="text-xs font-black text-slate-900 border-l-4 border-amber-500 pl-2 uppercase tracking-wider flex items-center justify-between">
-                      <span>生理与特殊脑化学制剂</span>
-                      <span className="text-[10px] font-mono text-slate-400 font-bold">数量: {INITIAL_DRUGS.length}</span>
-                    </div>
-                    <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar font-sans">
-                      {INITIAL_DRUGS.map(d => (
-                        <div key={d.id} className="p-4 border border-amber-100 rounded-lg hover:border-amber-200 bg-amber-50/30 transition-colors">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs font-black uppercase text-amber-950">{d.name}</span>
-                            <span className="text-[8px] px-1 bg-amber-50 border border-amber-200 text-amber-700 font-black uppercase tracking-widest">制剂</span>
-                          </div>
-                          <p className="text-[10px] text-slate-500 italic leading-snug">“{d.description}”</p>
-                          <p className="text-[9px] font-bold text-red-600 mt-2 font-mono">
-                             ◆ 副作用: 永久性扣减 1 点 {d.permStat === "health" ? "生命值" : "士气值"}
-                          </p>
-                          <div className="flex flex-wrap gap-1.5 mt-1.5 font-mono">
-                            <span className="text-[9px] font-black text-amber-700 my-auto">临时效果 (场景级):</span>
-                            {d.tempModifiers.map(m => (
-                              <span key={m.skillId} className={`text-[8px] font-black px-1 border ${m.amount > 0 ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"}`}>
-                                 {SKILLS.find(s => s.id === m.skillId)?.name}{m.amount > 0 ? `+${m.amount}` : m.amount}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </section>
         )}
 
+        {/* Gear & Medications Section */}
+        {activeTab === "gears" && (
+          <section className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-2 md:pb-4">
+                  <h4 className="text-lg md:text-xl font-black uppercase tracking-tight">
+                    装备、随行箱包与生理制剂目录
+                  </h4>
+                  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-black">行囊辅助配备</span>
+                </div>
+
+                {/* Gear filter tabs */}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {(["全部", "衣物", "工具", "武器", "制剂"] as const).map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveGearCategory(cat)}
+                      className={`px-4 py-2 text-xs font-black uppercase tracking-wider border-2 transition-all ${
+                        activeGearCategory === cat 
+                          ? "bg-slate-900 text-white border-slate-900 shadow-sm" 
+                          : "bg-white text-slate-500 border-slate-200 hover:border-slate-400 hover:text-slate-800"
+                      }`}
+                    >
+                      {cat === "全部" ? "所有目录" : cat === "制剂" ? "生理制剂" : `${cat}装备`}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex flex-col gap-10 text-sm mt-4">
+                  {/* Gears Section */}
+                  {(activeGearCategory === "全部" || activeGearCategory !== "制剂") && (
+                    <div className="space-y-4">
+                      <div className="text-sm font-black text-slate-900 border-l-4 border-slate-900 pl-3 uppercase tracking-wider flex items-center justify-between">
+                        <span>{activeGearCategory === "全部" ? "随行物理装备与常备工具" : `${activeGearCategory}分类清单`}</span>
+                        <span className="text-xs font-mono text-slate-400 font-bold">数量: {INITIAL_GEAR.filter(g => activeGearCategory === "全部" || g.type === activeGearCategory).length}</span>
+                      </div>
+                      <div className="flex flex-col space-y-3 font-sans">
+                        {INITIAL_GEAR.filter(g => activeGearCategory === "全部" || g.type === activeGearCategory).map(g => (
+                          <div key={g.id} className="flex flex-col md:flex-row md:items-center gap-4 p-4 md:p-5 border border-slate-200 rounded-lg hover:border-slate-300 bg-slate-50 transition-colors shadow-sm">
+                            <div className="md:w-[22%] shrink-0 flex items-center justify-between md:justify-start gap-3">
+                              <span className="text-sm md:text-base font-black uppercase text-slate-800">{g.name}</span>
+                              <span className="text-[9px] px-1.5 border border-slate-200 text-slate-400 font-black uppercase tracking-tight">{g.type}</span>
+                            </div>
+                            <div className="md:w-[45%] shrink-0">
+                               <p className="text-xs text-slate-500 italic leading-relaxed">“{g.description}”</p>
+                            </div>
+                            <div className="md:flex-1 flex flex-wrap md:justify-end gap-2 mt-2 md:mt-0 font-mono">
+                              {g.modifiers.map(m => (
+                                <span key={m.skillId} className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-700 shadow-sm">
+                                  <span className={`w-1.5 h-1.5 rounded-full ${m.amount > 0 ? "bg-blue-500" : "bg-red-500"}`} />
+                                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-200">
+                                    {SKILLS.find(s => s.id === m.skillId)?.name}
+                                  </span>
+                                  <span className="text-[10px] font-black text-white">
+                                    {m.amount > 0 ? `+${m.amount}` : m.amount}
+                                  </span>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Drugs Section */}
+                  {(activeGearCategory === "全部" || activeGearCategory === "制剂") && (
+                    <div className="space-y-4">
+                      <div className="text-sm font-black text-slate-900 border-l-4 border-amber-500 pl-3 uppercase tracking-wider flex items-center justify-between">
+                        <span>生理与特殊脑化学制剂</span>
+                        <span className="text-xs font-mono text-slate-400 font-bold">数量: {INITIAL_DRUGS.length}</span>
+                      </div>
+                      <div className="flex flex-col space-y-3 font-sans">
+                        {INITIAL_DRUGS.map(d => (
+                          <div key={d.id} className="flex flex-col md:flex-row md:items-center gap-4 p-4 md:p-5 border border-amber-200 rounded-lg hover:border-amber-300 bg-slate-50 transition-colors shadow-sm">
+                            <div className="md:w-[22%] shrink-0 flex items-center justify-between md:justify-start gap-3">
+                              <span className="text-sm md:text-base font-black uppercase text-amber-950">{d.name}</span>
+                              <span className="text-[9px] px-1.5 bg-amber-50 border border-amber-200 text-amber-700 font-black uppercase tracking-widest">制剂</span>
+                            </div>
+                            <div className="md:w-[45%] shrink-0 space-y-1.5">
+                               <p className="text-xs text-slate-500 italic leading-relaxed">“{d.description}”</p>
+                               <p className="text-[10px] font-bold text-red-600 font-mono">
+                                 ◆ 副作用: 永久性扣减 1 点 {d.permStat === "health" ? "生命值" : "士气值"}
+                               </p>
+                            </div>
+                            <div className="md:flex-1 flex flex-wrap md:justify-end items-center gap-2 mt-2 md:mt-0 font-mono">
+                              <span className="text-[10px] font-black text-amber-700 hidden lg:inline-block mr-1">临时效果:</span>
+                              {d.tempModifiers.map(m => (
+                                <span key={m.skillId} className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-700 shadow-sm">
+                                  <span className={`w-1.5 h-1.5 rounded-full ${m.amount > 0 ? "bg-blue-500" : "bg-red-500"}`} />
+                                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-200">
+                                    {SKILLS.find(s => s.id === m.skillId)?.name}
+                                  </span>
+                                  <span className="text-[10px] font-black text-white">
+                                    {m.amount > 0 ? `+${m.amount}` : m.amount}
+                                  </span>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+          </section>
+        )}
+
         {/* Skills Section */}
-        {activeCategory !== "规则" && (
-          <section className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100">
-            <div className="flex items-center gap-4">
-              <h3 className="text-xs font-black uppercase text-slate-500 tracking-[0.2em]">二十四项心智潜机能详述</h3>
-              <div className="h-px flex-1 bg-slate-300" />
-            </div>
+        {activeTab === "skills" && (
+          <section className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {filteredSkills.map(skill => (
                 <div key={skill.id} className="bg-white p-6 md:p-8 border border-slate-100 rounded-2xl hover:border-blue-200 hover:bg-blue-50/30 transition-all relative overflow-hidden group shadow-sm hover:shadow-md">
@@ -317,6 +384,7 @@ export default function Rulebook() {
              <span className="text-[10px] opacity-60">记忆为谎言的面具。理化数据与证据方为唯一的庇护所。</span>
            </p>
         </div>
+      </div>
       </div>
     </div>
   );

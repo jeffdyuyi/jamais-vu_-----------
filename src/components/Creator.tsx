@@ -137,7 +137,7 @@ export default function Creator({ onComplete }: CreatorProps) {
                 <p className="text-slate-500 font-mono text-sm">将 7,6,5,4,3,2,1 点分配到对应的子技能。技能决定了你的感知边界。</p>
               </div>
 
-              <div className="disco-card bg-geo-dark text-white flex justify-between items-center py-6 px-8 mb-10 shadow-2xl">
+              <div className="disco-card bg-white flex justify-between items-center py-6 px-8 mb-10 shadow-sm border border-slate-200">
                 <div className="flex items-center gap-3 text-xs font-black uppercase tracking-[0.2em]">
                   <Wand2 className="w-5 h-5 text-geo-accent" /> 待固化点数:
                 </div>
@@ -256,8 +256,14 @@ export default function Creator({ onComplete }: CreatorProps) {
                           <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100 text-[10px] font-bold">
                             <span className="text-[10px] font-black uppercase text-amber-600 mr-1">加成:</span>
                             {drug.tempModifiers.map(m => (
-                              <span key={m.skillId} className={`px-1.5 py-0.2 rounded border ${m.amount > 0 ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"}`}>
-                                {SKILLS.find(s => s.id === m.skillId)?.name}{m.amount > 0 ? `+${m.amount}` : m.amount}
+                              <span key={m.skillId} className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-700 shadow-sm">
+                                <span className={`w-1.5 h-1.5 rounded-full ${m.amount > 0 ? "bg-blue-500" : "bg-red-500"}`} />
+                                <span className="text-[10px] font-black uppercase tracking-wider text-slate-200">
+                                  {SKILLS.find(s => s.id === m.skillId)?.name}
+                                </span>
+                                <span className="text-[10px] font-black text-white">
+                                  {m.amount > 0 ? `+${m.amount}` : m.amount}
+                                </span>
                               </span>
                             ))}
                           </div>
@@ -293,8 +299,14 @@ export default function Creator({ onComplete }: CreatorProps) {
                         </div>
                         <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100 w-full">
                           {gear.modifiers.map(m => (
-                            <span key={m.skillId} className={`text-[10px] font-black uppercase px-2 py-0.5 rounded border ${m.amount > 0 ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"}`}>
-                              {SKILLS.find(s => s.id === m.skillId)?.name} {m.amount > 0 ? `+${m.amount}` : m.amount}
+                            <span key={m.skillId} className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-700 shadow-sm">
+                              <span className={`w-1.5 h-1.5 rounded-full ${m.amount > 0 ? "bg-blue-500" : "bg-red-500"}`} />
+                              <span className="text-[10px] font-black uppercase tracking-wider text-slate-200">
+                                {SKILLS.find(s => s.id === m.skillId)?.name}
+                              </span>
+                              <span className="text-[10px] font-black text-white">
+                                {m.amount > 0 ? `+${m.amount}` : m.amount}
+                              </span>
                             </span>
                           ))}
                         </div>
@@ -485,7 +497,7 @@ export default function Creator({ onComplete }: CreatorProps) {
                 
                 <div className="relative z-10 space-y-10">
                   <div className="flex items-center gap-6">
-                    <div className="w-24 h-24 bg-geo-dark text-white flex items-center justify-center font-black text-4xl leading-none shadow-2xl">
+                    <div className="w-24 h-24 bg-white text-geo-dark border-2 border-slate-200 flex items-center justify-center font-black text-4xl leading-none shadow-sm">
                       {char.name[0] || "?"}
                     </div>
                     <div className="space-y-1">

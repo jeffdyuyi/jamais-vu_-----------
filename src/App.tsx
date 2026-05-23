@@ -12,13 +12,19 @@ import Rulebook from "./components/Rulebook";
 import InterjectionBoard from "./components/InterjectionBoard";
 import InvestigationBoard from "./components/InvestigationBoard";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Book, Plus } from "lucide-react";
+import { X, Book, Plus, ChevronDown, Palette } from "lucide-react";
 
 export default function App() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [activeCharId, setActiveCharId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"library" | "attributes" | "gear" | "thoughts" | "clues" | "rulebook">("library");
   const [isCreating, setIsCreating] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+  const [theme, setTheme] = useState<"default" | "sunset">("default");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   // Derived active character from registry
   const char = characters.find(c => c.id === activeCharId) || null;
@@ -258,9 +264,18 @@ export default function App() {
               规则手册
             </button>
           </div>
-          <div className="flex items-center space-x-2 md:space-x-3 bg-slate-100 px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-slate-200">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-tighter">本地存储：同步中</span>
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <button
+              onClick={() => setTheme(t => t === "default" ? "sunset" : "default")}
+              className="p-1.5 md:p-2 rounded-full border border-slate-200 bg-slate-50 text-slate-500 hover:text-blue-600 hover:bg-slate-100 transition-colors"
+              title="切换主题风格"
+            >
+              <Palette className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            </button>
+            <div className="flex items-center space-x-2 md:space-x-3 bg-slate-100 px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-slate-200">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-tighter hidden sm:inline-block">本地存储：同步中</span>
+            </div>
           </div>
         </div>
       </nav>
@@ -277,21 +292,16 @@ export default function App() {
               animate={{ opacity: 1, scale: 1 }}
               className="space-y-6 max-w-2xl my-auto"
             >
-              <div className="inline-block px-4 py-1 bg-geo-dark text-white text-[10px] font-bold uppercase tracking-[0.2em] mb-2 md:mb-4">
-                思维叙事辅助系统
-              </div>
               <h1 className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tighter uppercase leading-[0.8] mb-2 text-slate-900">
                 JAMAIS <span className="text-blue-600 block md:inline">VU</span>
               </h1>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif italic text-slate-500 font-medium py-2 md:py-4">
+              <h2 
+                className="text-3xl sm:text-4xl md:text-5xl font-serif italic text-slate-500 font-medium py-2 md:py-4 cursor-pointer hover:text-blue-600 transition-colors inline-flex items-center gap-2 group"
+                onClick={() => setShowAbout(true)}
+              >
                 旧事如新
+                <span className="text-xs font-sans not-italic bg-slate-100 text-slate-400 px-2 py-1 rounded-full group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">关于</span>
               </h2>
-              <div className="p-6 bg-slate-100 rounded-2xl mt-8 shadow-inner">
-                <p className="text-slate-600 font-sans text-sm leading-relaxed">
-                  你对自己是谁或住在哪里毫无记忆。你只能按照周围人的期望处理你的案件。
-                  此工具旨在帮助你在极度失忆的状态下管理你的思维、技能与痛苦。
-                </p>
-              </div>
 
               <div className="flex flex-col md:flex-row gap-4 justify-center pt-8">
                 <button 
@@ -373,6 +383,64 @@ export default function App() {
            </div>
         </div>
       )}
+
+      {/* About Modal */}
+      <AnimatePresence>
+        {showAbout && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAbout(false)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="relative bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col"
+            >
+              <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                  <Book className="w-4 h-4 text-blue-500" /> 关于《旧事如新》
+                </h3>
+                <button onClick={() => setShowAbout(false)} className="text-slate-400 hover:text-slate-900 hover:bg-slate-100 p-1.5 rounded-lg transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar space-y-6">
+                <div className="text-slate-600 font-sans text-sm leading-relaxed space-y-3">
+                  <p>《旧事如新》是一款关于惨烈失败的心理叙事类角色扮演游戏。你将扮演一位平庸的调查员，在严重失忆的状态下处理此生最重要的案件。你甚至不记得自己是谁、住在何处。</p>
+                  <p>按照周围人似乎期待的方式推进案件，收集关于自己身份的信息，或是伪造全新身份。</p>
+                  <p>但无论做什么，你都不会孤单：颅内噪音会试图将你拉向不同的方向。</p>
+                  <p>本游戏是对 ZA/UM 工作室电子游戏《极乐迪斯科》的非官方桌面改编版本，并非对原版内容的复刻，而是为在桌面环境中有机创造类似体验的工具。正如《极乐迪斯科》是对桌面角色扮演游戏的致敬，《旧事如新》亦是对《极乐迪斯科》的致敬。</p>
+                </div>
+                
+                <div className="border-t border-slate-100 pt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-medium">
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-black uppercase text-slate-400 tracking-wider">原案信息</div>
+                    <ul className="space-y-1.5 text-slate-600">
+                      <li><span className="text-slate-400">原作者：</span>Kevin M. Rodrigo</li>
+                      <li><span className="text-slate-400">Discord 社群：</span><a href="https://discord.gg/vHWz6j5Umf" target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">vHWz6j5Umf</a></li>
+                      <li><span className="text-slate-400">中文翻译：</span>三局两胜工作室</li>
+                    </ul>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-black uppercase text-slate-400 tracking-wider">工具与协助</div>
+                    <ul className="space-y-1.5 text-slate-600">
+                      <li><span className="text-slate-400">本工具作者：</span>不咕鸟（基德）</li>
+                      <li><span className="text-slate-400">辅助：</span>Antigravity Gemini</li>
+                      <li><span className="text-slate-400">不咕鸟TRPG创想俱乐部：</span>261751459</li>
+                      <li><span className="text-slate-400">成都秘密基地：</span><a href="https://nogubird.top/" target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">nogubird.top</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

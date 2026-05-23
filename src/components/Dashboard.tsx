@@ -794,13 +794,13 @@ export default function Dashboard({
         <div className="p-6 space-y-8 flex-1">
           <div>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">当前状态</p>
-            <div className="disco-card rounded-none p-6 bg-geo-dark text-white space-y-6">
-              <h2 className="text-2xl font-black italic">{char.name}</h2>
+            <div className="disco-card rounded-none p-6 bg-white space-y-6">
+              <h2 className="text-2xl font-black italic text-geo-dark">{char.name}</h2>
               
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <div className="flex flex-col gap-1">
-                    <div className="text-[10px] font-bold uppercase text-red-400">健康值</div>
+                    <div className="text-[10px] font-bold uppercase text-red-600">健康值</div>
                     <div className="flex gap-1.5">
                       {[1, 2, 3, 4, 5].map(i => (
                         <div key={i} className={`w-5 h-5 border-2 flex items-center justify-center transition-all ${
@@ -831,7 +831,7 @@ export default function Dashboard({
 
                 <div className="flex justify-between items-end">
                   <div className="flex flex-col gap-1">
-                    <div className="text-[10px] font-bold uppercase text-blue-400">士气值</div>
+                    <div className="text-[10px] font-bold uppercase text-blue-600">士气值</div>
                     <div className="flex gap-1.5">
                       {[1, 2, 3, 4, 5].map(i => (
                         <div key={i} className={`w-5 h-5 border-2 flex items-center justify-center transition-all ${
@@ -1238,7 +1238,7 @@ export default function Dashboard({
                 <div className="flex gap-2 pt-2">
                   <button 
                     onClick={handleAddTag} 
-                    className="flex-1 py-2 bg-geo-dark hover:bg-geo-accent text-white text-[10px] font-black uppercase tracking-wider shadow-[2px_2px_0px_#475569] active:translate-y-0.5 active:shadow-none transition-all"
+                    className="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black uppercase tracking-wider shadow-[2px_2px_0px_#475569] active:translate-y-0.5 active:shadow-none transition-all"
                   >
                     记录此标签效果
                   </button>
@@ -1326,7 +1326,7 @@ export default function Dashboard({
 
         {/* Action toast system at bottom */}
         {notification && (
-          <div className="fixed bottom-6 left-6 z-50 bg-geo-dark text-white text-xs font-bold font-mono px-4 py-3 shadow-[4px_4px_0px_#94a3b8] border-2 border-white max-w-sm animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <div className="fixed bottom-6 left-6 z-50 bg-white text-geo-dark text-xs font-bold font-mono px-4 py-3 shadow-[4px_4px_0px_#94a3b8] border-2 border-slate-200 max-w-sm animate-in fade-in slide-in-from-bottom-2 duration-200">
             {notification}
           </div>
         )}

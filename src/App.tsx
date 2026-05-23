@@ -234,17 +234,6 @@ export default function App() {
               </button>
             )}
             
-            {char && (
-              <button 
-                onClick={() => { setIsCreating(false); setActiveTab("attributes"); }} 
-                className={`transition-all py-1.5 cursor-pointer ${
-                  !isCreating && (activeTab === "attributes" || activeTab === "gear" || activeTab === "thoughts" || activeTab === "clues") ? "border-b-2 border-geo-accent font-black text-slate-900" : "opacity-40 hover:opacity-100"
-                }`}
-              >
-                调查员主卡
-              </button>
-            )}
-
             {!isCreating && (
               <button 
                 onClick={() => setIsCreating(true)} 

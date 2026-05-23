@@ -21,7 +21,9 @@ import {
   Sparkles, 
   X, 
   Globe,
-  Info
+  Info,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -49,6 +51,7 @@ export default function Library({
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
   const [showImport, setShowImport] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [exportingChar, setExportingChar] = useState<Character | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -142,8 +145,14 @@ export default function Library({
   return (
     <div className="h-full w-full flex flex-col md:flex-row bg-[#f1f5f9] overflow-hidden">
       {/* Sidebar: Library Stats Dashboard */}
-      <aside className="w-full md:w-80 border-b-2 md:border-b-0 md:border-r-2 border-slate-900 bg-white p-6 space-y-6 flex flex-col justify-between overflow-y-auto shrink-0">
-        <div className="space-y-6">
+      <aside 
+        className={`${
+          isSidebarOpen ? "w-full md:w-80 p-6" : "w-0 md:w-16 p-0 md:py-6 flex items-center"
+        } border-b-2 md:border-b-0 md:border-r-2 border-slate-900 bg-white space-y-6 flex flex-col justify-between overflow-y-auto shrink-0 transition-all duration-300 relative`}
+      >
+        {isSidebarOpen ? (
+          <>
+            <div className="space-y-6">
           <div className="space-y-1">
              <div className="inline-block px-2.5 py-0.5 bg-slate-900 text-white text-[9px] font-black tracking-widest uppercase mb-1">
                ARCHIVE CONTROL
@@ -181,11 +190,29 @@ export default function Library({
         </div>
 
         <div className="pt-4 border-t border-slate-200 text-center">
-          <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">
-            GEOMETRIC DETECTIVE REGISTRY
-          </span>
-        </div>
+            <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">
+              GEOMETRIC DETECTIVE REGISTRY
+            </span>
+          </div>
+          </>
+        ) : (
+          <div className="hidden md:flex flex-col items-center justify-start h-full gap-8">
+            <div className="text-slate-400 tracking-widest font-black uppercase text-xs rotate-180 flex-1 whitespace-nowrap" style={{ writingMode: 'vertical-rl' }}>
+              Archive Control
+            </div>
+          </div>
+        )}
       </aside>
+
+      {/* Sidebar Toggle Button - Fixed to edge */}
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="hidden md:flex absolute top-1/2 left-0 -translate-y-1/2 z-10 items-center justify-center w-6 h-12 bg-slate-900 text-white hover:bg-slate-800 rounded-r-md shadow-md transition-all border border-l-0 border-slate-900"
+        style={{ left: isSidebarOpen ? '20rem' : '4rem' }}
+        title={isSidebarOpen ? "收起控制台" : "展开控制台"}
+      >
+        {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+      </button>
 
       {/* Main Grid Workspace */}
       <section className="flex-1 p-8 overflow-y-auto space-y-8 flex flex-col">

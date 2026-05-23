@@ -2293,7 +2293,7 @@ export default function Dashboard({
               </div>
               
                <div className="flex items-center gap-4 relative z-10">
-                 <h3 className="text-xl font-black uppercase">外观描述</h3>
+                 <h3 className="text-xl font-black uppercase">外观印象</h3>
                  <div className="h-0.5 flex-1 bg-slate-200" />
                </div>
 

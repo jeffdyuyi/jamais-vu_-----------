@@ -140,7 +140,7 @@ export default function Rulebook() {
               {/* Thought Cabinet */}
               <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 lg:col-span-2 shadow-sm">
                 <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-100 pb-2 md:pb-4">
-                  思维内阁与体验消耗顿悟
+                  思维内阁
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-sm">
                   <div className="space-y-3">
@@ -161,7 +161,7 @@ export default function Rulebook() {
               {/* States & Tags core rules */}
               <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 lg:col-span-2 shadow-sm">
                 <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-100 pb-2 md:pb-4">
-                  状态伤痛与情节标签规范
+                  状态与标签
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-sm">
                   <div className="space-y-3 p-4 bg-red-50/50 border border-red-200">
@@ -200,7 +200,7 @@ export default function Rulebook() {
               {/* Tokens & Health/Morale */}
               <div className="p-6 md:p-8 border border-slate-200 rounded-2xl bg-slate-50 space-y-4 md:space-y-6 lg:col-span-2">
                 <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-200 pb-2 md:pb-4">
-                  健康、士气与令牌
+                  健康、士气、插叙指示物
                 </h4>
                 <div className="space-y-4 md:space-y-6">
                   <div className="flex gap-4">
@@ -251,7 +251,7 @@ export default function Rulebook() {
               <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 shadow-sm">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-2 md:pb-4">
                   <h4 className="text-lg md:text-xl font-black uppercase tracking-tight">
-                    装备、随行箱包与生理制剂目录
+                    装备列表
                   </h4>
                   <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-black">行囊辅助配备</span>
                 </div>

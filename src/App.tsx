@@ -314,7 +314,7 @@ export default function App() {
                   onClick={() => { setIsCreating(false); setActiveTab("rulebook"); }}
                   className="bg-white text-slate-700 font-medium rounded-full py-3.5 px-8 text-base border border-slate-200 hover:bg-slate-50 hover:shadow-sm transition-all cursor-pointer"
                 >
-                  参阅调查手册
+                  规则手册
                 </button>
               </div>
             </motion.div>

@@ -49,7 +49,7 @@ export default function Library({
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
   const [showImport, setShowImport] = useState(false);
-  const [editingChar, setEditingChar] = useState<Character | null>(null);
+
   const [exportingChar, setExportingChar] = useState<Character | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -110,58 +110,7 @@ export default function Library({
     setEndingInput("");
   };
 
-  // Quick edit state forms (basic metadata & stats)
-  const [editName, setEditName] = useState("");
-  const [editDesc, setEditDesc] = useState("");
-  const [editHealth, setEditHealth] = useState(5);
-  const [editMorale, setEditMorale] = useState(5);
-  const [editXp, setEditXp] = useState(0);
-  const [editTokens, setEditTokens] = useState(1);
-  const [editHairStyle, setEditHairStyle] = useState("");
-  const [editHairColor, setEditHairColor] = useState("");
-  const [editEyeColor, setEditEyeColor] = useState("");
-  const [editSkinTone, setEditSkinTone] = useState("");
-  const [editClothingStyle, setEditClothingStyle] = useState("");
-  const [editAccessories, setEditAccessories] = useState("");
 
-  const handleOpenEdit = (c: Character) => {
-    setEditingChar(c);
-    setEditName(c.name);
-    setEditDesc(c.description);
-    setEditHealth(c.health);
-    setEditMorale(c.morale);
-    setEditXp(c.xp);
-    setEditTokens(c.tokens);
-    setEditHairStyle(c.appearance?.hairStyle || "");
-    setEditHairColor(c.appearance?.hairColor || "");
-    setEditEyeColor(c.appearance?.eyeColor || "");
-    setEditSkinTone(c.appearance?.skinTone || "");
-    setEditClothingStyle(c.appearance?.clothingStyle || "");
-    setEditAccessories(c.appearance?.accessories || "");
-  };
-
-  const handleSaveEdit = () => {
-    if (!editingChar) return;
-    const updated: Character = {
-      ...editingChar,
-      name: editName,
-      description: editDesc,
-      health: editHealth,
-      morale: editMorale,
-      xp: editXp,
-      tokens: editTokens,
-      appearance: {
-        hairStyle: editHairStyle,
-        hairColor: editHairColor,
-        eyeColor: editEyeColor,
-        skinTone: editSkinTone,
-        clothingStyle: editClothingStyle,
-        accessories: editAccessories
-      }
-    };
-    onUpdateCharacter(updated);
-    setEditingChar(null);
-  };
 
   const handleImportSubmit = () => {
     if (!importText.trim()) return;
@@ -517,11 +466,16 @@ export default function Library({
                   <div className="px-6 py-4 bg-slate-50 border-t-2 border-slate-900 flex justify-between items-center gap-3">
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => handleOpenEdit(sc)}
-                        className="p-1 px-2.5 bg-white border border-slate-300 hover:border-slate-800 text-slate-700 hover:text-slate-900 text-xs font-black uppercase flex items-center gap-1.5 transition-colors"
-                        title="精细修改基础设定、容貌、状态及代金券等值"
+                        onClick={() => onSelect(sc.id)}
+                        className={`px-4 py-1.5 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors ${
+                          isActive 
+                            ? "bg-green-600 text-white border border-green-700 cursor-default" 
+                            : "bg-slate-900 hover:bg-slate-800 text-white shadow-[2px_2px_0px_#000] active:translate-y-0.5 active:shadow-none"
+                        }`}
+                        title="进入角色卡进行精细管理"
                       >
-                        <Edit className="w-3.5 h-3.5" /> 修改细节
+                        {isActive ? <Check className="w-3.5 h-3.5" /> : <Edit className="w-3.5 h-3.5" />}
+                        {isActive ? "正在使用中" : "修改细节"}
                       </button>
 
                       <button
@@ -549,18 +503,6 @@ export default function Library({
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
-
-                      <button
-                        onClick={() => onSelect(sc.id)}
-                        className={`px-4 py-1.5 text-xs font-black uppercase tracking-wider flex items-center gap-1 ${
-                          isActive 
-                            ? "bg-green-600 text-white border border-green-700 cursor-default" 
-                            : "bg-slate-900 hover:bg-slate-800 text-white shadow-[2px_2px_0px_#000] active:translate-y-0.5 active:shadow-none"
-                        }`}
-                      >
-                        {isActive ? <Check className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                        {isActive ? "正在使用中" : "加载此档案"}
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -570,193 +512,7 @@ export default function Library({
         )}
       </section>
 
-      {/* Advanced Fine-Grained Character Card Detail Editor - MODAL */}
-      <AnimatePresence>
-        {editingChar && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setEditingChar(null)} />
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="relative bg-white border-4 border-slate-950 p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto space-y-6 shadow-[8px_8px_0px_#000]"
-            >
-              <button 
-                onClick={() => setEditingChar(null)}
-                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-sm"
-              >
-                <X className="w-5 h-5" />
-              </button>
 
-              <div className="border-b-4 border-slate-900 pb-2">
-                <span className="text-[10px] text-blue-600 font-extrabold uppercase tracking-widest font-mono">FINELY TUNED MANAGEMENT SHEET</span>
-                <h3 className="text-3xl font-black uppercase text-slate-900">角色细节精细管理与修改</h3>
-                <p className="text-xs text-slate-500 font-medium">在此直接在纸面编辑【{editingChar.name}】的身份线索和属性。这些修剪将实时并入档案库中。</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Basic Metadata */}
-                <div className="space-y-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider">侦探姓名 / 档案编号</label>
-                    <input 
-                      type="text" 
-                      className="w-full text-sm font-bold p-2 border-2 border-slate-300 focus:border-slate-800 outline-none"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-black text-slate-500 uppercase tracking-wider">破碎的自我陈述 (档案背景)</label>
-                    <textarea 
-                      className="w-full h-32 p-3 text-xs font-mono border-2 border-slate-300 focus:border-slate-800 outline-none resize-none leading-relaxed"
-                      value={editDesc}
-                      onChange={(e) => setEditDesc(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-black text-slate-500 uppercase tracking-wider">当前残存健康值 (0-5)</label>
-                      <input 
-                        type="number" 
-                        min="0"
-                        max="5"
-                        className="w-full text-sm font-bold p-2 border-2 border-slate-300 focus:border-slate-800 outline-none font-mono"
-                        value={editHealth}
-                        onChange={(e) => setEditHealth(Math.min(5, Math.max(0, parseInt(e.target.value) || 0)))}
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-black text-slate-500 uppercase tracking-wider">当前饱满精神值 (0-5)</label>
-                      <input 
-                        type="number" 
-                        min="0"
-                        max="5"
-                        className="w-full text-sm font-bold p-2 border-2 border-slate-300 focus:border-slate-800 outline-none font-mono"
-                        value={editMorale}
-                        onChange={(e) => setEditMorale(Math.min(5, Math.max(0, parseInt(e.target.value) || 0)))}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-black text-slate-500 uppercase tracking-wider">储存的经验值 (XP)</label>
-                      <input 
-                        type="number" 
-                        min="0"
-                        className="w-full text-sm font-bold p-2 border-2 border-slate-300 focus:border-slate-800 outline-none font-mono"
-                        value={editXp}
-                        onChange={(e) => setEditXp(Math.max(0, parseInt(e.target.value) || 0))}
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-black text-slate-500 uppercase tracking-wider">插叙指示物 (Interjection Tokens)</label>
-                      <input 
-                        type="number" 
-                        min="0"
-                        max="3"
-                        className="w-full text-sm font-bold p-2 border-2 border-slate-300 focus:border-slate-800 outline-none font-mono"
-                        value={editTokens}
-                        onChange={(e) => setEditTokens(Math.min(3, Math.max(0, parseInt(e.target.value) || 0)))}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Appearance Customizations */}
-                <div className="space-y-4">
-                  <div className="text-xs font-black text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-1">
-                    写实在镜中看到的外轮廓 (Appearance)
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                     <div className="space-y-1">
-                       <label className="text-[10px] font-black text-slate-500 uppercase font-mono">发型设计</label>
-                       <input 
-                         type="text" 
-                         className="w-full text-xs p-2 border border-slate-300 focus:border-slate-800 outline-none font-bold"
-                         value={editHairStyle}
-                         onChange={(e) => setEditHairStyle(e.target.value)}
-                       />
-                     </div>
-                     <div className="space-y-1">
-                       <label className="text-[10px] font-black text-slate-500 uppercase font-mono">发质色泽</label>
-                       <input 
-                         type="text" 
-                         className="w-full text-xs p-2 border border-slate-300 focus:border-slate-800 outline-none font-bold"
-                         value={editHairColor}
-                         onChange={(e) => setEditHairColor(e.target.value)}
-                       />
-                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                     <div className="space-y-1">
-                       <label className="text-[10px] font-black text-slate-500 uppercase font-mono">眼眸气场 (瞳色)</label>
-                       <input 
-                         type="text" 
-                         className="w-full text-xs p-2 border border-slate-300 focus:border-slate-800 outline-none font-bold"
-                         value={editEyeColor}
-                         onChange={(e) => setEditEyeColor(e.target.value)}
-                       />
-                     </div>
-                     <div className="space-y-1">
-                       <label className="text-[10px] font-black text-slate-500 uppercase font-mono">人体肤色</label>
-                       <input 
-                         type="text" 
-                         className="w-full text-xs p-2 border border-slate-300 focus:border-slate-800 outline-none font-bold"
-                         value={editSkinTone}
-                         onChange={(e) => setEditSkinTone(e.target.value)}
-                       />
-                     </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-500 uppercase font-mono">上身/服装流派设计</label>
-                    <textarea 
-                      className="w-full h-14 p-2 text-xs border border-slate-300 focus:border-slate-800 outline-none font-medium resize-none leading-relaxed"
-                      value={editClothingStyle}
-                      onChange={(e) => setEditClothingStyle(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-500 uppercase font-mono font-mono">胸襟点缀与代表配饰</label>
-                    <input 
-                      type="text" 
-                      className="w-full text-xs p-2 border border-slate-300 focus:border-slate-800 outline-none font-bold"
-                      value={editAccessories}
-                      onChange={(e) => setEditAccessories(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="p-3 bg-amber-50 border border-amber-200 text-[10px] text-amber-800 font-mono leading-relaxed">
-                     ※ 提示：如需修改技能分配或随行装备，请加载该档案后在主卡的属性和装备页面操作。
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t-2 border-slate-900 flex justify-end gap-3">
-                <button 
-                  onClick={() => setEditingChar(null)}
-                  className="px-6 py-2.5 bg-slate-100 border text-slate-700 font-bold hover:bg-slate-200 text-xs transition-colors"
-                >
-                  取消
-                </button>
-                <button 
-                  onClick={handleSaveEdit}
-                  className="px-8 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase shadow-[2px_2px_0px_#2563eb]"
-                >
-                  固化并应用修改
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* JSON Export Modal */}
       <AnimatePresence>

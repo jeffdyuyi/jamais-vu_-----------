@@ -155,9 +155,9 @@ export default function Creator({ onComplete }: CreatorProps) {
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">创建流程</p>
           <div className="space-y-6">
             {[
-              { id: 1, title: "核心特质", desc: "技能点分配" },
-              { id: 2, title: "初始装备", desc: "物品与加成" },
-              { id: 3, title: "身份重构", desc: "外观与姓名" },
+              { id: 1, title: "技能加点", desc: "技能点分配" },
+              { id: 2, title: "装备与药剂", desc: "物品与加成" },
+              { id: 3, title: "角色外观", desc: "外观与姓名" },
               { id: 4, title: "档案确认", desc: "预览与启动" }
             ].map(s => (
               <div key={s.id} className={`flex items-start space-x-3 transition-opacity ${step < s.id ? "opacity-30" : ""}`}>
@@ -199,7 +199,7 @@ export default function Creator({ onComplete }: CreatorProps) {
               className="space-y-10"
             >
               <div>
-                <h2 className="text-4xl font-black mb-2 uppercase tracking-tighter">核心特质分布</h2>
+                <h2 className="text-4xl font-black mb-2 uppercase tracking-tighter">技能点分配</h2>
                 <p className="text-slate-500 font-mono text-sm">将 7,6,5,4,3,2,1 点分配到对应的子技能。技能决定了你的感知边界。</p>
               </div>
 
@@ -266,7 +266,7 @@ export default function Creator({ onComplete }: CreatorProps) {
             >
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b-4 border-geo-border pb-6">
                 <div>
-                  <h2 className="text-4xl font-black mb-2 uppercase tracking-tighter">初始装备与试剂固化</h2>
+                  <h2 className="text-4xl font-black mb-2 uppercase tracking-tighter">装备与药剂选择</h2>
                   <p className="text-slate-500 font-mono text-sm uppercase">选择最多三件辅助装备（衣物、工具、武器），以及一剂初始随身药剂。</p>
                 </div>
                 <div className="flex gap-4 text-xs font-black uppercase text-right shrink-0">
@@ -394,7 +394,7 @@ export default function Creator({ onComplete }: CreatorProps) {
             >
               <div className="flex justify-between items-end border-b-4 border-geo-border pb-4">
                 <div>
-                  <h2 className="text-4xl font-black mb-1 uppercase tracking-tighter">身份与外观重构</h2>
+                  <h2 className="text-4xl font-black mb-1 uppercase tracking-tighter">角色外观设定</h2>
                   <p className="text-slate-500 font-mono text-sm uppercase tracking-widest opacity-60">定义你在镜子中看到的那个幻象。</p>
                 </div>
                 <div className="flex items-center gap-6">

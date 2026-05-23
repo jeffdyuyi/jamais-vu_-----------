@@ -1340,11 +1340,6 @@ export default function Dashboard({
           </div>
         )}
 
-        <div className="p-6 border-t-2 border-geo-border bg-white mt-auto">
-          <button onClick={openRulebook} className="disco-button w-full flex items-center justify-center gap-3 py-4 shadow-[4px_4px_0px_0px_#0f172a] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all">
-            <Book className="w-5 h-5 text-geo-accent" /> 速查手册
-          </button>
-        </div>
       </aside>
 
       {/* Main Panel: Skills Grid */}
@@ -1416,7 +1411,7 @@ export default function Dashboard({
                 : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
             }`}
           >
-            👤 角色属性系统
+            👤 角色属性
           </button>
           <button
             onClick={() => setCurrentTab("gear")}
@@ -1426,7 +1421,7 @@ export default function Dashboard({
                 : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
             }`}
           >
-            🎒 随身装备与试剂
+            🎒 装备与药剂
           </button>
           <button
             onClick={() => setCurrentTab("thoughts")}
@@ -1436,7 +1431,7 @@ export default function Dashboard({
                 : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
             }`}
           >
-            🧠 沉思思维内阁
+            🧠 思维内阁
           </button>
           <button
             onClick={() => setCurrentTab("clues")}
@@ -1446,7 +1441,7 @@ export default function Dashboard({
                 : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
             }`}
           >
-            🔎 案情黑板与直觉
+            🔎 线索拼图
           </button>
         </div>
 
@@ -1474,7 +1469,6 @@ export default function Dashboard({
                     <div key={skill.id} className="flex justify-between items-end border-b-2 border-slate-800 pb-1.5 relative group transition-all hover:bg-slate-50" title={skill.description}>
                       <div className="flex items-baseline gap-2">
                         <span className="text-xl font-black tracking-tight">{skill.name}</span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest hidden sm:inline">{skill.id}</span>
                       </div>
                       
                       <div className="flex items-center gap-3">
@@ -1726,7 +1720,7 @@ export default function Dashboard({
               <div className="border border-slate-200 bg-slate-50/50 p-6 rounded-sm space-y-4">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h4 className="text-sm font-black uppercase text-slate-800 tracking-wider">📦 装备与制药公共文库 (INTEGRATED GEAR & POTION VAULT)</h4>
+                    <h4 className="text-sm font-black uppercase text-slate-800 tracking-wider">📦 装备与药剂</h4>
                     <p className="text-[10px] text-slate-500 font-sans">调阅并复制系统标准档案或各调查员独立创制的物理装备与生化药剂进入行囊</p>
                   </div>
                   <button 

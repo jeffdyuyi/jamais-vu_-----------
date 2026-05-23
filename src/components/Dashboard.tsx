@@ -2297,25 +2297,87 @@ export default function Dashboard({
                  <div className="h-0.5 flex-1 bg-slate-200" />
                </div>
 
-               <div className="border-2 border-slate-200 bg-white p-8 relative z-10 shadow-sm">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm font-bold text-slate-800">
-                   <div className="flex flex-col space-y-2 pb-4 border-b border-slate-100">
-                      <span className="text-slate-400 uppercase text-xs tracking-widest font-black">发型/色</span>
-                      <span className="text-xl">{char.appearance?.hairStyle || "未知"} ({char.appearance?.hairColor || "未知"})</span>
-                   </div>
-                   <div className="flex flex-col space-y-2 pb-4 border-b border-slate-100">
-                      <span className="text-slate-400 uppercase text-xs tracking-widest font-black">瞳色</span>
-                      <span className="text-xl">{char.appearance?.eyeColor || "未知"}</span>
-                   </div>
-                   <div className="flex flex-col space-y-2 pt-2">
-                      <span className="text-slate-400 uppercase text-xs tracking-widest font-black">风格</span>
-                      <span className="text-xl">{char.appearance?.clothingStyle || "未知"}</span>
-                   </div>
-                   <div className="flex flex-col space-y-2 pt-2">
-                      <span className="text-slate-400 uppercase text-xs tracking-widest font-black">配饰</span>
-                      <span className="text-xl">{char.appearance?.accessories || "未知"}</span>
-                   </div>
+               <div className="border-2 border-slate-200 bg-white p-8 relative z-10 shadow-sm space-y-10">
+                 
+                 {/* 身份与性格 */}
+                 <div className="space-y-6">
+                    <div className="flex items-center gap-2 border-b-2 border-slate-900 pb-2">
+                      <span className="text-sm font-black text-slate-800 tracking-widest uppercase">👤 基础身份与内在</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm font-bold text-slate-800">
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">身份/背景</span>
+                          <span className="text-lg">{char.appearance?.identity || "未知"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">性别</span>
+                          <span className="text-lg">{char.appearance?.gender || "未知"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">主导性格</span>
+                          <span className="text-lg">{char.appearance?.personality || "未知"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">标志性特质</span>
+                          <span className="text-lg">{char.appearance?.trait1 || "无"} / {char.appearance?.trait2 || "无"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">私人兴趣</span>
+                          <span className="text-lg">{char.appearance?.interest || "无"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">怪癖/习惯</span>
+                          <span className="text-lg">{char.appearance?.quirk || "无"}</span>
+                      </div>
+                    </div>
                  </div>
+
+                 {/* 形体与面容 */}
+                 <div className="space-y-6">
+                    <div className="flex items-center gap-2 border-b-2 border-slate-900 pb-2">
+                      <span className="text-sm font-black text-slate-800 tracking-widest uppercase">👁️ 形体与面容</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm font-bold text-slate-800">
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">体型/轮廓</span>
+                          <span className="text-lg">{char.appearance?.bodyType || "未知"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">发型与发色</span>
+                          <span className="text-lg">{char.appearance?.hairStyle || "未知"} ({char.appearance?.hairColor || "未知"})</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">瞳色与肤色</span>
+                          <span className="text-lg">{char.appearance?.eyeColor || "未知"} / {char.appearance?.skinTone || "未知肤色"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2 md:col-span-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">显著身体特征 (伤疤/胎记等)</span>
+                          <span className="text-lg">{char.appearance?.feature || "无"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">散发的气场/氛围</span>
+                          <span className="text-lg">{char.appearance?.vibe || "难以捉摸"}</span>
+                      </div>
+                    </div>
+                 </div>
+
+                 {/* 着装与配饰 */}
+                 <div className="space-y-6">
+                    <div className="flex items-center gap-2 border-b-2 border-slate-900 pb-2">
+                      <span className="text-sm font-black text-slate-800 tracking-widest uppercase">🧥 穿着与配饰</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm font-bold text-slate-800">
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">着装风格</span>
+                          <span className="text-lg">{char.appearance?.clothingStyle || "未知"}</span>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                          <span className="text-slate-400 uppercase text-xs tracking-widest font-black">惯用配饰/标志物</span>
+                          <span className="text-lg">{char.appearance?.accessories || "无"}</span>
+                      </div>
+                    </div>
+                 </div>
+
                </div>
             </div>
           )}

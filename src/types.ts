@@ -239,6 +239,16 @@ export interface Thought {
 }
 
 export interface Appearance {
+  gender: string;
+  identity: string;
+  personality: string;
+  trait1: string;
+  trait2: string;
+  interest: string;
+  quirk: string;
+  bodyType: string;
+  vibe: string;
+  feature: string;
   hairStyle: string;
   hairColor: string;
   eyeColor: string;
@@ -304,6 +314,16 @@ export const INITIAL_CHARACTER: Character = {
   states: [],
   tokens: 1,
   appearance: {
+    gender: "",
+    identity: "调查员",
+    personality: "",
+    trait1: "",
+    trait2: "",
+    interest: "",
+    quirk: "",
+    bodyType: "",
+    vibe: "",
+    feature: "",
     hairStyle: "尚未重构",
     hairColor: "深灰色",
     eyeColor: "浅褐色",

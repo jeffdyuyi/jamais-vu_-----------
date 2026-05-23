@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import { Character, INITIAL_CHARACTER, SKILLS, SkillCategory, INITIAL_GEAR, Skill, INITIAL_DRUGS, Drug } from "../types";
-import { ArrowRight, ArrowLeft, Check, Sparkles, Wand2, Package, EyeOff, Plus } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, Sparkles, Wand2, Package, EyeOff, Plus, Dices } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface CreatorProps {
@@ -15,12 +15,77 @@ interface CreatorProps {
 const POINTS_TO_ALLOCATE = [7, 6, 5, 4, 3, 2, 1];
 
 const APPEARANCE_PRESETS = {
-  hairStyle: ["寸头", "凌乱长发", "莫霍克", "背头", "秃头", "朋克短发"],
-  hairColor: ["黑色", "浅棕", "银白", "亮红", "墨绿", "深灰"],
-  eyeColor: ["深邃黑", "琥珀色", "冰蓝色", "鲜红色", "异色瞳", "灰暗色"],
-  skinTone: ["苍白", "自然", "古铜", "黝黑", "灰白", "冷色调"],
-  clothingStyle: ["经典调查员", "朋克皮甲", "复古西装", "极简运动", "仪式长袍", "病号服"],
-  accessories: ["破领带", "电子义眼", "烟灰缸", "黑色手套", "怀表", "身份奖章"]
+  hairStyle: ["寸头", "长发", "短发", "莫霍克", "背头", "秃头", "朋克短发", "大背头", "脏辫"],
+  hairColor: ["黑色", "浅棕", "红发", "金发", "棕发", "褐发", "银白", "墨绿", "深灰"],
+  eyeColor: ["深邃黑", "琥珀色", "冰蓝色", "鲜红色", "异色瞳", "灰暗色", "翠绿", "死鱼眼"],
+  skinTone: ["苍白", "自然", "古铜", "黝黑", "灰白", "冷色调", "病态白"],
+  clothingStyle: ["经典调查员", "朋克皮甲", "复古西装", "极简运动", "仪式长袍", "病号服", "休闲", "优雅", "现代", "狂野", "邋遢"],
+  accessories: ["破领带", "电子义眼", "烟灰缸", "黑色手套", "怀表", "身份奖章", "粗金链"]
+};
+
+const RANDOM_TABLES = {
+  gender: ["女性", "性别模糊", "男性", "刻意隐藏", "雌雄同体"],
+  identity: ["警探", "记者", "业余侦探", "前科犯", "自由雇佣兵", "神秘学者", "线人"],
+  personality: ["敌对", "谨慎", "中立", "友善", "友好", "孤僻", "狂躁", "冷漠", "迷人"],
+  trait1: ["愤世嫉俗", "尖酸刻薄", "顺从", "怯懦", "忠诚", "无私", "冷漠", "迷人", "乐天", "悲观", "偏执", "敏锐", "洞察", "耐心", "狡诈", "野蛮", "谦卑", "虚荣"],
+  trait2: ["内敛", "精于算计", "健谈", "狂野", "易怒", "健忘", "理想主义", "偏执", "轻信", "难以捉摸", "隐晦", "冷静", "坚忍", "善妒", "愤懑", "残酷", "高深莫测"],
+  interest: ["社交活动", "派对", "音乐", "电影", "游戏", "文学", "食物", "酒精", "药物", "历史", "动物", "体育", "阿马斯", "超自然", "宗教", "社会主义", "自由主义", "无政府主义"],
+  quirk: ["临终关怀", "病态", "精神崩溃", "悲伤", "悲惨过往", "精通之道", "恶名昭彰", "不忠", "戴绿帽", "激进思想", "前科犯", "罪犯", "传统", "知名人士", "负债累累", "人脉广泛", "迷信", "家族"],
+  bodyType: ["高挑", "矮小", "瘦削", "圆润", "健壮", "发福", "佝偻"],
+  vibe: ["成熟", "年轻", "魅惑", "丑陋", "普通", "性感", "沧桑", "憔悴"],
+  feature: ["佩戴眼镜", "大面积纹身", "显眼的疤痕", "身体残疾", "浓密蓄须", "体毛旺盛", "面部穿孔", "机械义肢"],
+  names: [
+    "弗恩", "阿施塔特", "西比尔", "阿里阿德涅", "布兰温", "戈黛娃", "克莱尔", "露比",
+    "黄蜂", "化身", "新星", "密码", "乔丹", "艾弗里", "奎因", "洛克",
+    "浮士德", "塞拉斯", "巴兹尔", "拉斐尔", "安德烈", "金", "班克罗夫特", "邓肯"
+  ]
+};
+
+const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+
+const PresetField = ({ 
+  label, 
+  value, 
+  options, 
+  onChange,
+  onRandom
+}: { 
+  label: string, 
+  value: string, 
+  options: string[], 
+  onChange: (val: string) => void,
+  onRandom?: () => void
+}) => {
+  return (
+    <div className="space-y-3 w-full">
+      <label className="block text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center justify-between">
+        {label}
+        <button onClick={onRandom || (() => onChange(getRandom(options)))} className="text-geo-accent hover:text-slate-900 transition-colors">
+          <Dices className="w-4 h-4" />
+        </button>
+      </label>
+      <div className="flex flex-wrap gap-1.5">
+        {options.map(p => {
+          const isActive = value === p || (value && value.includes(p));
+          return (
+            <button 
+              key={p} 
+              onClick={() => onChange(p)}
+              className={`px-3 py-1.5 border text-xs transition-all font-bold shadow-sm ${isActive ? "bg-slate-900 text-white border-slate-900" : "border-slate-200 hover:border-slate-400 text-slate-700 bg-white"}`}
+            >
+              {p}
+            </button>
+          );
+        })}
+      </div>
+      <input 
+        className="disco-input w-full p-3 text-sm font-bold text-slate-800 focus:border-geo-accent transition-colors" 
+        placeholder={`自定义或补充...`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  );
 };
 
 export default function Creator({ onComplete }: CreatorProps) {
@@ -332,8 +397,41 @@ export default function Creator({ onComplete }: CreatorProps) {
                   <h2 className="text-4xl font-black mb-1 uppercase tracking-tighter">身份与外观重构</h2>
                   <p className="text-slate-500 font-mono text-sm uppercase tracking-widest opacity-60">定义你在镜子中看到的那个幻象。</p>
                 </div>
-                <div className="text-[10px] font-bold text-geo-accent text-right">
-                  IDENTITY RECONSTRUCTION<br />PHASE 03
+                <div className="flex items-center gap-6">
+                  <button 
+                    onClick={() => {
+                      setChar(prev => ({
+                        ...prev,
+                        name: getRandom(RANDOM_TABLES.names),
+                        description: `我似乎记得一些关于${getRandom(["一桩谋杀案", "失落的宝藏", "一场大火", "背叛", "童年阴影", "一个神秘符号"])}的碎片。`,
+                        appearance: {
+                          ...prev.appearance,
+                          gender: getRandom(RANDOM_TABLES.gender),
+                          identity: getRandom(RANDOM_TABLES.identity),
+                          personality: getRandom(RANDOM_TABLES.personality),
+                          trait1: getRandom(RANDOM_TABLES.trait1),
+                          trait2: getRandom(RANDOM_TABLES.trait2),
+                          interest: getRandom(RANDOM_TABLES.interest),
+                          quirk: getRandom(RANDOM_TABLES.quirk),
+                          bodyType: getRandom(RANDOM_TABLES.bodyType),
+                          vibe: getRandom(RANDOM_TABLES.vibe),
+                          feature: getRandom(RANDOM_TABLES.feature),
+                          hairStyle: getRandom(APPEARANCE_PRESETS.hairStyle),
+                          hairColor: getRandom(APPEARANCE_PRESETS.hairColor),
+                          eyeColor: getRandom(APPEARANCE_PRESETS.eyeColor),
+                          skinTone: getRandom(APPEARANCE_PRESETS.skinTone),
+                          clothingStyle: getRandom(APPEARANCE_PRESETS.clothingStyle),
+                          accessories: getRandom(APPEARANCE_PRESETS.accessories)
+                        }
+                      }));
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white text-xs font-black uppercase hover:bg-slate-800 transition-colors shadow-sm"
+                  >
+                    <Dices className="w-4 h-4" /> 快速生成全套档案
+                  </button>
+                  <div className="text-[10px] font-bold text-geo-accent text-right">
+                    IDENTITY RECONSTRUCTION<br />PHASE 03
+                  </div>
                 </div>
               </div>
 
@@ -341,8 +439,9 @@ export default function Creator({ onComplete }: CreatorProps) {
                 {/* Basic Info (Merged Step 1) */}
                 <div className="space-y-8">
                   <div className="space-y-4">
-                    <label className="block text-xs font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
-                       <Plus className="w-3 h-3" /> 你的姓名 / 代号
+                    <label className="block text-xs font-black uppercase text-slate-400 tracking-widest flex items-center justify-between">
+                       <span className="flex items-center gap-2"><Plus className="w-3 h-3" /> 你的姓名 / 代号</span>
+                       <button onClick={() => setChar(prev => ({...prev, name: getRandom(RANDOM_TABLES.names)}))} className="text-geo-accent hover:text-slate-900 transition-colors" title="随机姓名"><Dices className="w-4 h-4" /></button>
                     </label>
                     <input 
                       type="text"
@@ -353,12 +452,62 @@ export default function Creator({ onComplete }: CreatorProps) {
                     />
                   </div>
 
+                  {/* Gender & Identity & Personality */}
+                  <PresetField 
+                    label="性别" 
+                    value={char.appearance.gender} 
+                    options={RANDOM_TABLES.gender} 
+                    onChange={(val) => updateAppearance("gender", val)} 
+                  />
+                  
+                  <PresetField 
+                    label="身份" 
+                    value={char.appearance.identity} 
+                    options={RANDOM_TABLES.identity} 
+                    onChange={(val) => updateAppearance("identity", val)} 
+                  />
+
+                  <PresetField 
+                    label="性格" 
+                    value={char.appearance.personality} 
+                    options={RANDOM_TABLES.personality} 
+                    onChange={(val) => updateAppearance("personality", val)} 
+                  />
+
+                  <PresetField 
+                    label="特质 1" 
+                    value={char.appearance.trait1} 
+                    options={RANDOM_TABLES.trait1} 
+                    onChange={(val) => updateAppearance("trait1", val)} 
+                  />
+
+                  <PresetField 
+                    label="特质 2" 
+                    value={char.appearance.trait2} 
+                    options={RANDOM_TABLES.trait2} 
+                    onChange={(val) => updateAppearance("trait2", val)} 
+                  />
+
+                  <PresetField 
+                    label="兴趣" 
+                    value={char.appearance.interest} 
+                    options={RANDOM_TABLES.interest} 
+                    onChange={(val) => updateAppearance("interest", val)} 
+                  />
+
+                  <PresetField 
+                    label="怪癖" 
+                    value={char.appearance.quirk} 
+                    options={RANDOM_TABLES.quirk} 
+                    onChange={(val) => updateAppearance("quirk", val)} 
+                  />
+
                   <div className="space-y-4">
                     <label className="block text-xs font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
                        <Plus className="w-3 h-3" /> 破碎的记忆自述 (背景)
                     </label>
                     <textarea 
-                      className="disco-card w-full h-64 outline-none font-mono text-sm leading-relaxed resize-none border-dashed bg-slate-50 focus:bg-white transition-all"
+                      className="disco-card w-full h-32 outline-none font-mono text-sm leading-relaxed resize-none border-dashed bg-slate-50 focus:bg-white transition-all"
                       placeholder="我模糊地记得一些关于..."
                       value={char.description}
                       onChange={e => setChar({ ...char, description: e.target.value })}
@@ -368,117 +517,77 @@ export default function Creator({ onComplete }: CreatorProps) {
 
                 {/* Appearance Customization */}
                 <div className="space-y-8">
-                  <div className="grid grid-cols-2 gap-6">
-                    {/* Hair Style */}
-                    <div className="space-y-3">
-                      <label className="block text-[10px] font-black uppercase text-slate-400 tracking-widest">发型</label>
-                      <select 
-                        className="w-full bg-white border-2 border-geo-border p-2 font-bold text-sm outline-none focus:border-geo-accent"
-                        value={char.appearance.hairStyle}
-                        onChange={(e) => updateAppearance("hairStyle", e.target.value)}
-                      >
-                        {APPEARANCE_PRESETS.hairStyle.map(p => <option key={p} value={p}>{p}</option>)}
-                      </select>
-                      <input 
-                        className="disco-input w-full p-2 text-xs" 
-                        placeholder="自定义描述..." 
-                        value={char.appearance.hairStyle}
-                        onChange={(e) => updateAppearance("hairStyle", e.target.value)}
-                      />
-                    </div>
-
-                    {/* Hair Color */}
-                    <div className="space-y-3">
-                      <label className="block text-[10px] font-black uppercase text-slate-400 tracking-widest">发色</label>
-                      <select 
-                        className="w-full bg-white border-2 border-geo-border p-2 font-bold text-sm outline-none focus:border-geo-accent"
-                        value={char.appearance.hairColor}
-                        onChange={(e) => updateAppearance("hairColor", e.target.value)}
-                      >
-                        {APPEARANCE_PRESETS.hairColor.map(p => <option key={p} value={p}>{p}</option>)}
-                      </select>
-                      <input className="disco-input w-full p-2 text-xs" placeholder="自定义颜色..." 
-                        value={char.appearance.hairColor}
-                        onChange={(e) => updateAppearance("hairColor", e.target.value)}
-                      />
-                    </div>
-
-                    {/* Eye Color */}
-                    <div className="space-y-3">
-                      <label className="block text-[10px] font-black uppercase text-slate-400 tracking-widest">瞳色</label>
-                      <div className="flex flex-wrap gap-1">
-                        {APPEARANCE_PRESETS.eyeColor.map(p => (
-                          <button 
-                            key={p} 
-                            onClick={() => updateAppearance("eyeColor", p)}
-                            className={`px-2 py-1 border text-[10px] transition-all font-bold ${char.appearance.eyeColor === p ? "bg-geo-dark text-white border-geo-dark" : "border-slate-200 hover:border-geo-muted"}`}
-                          >
-                            {p}
-                          </button>
-                        ))}
-                      </div>
-                      <input className="disco-input w-full p-2 text-xs" placeholder="自定义眼睛描述..." 
-                        value={char.appearance.eyeColor}
-                        onChange={(e) => updateAppearance("eyeColor", e.target.value)}
-                      />
-                    </div>
-
-                    {/* Skin Tone */}
-                    <div className="space-y-3">
-                      <label className="block text-[10px] font-black uppercase text-slate-400 tracking-widest">肤色</label>
-                      <div className="flex flex-wrap gap-1">
-                        {APPEARANCE_PRESETS.skinTone.map(p => (
-                          <button 
-                            key={p} 
-                            onClick={() => updateAppearance("skinTone", p)}
-                            className={`px-2 py-1 border text-[10px] transition-all font-bold ${char.appearance.skinTone === p ? "bg-geo-dark text-white border-geo-dark" : "border-slate-200 hover:border-geo-muted"}`}
-                          >
-                            {p}
-                          </button>
-                        ))}
-                      </div>
-                      <input className="disco-input w-full p-2 text-xs font-normal" placeholder="更多肤色细节..." 
-                        value={char.appearance.skinTone}
-                        onChange={(e) => updateAppearance("skinTone", e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-4 pt-4 border-t border-slate-100">
-                    <label className="block text-[10px] font-black uppercase text-slate-400 tracking-widest">服装风格</label>
-                    <div className="flex flex-wrap gap-2">
-                      {APPEARANCE_PRESETS.clothingStyle.map(p => (
-                        <button 
-                          key={p} 
-                          onClick={() => updateAppearance("clothingStyle", p)}
-                          className={`px-4 py-2 border-2 text-xs transition-all font-black uppercase ${char.appearance.clothingStyle === p ? "bg-geo-accent text-white border-geo-accent shadow-lg" : "border-slate-200 hover:bg-slate-50"}`}
-                        >
-                          {p}
-                        </button>
-                      ))}
-                    </div>
-                    <input className="disco-input w-full p-3 text-sm" placeholder="详述你的着装..." 
-                      value={char.appearance.clothingStyle}
-                      onChange={(e) => updateAppearance("clothingStyle", e.target.value)}
+                  {/* BodyType, Vibe, Feature */}
+                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 pb-6 border-b border-slate-100">
+                    <PresetField 
+                      label="体型" 
+                      value={char.appearance.bodyType} 
+                      options={RANDOM_TABLES.bodyType} 
+                      onChange={(val) => updateAppearance("bodyType", val)} 
+                    />
+                    <PresetField 
+                      label="气场" 
+                      value={char.appearance.vibe} 
+                      options={RANDOM_TABLES.vibe} 
+                      onChange={(val) => updateAppearance("vibe", val)} 
+                    />
+                    <PresetField 
+                      label="特征" 
+                      value={char.appearance.feature} 
+                      options={RANDOM_TABLES.feature} 
+                      onChange={(val) => updateAppearance("feature", val)} 
                     />
                   </div>
 
-                  <div className="space-y-4">
-                    <label className="block text-[10px] font-black uppercase text-slate-400 tracking-widest">特色配饰</label>
-                    <div className="flex flex-wrap gap-2">
-                       {APPEARANCE_PRESETS.accessories.map(p => (
-                         <button 
-                           key={p} 
-                           onClick={() => updateAppearance("accessories", p)}
-                           className={`px-3 py-1 border-2 text-[10px] font-bold ${char.appearance.accessories.includes(p) ? "bg-geo-dark text-white border-geo-dark" : "bg-white text-slate-400 hover:text-geo-dark transition-all"}`}
-                         >
-                           {p}
-                         </button>
-                       ))}
-                    </div>
-                    <input className="disco-input w-full p-3 text-sm" placeholder="其他引人注目的特征..." 
-                      value={char.appearance.accessories}
-                      onChange={(e) => updateAppearance("accessories", e.target.value)}
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    {/* Hair Style */}
+                    <PresetField 
+                      label="发型" 
+                      value={char.appearance.hairStyle} 
+                      options={APPEARANCE_PRESETS.hairStyle} 
+                      onChange={(val) => updateAppearance("hairStyle", val)} 
+                    />
+
+                    {/* Hair Color */}
+                    <PresetField 
+                      label="发色" 
+                      value={char.appearance.hairColor} 
+                      options={APPEARANCE_PRESETS.hairColor} 
+                      onChange={(val) => updateAppearance("hairColor", val)} 
+                    />
+
+                    {/* Eye Color */}
+                    <PresetField 
+                      label="瞳色" 
+                      value={char.appearance.eyeColor} 
+                      options={APPEARANCE_PRESETS.eyeColor} 
+                      onChange={(val) => updateAppearance("eyeColor", val)} 
+                    />
+
+                    {/* Skin Tone */}
+                    <PresetField 
+                      label="肤色" 
+                      value={char.appearance.skinTone} 
+                      options={APPEARANCE_PRESETS.skinTone} 
+                      onChange={(val) => updateAppearance("skinTone", val)} 
+                    />
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100">
+                    <PresetField 
+                      label="服装风格" 
+                      value={char.appearance.clothingStyle} 
+                      options={APPEARANCE_PRESETS.clothingStyle} 
+                      onChange={(val) => updateAppearance("clothingStyle", val)} 
+                    />
+                  </div>
+
+                  <div>
+                    <PresetField 
+                      label="特色配饰" 
+                      value={char.appearance.accessories} 
+                      options={APPEARANCE_PRESETS.accessories} 
+                      onChange={(val) => updateAppearance("accessories", val)} 
                     />
                   </div>
                 </div>
@@ -508,7 +617,7 @@ export default function Creator({ onComplete }: CreatorProps) {
                           档案待激活
                         </div>
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                          {char.appearance?.hairColor} / {char.appearance?.clothingStyle}
+                          {char.appearance?.identity || "神秘调查员"} / {char.appearance?.vibe || "普通"}
                         </span>
                       </div>
                     </div>
@@ -521,13 +630,24 @@ export default function Creator({ onComplete }: CreatorProps) {
                           <span>{SKILLS.find(s => s.id === Object.entries(char.skills).sort((a,b) => (b[1] as number) - (a[1] as number))[0][0])?.name || "尚未觉醒"}</span>
                           <span className="text-[10px] text-geo-accent mt-1">CORE PSYCHOLOGY</span>
                         </div>
+                        <div className="mt-4 pt-4 border-t border-slate-200">
+                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">背景档案</p>
+                           <p className="text-xs font-bold text-slate-600">
+                              性别/身份: {char.appearance?.gender || "未知"} {char.appearance?.identity || "调查员"} <br />
+                              性格倾向: {char.appearance?.personality || "未定义"} <br />
+                              特质: {char.appearance?.trait1 || "无"} / {char.appearance?.trait2 || "无"} <br />
+                              兴趣怪癖: {char.appearance?.interest || "无"} / {char.appearance?.quirk || "无"}
+                           </p>
+                        </div>
                       </div>
                       <div className="space-y-4 md:text-right">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">外观概览</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">外观与特征</p>
                         <div className="text-xs font-bold text-slate-600 leading-relaxed uppercase tracking-tight">
+                          {char.appearance?.vibe || ""}的{char.appearance?.bodyType || ""} <br/>
                           {char.appearance?.hairStyle} ({char.appearance?.hairColor}) <br />
                           {char.appearance?.eyeColor} 眼眸 / {char.appearance?.skinTone} 肤色 <br />
-                          {char.appearance?.accessories}
+                          穿着: {char.appearance?.clothingStyle} <br />
+                          特征: {char.appearance?.feature} / 随身: {char.appearance?.accessories}
                         </div>
                       </div>
                   </div>

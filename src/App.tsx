@@ -9,6 +9,7 @@ import Creator from "./components/Creator";
 import Dashboard from "./components/Dashboard";
 import Library from "./components/Library";
 import Rulebook from "./components/Rulebook";
+import Oracle from "./components/Oracle";
 import InterjectionBoard from "./components/InterjectionBoard";
 import InvestigationBoard from "./components/InvestigationBoard";
 import { motion, AnimatePresence } from "motion/react";
@@ -17,7 +18,7 @@ import { X, Book, Plus, ChevronDown, Palette } from "lucide-react";
 export default function App() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [activeCharId, setActiveCharId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"library" | "attributes" | "gear" | "thoughts" | "clues" | "rulebook" | "appearance">("library");
+  const [activeTab, setActiveTab] = useState<"library" | "attributes" | "gear" | "thoughts" | "clues" | "rulebook" | "appearance" | "oracle">("library");
   const [isCreating, setIsCreating] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [theme, setTheme] = useState<"default" | "sunset">("default");
@@ -257,6 +258,14 @@ export default function App() {
             >
               规则手册
             </button>
+            <button 
+              onClick={() => { setIsCreating(false); setActiveTab("oracle"); }} 
+              className={`transition-all py-1.5 cursor-pointer ${
+                !isCreating && activeTab === "oracle" ? "border-b-2 border-geo-accent font-black text-slate-900" : "opacity-40 hover:opacity-100"
+              }`}
+            >
+              神谕
+            </button>
           </div>
           <div className="flex items-center space-x-2 md:space-x-4">
             <button
@@ -330,6 +339,8 @@ export default function App() {
             setActiveSubTab={(tab) => setActiveTab(tab)}
             characters={characters}
           />
+        ) : activeTab === "oracle" ? (
+          <Oracle />
         ) : (
           <Rulebook />
         )}
@@ -347,6 +358,7 @@ export default function App() {
               <button onClick={() => setIsCreating(true)} className={`flex-1 h-full text-[11px] font-black uppercase flex flex-col items-center justify-center border-l-2 border-slate-100 ${isCreating ? "text-blue-600 bg-blue-50 border-t-2 border-t-blue-600 -mt-[2px]" : "text-blue-500"}`}>新建</button>
             )}
             <button onClick={() => { setIsCreating(false); setActiveTab("rulebook"); }} className={`flex-1 h-full text-[11px] font-black uppercase flex flex-col items-center justify-center border-l-2 border-slate-100 ${!isCreating && activeTab === "rulebook" ? "text-geo-accent bg-slate-50 border-t-2 border-t-geo-accent -mt-[2px]" : "text-slate-500"}`}>规则</button>
+            <button onClick={() => { setIsCreating(false); setActiveTab("oracle"); }} className={`flex-1 h-full text-[11px] font-black uppercase flex flex-col items-center justify-center border-l-2 border-slate-100 ${!isCreating && activeTab === "oracle" ? "text-geo-accent bg-slate-50 border-t-2 border-t-geo-accent -mt-[2px]" : "text-slate-500"}`}>神谕</button>
       </div>
 
       {/* Footer from Design */}

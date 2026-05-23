@@ -15,7 +15,7 @@ export default function Rulebook() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-slate-100">
-      <div className="p-4 md:p-8 border-b-2 border-geo-border bg-white space-y-4 md:space-y-6 shrink-0">
+      <div className="p-4 md:p-8 border-b border-slate-200 bg-white space-y-4 md:space-y-6 shrink-0 z-10 shadow-sm">
         <div>
           <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-1">
             调查员指南 <span className="text-geo-accent italic text-xs md:text-base font-bold ml-1 md:ml-2">精炼参考规范</span>
@@ -28,7 +28,7 @@ export default function Rulebook() {
           <input 
             type="text" 
             placeholder="正在检索规则库/技能描述..." 
-            className="w-full pl-10 pr-4 py-3 bg-white border-2 border-geo-border focus:ring-4 focus:ring-blue-100 outline-none font-sans font-bold text-sm transition-all"
+            className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-sans font-medium text-sm transition-all"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -39,10 +39,10 @@ export default function Rulebook() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat as any)}
-              className={`px-4 py-1 text-[10px] font-black uppercase border-2 transition-all ${
+              className={`px-4 py-1.5 text-[11px] font-bold uppercase rounded-full transition-all ${
                 activeCategory === cat 
-                  ? "bg-geo-dark text-white border-geo-dark" 
-                  : "bg-white text-slate-400 border-slate-200 hover:border-geo-dark hover:text-geo-dark"
+                  ? "bg-slate-900 text-white shadow-md" 
+                  : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
               }`}
             >
               {cat}
@@ -62,9 +62,8 @@ export default function Rulebook() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Mechanics */}
-              <div className="bg-geo-dark text-white p-4 md:p-8 space-y-4 md:space-y-6 shadow-2xl relative overflow-hidden">
-                <Hammer className="absolute -right-8 -bottom-8 w-24 h-24 md:w-32 md:h-32 text-white/5 rotate-12" />
-                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight flex items-center gap-2 md:gap-3 border-b border-white/10 pb-2 md:pb-4">
+              <div className="bg-slate-900 text-white p-6 md:p-8 space-y-4 md:space-y-6 rounded-2xl relative overflow-hidden">
+                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-white/10 pb-2 md:pb-4">
                    判定机制
                 </h4>
                 <div className="space-y-4">
@@ -89,8 +88,8 @@ export default function Rulebook() {
               </div>
 
               {/* Difficulty */}
-              <div className="bg-white border-4 border-geo-border p-4 md:p-8 space-y-4 md:space-y-6">
-                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight flex items-center gap-2 md:gap-3 border-b border-slate-100 pb-2 md:pb-4">
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 shadow-sm">
+                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-100 pb-2 md:pb-4">
                    难度阶梯
                 </h4>
                 <div className="grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-2 md:gap-y-3 font-mono">
@@ -110,9 +109,9 @@ export default function Rulebook() {
               </div>
 
               {/* Thought Cabinet */}
-              <div className="bg-white border-2 border-geo-border p-4 md:p-8 space-y-4 md:space-y-6 lg:col-span-2">
-                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight flex items-center gap-2 md:gap-3 border-b border-slate-100 pb-2 md:pb-4">
-                  <Brain className="w-5 h-5 text-geo-accent shrink-0" /> 思维内阁与体验消耗顿悟
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 lg:col-span-2 shadow-sm">
+                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-100 pb-2 md:pb-4">
+                  思维内阁与体验消耗顿悟
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-sm">
                   <div className="space-y-3">
@@ -131,9 +130,9 @@ export default function Rulebook() {
               </div>
 
               {/* States & Tags core rules */}
-              <div className="bg-white border-2 border-geo-border p-4 md:p-8 space-y-4 md:space-y-6 lg:col-span-2">
-                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight flex items-center gap-2 md:gap-3 border-b border-slate-100 pb-2 md:pb-4">
-                  <Tag className="w-5 h-5 text-geo-accent shrink-0" /> 状态伤痛与情节标签规范
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 lg:col-span-2 shadow-sm">
+                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-100 pb-2 md:pb-4">
+                  状态伤痛与情节标签规范
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-sm">
                   <div className="space-y-3 p-4 bg-red-50/50 border border-red-200">
@@ -170,8 +169,8 @@ export default function Rulebook() {
               </div>
 
               {/* Tokens & Health/Morale */}
-              <div className="p-4 md:p-8 border-2 border-geo-border bg-slate-50 space-y-4 md:space-y-6 lg:col-span-2">
-                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight flex items-center gap-2 md:gap-3 border-b border-slate-200 pb-2 md:pb-4">
+              <div className="p-6 md:p-8 border border-slate-200 rounded-2xl bg-slate-50 space-y-4 md:space-y-6 lg:col-span-2">
+                <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-200 pb-2 md:pb-4">
                   健康、士气与令牌
                 </h4>
                 <div className="space-y-4 md:space-y-6">
@@ -193,9 +192,9 @@ export default function Rulebook() {
                       <p className="text-[11px] text-slate-500 font-medium leading-relaxed mt-1">精神的稳固程度。降至 0 时将导致彻底的崩溃、放弃或辞职。</p>
                     </div>
                   </div>
-                  <div className="flex gap-4 p-4 bg-amber-50 border border-amber-500 shadow-[4px_4px_0px_0px_#d97706]">
-                    <div className="w-12 h-12 bg-amber-600 flex items-center justify-center shrink-0 shadow-inner">
-                      <span className="text-white font-black text-xl select-none">★</span>
+                  <div className="flex gap-4 p-4 md:p-6 bg-amber-50 border border-amber-200 rounded-xl shadow-sm">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-500 rounded-full flex items-center justify-center shrink-0 text-white font-black text-lg md:text-xl shadow-inner">
+                      ★
                     </div>
                     <div className="space-y-1">
                       <span className="text-xs font-black uppercase tracking-widest text-amber-800">插叙提示指示物</span>
@@ -214,10 +213,10 @@ export default function Rulebook() {
               </div>
 
               {/* Gear & Medications Registry */}
-              <div className="bg-white border-2 border-geo-border p-4 md:p-8 space-y-4 md:space-y-6 lg:col-span-2">
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 lg:col-span-2 shadow-sm">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-2 md:pb-4">
-                  <h4 className="text-lg md:text-xl font-black uppercase tracking-tight flex items-center gap-2 md:gap-3">
-                    <Briefcase className="w-5 h-5 text-geo-accent shrink-0" /> 装备、随行箱包与生理制剂目录
+                  <h4 className="text-lg md:text-xl font-black uppercase tracking-tight">
+                    装备、随行箱包与生理制剂目录
                   </h4>
                   <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-black">第四节：行囊辅助配备</span>
                 </div>
@@ -231,15 +230,15 @@ export default function Rulebook() {
                     </div>
                     <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar font-sans">
                       {INITIAL_GEAR.map(g => (
-                        <div key={g.id} className="p-3 border border-slate-150 hover:border-slate-300 bg-slate-50/50 transition-colors">
-                          <div className="flex justify-between items-center mb-1">
+                        <div key={g.id} className="p-4 border border-slate-100 rounded-lg hover:border-slate-200 bg-slate-50 transition-colors">
+                          <div className="flex justify-between items-center mb-2">
                             <span className="text-xs font-black uppercase text-slate-800">{g.name}</span>
                             <span className="text-[8px] px-1 border border-slate-200 text-slate-400 font-black uppercase tracking-tight">{g.type}</span>
                           </div>
                           <p className="text-[10px] text-slate-500 italic leading-snug">“{g.description}”</p>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {g.modifiers.map(m => (
-                              <span key={m.skillId} className="text-[9px] font-black bg-slate-100 text-slate-700 px-1 border border-slate-200">
+                              <span key={m.skillId} className="text-[10px] font-medium bg-white text-slate-600 px-2 py-0.5 rounded-full border border-slate-200 shadow-sm">
                                  {SKILLS.find(s => s.id === m.skillId)?.name} {m.amount > 0 ? `+${m.amount}` : m.amount}
                               </span>
                             ))}
@@ -257,8 +256,8 @@ export default function Rulebook() {
                     </div>
                     <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar font-sans">
                       {INITIAL_DRUGS.map(d => (
-                        <div key={d.id} className="p-3 border border-amber-100 hover:border-amber-300 bg-amber-50/20 transition-colors">
-                          <div className="flex justify-between items-center mb-1">
+                        <div key={d.id} className="p-4 border border-amber-100 rounded-lg hover:border-amber-200 bg-amber-50/30 transition-colors">
+                          <div className="flex justify-between items-center mb-2">
                             <span className="text-xs font-black uppercase text-amber-950">{d.name}</span>
                             <span className="text-[8px] px-1 bg-amber-50 border border-amber-200 text-amber-700 font-black uppercase tracking-widest">制剂</span>
                           </div>
@@ -293,7 +292,7 @@ export default function Rulebook() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {filteredSkills.map(skill => (
-                <div key={skill.id} className="bg-white p-6 md:p-8 border-2 border-slate-200 hover:border-geo-accent transition-all relative overflow-hidden group shadow-sm hover:shadow-xl">
+                <div key={skill.id} className="bg-white p-6 md:p-8 border border-slate-100 rounded-2xl hover:border-blue-200 hover:bg-blue-50/30 transition-all relative overflow-hidden group shadow-sm hover:shadow-md">
                   <div className="flex justify-between items-start mb-4 md:mb-6 relative z-10">
                     <div>
                       <div className="text-[10px] font-black text-geo-accent uppercase mb-1 tracking-widest">{skill.id}</div>
@@ -303,22 +302,17 @@ export default function Rulebook() {
                       {skill.category}技能系
                     </span>
                   </div>
-                  <p className="text-sm text-slate-600 leading-relaxed font-bold relative z-10 pr-12 italic">
+                  <p className="text-sm text-slate-600 leading-relaxed font-bold relative z-10 italic">
                     “{skill.description}”
                   </p>
-                  <div className="absolute right-0 bottom-0 opacity-[0.02] group-hover:opacity-[0.06] transition-opacity translate-x-4 translate-y-4">
-                     <User className="w-32 h-32 stroke-[6]" />
-                  </div>
-                  <div className="absolute top-0 left-0 w-1 h-0 group-hover:h-full bg-geo-accent transition-all duration-300" />
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        <div className="p-12 border-4 border-dashed border-slate-300 flex flex-col items-center justify-center space-y-4 bg-white/50 italic text-center">
-           <Book className="w-12 h-12 text-slate-200" />
-           <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] max-w-md leading-relaxed">
+        <div className="p-8 md:p-12 border border-slate-200 rounded-2xl flex flex-col items-center justify-center space-y-4 bg-white shadow-sm italic text-center">
+           <p className="text-sm font-medium text-slate-400 tracking-widest max-w-md leading-relaxed">
              在此终结你的疑虑。这是你仅存的真实。<br />
              <span className="text-[10px] opacity-60">记忆为谎言的面具。理化数据与证据方为唯一的庇护所。</span>
            </p>

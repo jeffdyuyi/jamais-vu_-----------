@@ -208,9 +208,9 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col bg-geo-paper text-geo-dark border-4 border-geo-border overflow-hidden">
+    <div className="h-screen w-full flex flex-col bg-slate-50 text-slate-900 overflow-hidden">
       {/* Top Header from Design */}
-      <nav className="h-16 border-b-2 border-geo-border bg-white flex items-center justify-between px-4 md:px-8 z-10 shrink-0">
+      <nav className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-4 md:px-8 z-10 shrink-0 shadow-sm">
         <div className="flex items-center space-x-2 md:space-x-4">
           <div className="w-8 h-8 md:w-10 md:h-10 bg-geo-dark flex items-center justify-center text-white font-bold text-lg md:text-xl leading-none">档案</div>
           <h1 className="text-sm md:text-xl font-black tracking-tight uppercase truncate max-w-[200px] md:max-w-none">调查员档案管理系统 <span className="font-normal opacity-50 text-[10px] md:text-xs">v1.2</span></h1>
@@ -280,14 +280,14 @@ export default function App() {
               <div className="inline-block px-4 py-1 bg-geo-dark text-white text-[10px] font-bold uppercase tracking-[0.2em] mb-2 md:mb-4">
                 思维叙事辅助系统
               </div>
-              <h1 className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tighter uppercase leading-[0.8] mb-2">
-                JAMAIS <span className="text-geo-accent block md:inline">VU</span>
+              <h1 className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tighter uppercase leading-[0.8] mb-2 text-slate-900">
+                JAMAIS <span className="text-blue-600 block md:inline">VU</span>
               </h1>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif italic text-geo-dark font-medium border-y-2 border-geo-border py-2 md:py-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif italic text-slate-500 font-medium py-2 md:py-4">
                 旧事如新
               </h2>
-              <div className="p-6 border-2 border-dashed border-slate-300 mt-8">
-                <p className="text-slate-500 font-mono text-sm leading-relaxed">
+              <div className="p-6 bg-slate-100 rounded-2xl mt-8 shadow-inner">
+                <p className="text-slate-600 font-sans text-sm leading-relaxed">
                   你对自己是谁或住在哪里毫无记忆。你只能按照周围人的期望处理你的案件。
                   此工具旨在帮助你在极度失忆的状态下管理你的思维、技能与痛苦。
                 </p>
@@ -296,13 +296,13 @@ export default function App() {
               <div className="flex flex-col md:flex-row gap-4 justify-center pt-8">
                 <button 
                   onClick={() => setIsCreating(true)}
-                  className="disco-button bg-geo-dark py-4 px-10 text-lg hover:bg-geo-accent cursor-pointer"
+                  className="bg-blue-600 text-white font-medium rounded-full py-3.5 px-8 text-base hover:bg-blue-700 hover:shadow-md transition-all cursor-pointer"
                 >
                   启动新调查档案
                 </button>
                 <button 
                   onClick={() => { setIsCreating(false); setActiveTab("rulebook"); }}
-                  className="disco-button bg-white text-geo-dark py-4 px-10 text-lg hover:bg-slate-50 shadow-none border-2 cursor-pointer"
+                  className="bg-white text-slate-700 font-medium rounded-full py-3.5 px-8 text-base border border-slate-200 hover:bg-slate-50 hover:shadow-sm transition-all cursor-pointer"
                 >
                   参阅调查手册
                 </button>
@@ -335,7 +335,7 @@ export default function App() {
       </div>
       
       {/* Mobile Bottom Nav */}
-      <div className="md:hidden h-14 border-t-2 border-geo-border bg-white flex items-center justify-around shrink-0 z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+      <div className="md:hidden h-14 border-t border-slate-200 bg-white flex items-center justify-around shrink-0 z-20 shadow-[0_-4px_15px_rgba(0,0,0,0.05)]">
             {characters.length > 0 && (
               <button onClick={() => { setIsCreating(false); setActiveTab("library"); }} className={`flex-1 h-full text-[11px] font-black uppercase flex flex-col items-center justify-center ${!isCreating && activeTab === "library" ? "text-geo-accent bg-slate-50 border-t-2 border-t-geo-accent -mt-[2px]" : "text-slate-500"}`}>卡库</button>
             )}
@@ -349,7 +349,7 @@ export default function App() {
       </div>
 
       {/* Footer from Design */}
-      <footer className="h-10 border-t-2 border-geo-border bg-white flex items-center justify-between px-2 md:px-6 shrink-0 pb-[env(safe-area-inset-bottom)] z-20">
+      <footer className="h-10 border-t border-slate-200 bg-white flex items-center justify-between px-4 md:px-6 shrink-0 pb-[env(safe-area-inset-bottom)] z-20 shadow-sm">
         <div className="flex items-center space-x-2 md:space-x-6 text-[10px] font-bold uppercase">
           <span className="text-geo-accent flex items-center gap-1.5 md:gap-2">
             <div className="w-1.5 h-1.5 bg-geo-accent rounded-full"></div>

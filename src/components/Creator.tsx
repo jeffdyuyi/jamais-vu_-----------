@@ -123,7 +123,8 @@ export default function Creator({ onComplete }: CreatorProps) {
       </aside>
 
       {/* Main Workspace */}
-      <section className="flex-1 bg-white p-12 flex flex-col overflow-y-auto relative">
+      <section className="flex-1 bg-white flex flex-col overflow-hidden relative">
+        <div className="flex-1 overflow-y-auto p-12 pb-8">
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div 
@@ -543,26 +544,30 @@ export default function Creator({ onComplete }: CreatorProps) {
           )}
         </AnimatePresence>
 
-        <div className="mt-auto flex justify-between items-center border-t-2 border-geo-border pt-8 bg-white z-10 sticky bottom-0">
-          {step > 1 ? (
-            <button onClick={prevStep} className="px-8 py-3 border-2 border-geo-border font-black uppercase transition-colors hover:bg-slate-50 tracking-tight">
-              上一步 / PREV
-            </button>
-          ) : <div />}
-          
-          {step < 4 ? (
-            <button 
-              onClick={nextStep} 
-              disabled={step === 1 && availablePoints.length > 0}
-              className="px-8 py-3 bg-geo-dark text-white font-black uppercase disabled:opacity-20 disabled:cursor-not-allowed hover:bg-slate-800 transition-colors tracking-tight"
-            >
-              下一步 / NEXT
-            </button>
-          ) : (
-            <button onClick={() => onComplete({ ...char, id: `char_${Date.now()}_${Math.floor(Math.random() * 1000)}` })} className="px-12 py-3 bg-geo-accent text-white font-black uppercase shadow-xl hover:shadow-blue-500/20 active:translate-y-1 transition-all tracking-tight text-lg">
-              激活并开启调查 / ACTIVATE
-            </button>
-          )}
+        </div>
+
+        <div className="shrink-0 bg-white px-12 py-6 border-t-2 border-geo-border z-10 relative">
+          <div className="flex justify-between items-center">
+            {step > 1 ? (
+              <button onClick={prevStep} className="px-8 py-3 border-2 border-geo-border font-black uppercase transition-colors hover:bg-slate-50 tracking-tight">
+                上一步 / PREV
+              </button>
+            ) : <div />}
+            
+            {step < 4 ? (
+              <button 
+                onClick={nextStep} 
+                disabled={step === 1 && availablePoints.length > 0}
+                className="px-8 py-3 bg-geo-dark text-white font-black uppercase disabled:opacity-20 disabled:cursor-not-allowed hover:bg-slate-800 transition-colors tracking-tight"
+              >
+                下一步 / NEXT
+              </button>
+            ) : (
+              <button onClick={() => onComplete({ ...char, id: `char_${Date.now()}_${Math.floor(Math.random() * 1000)}` })} className="px-12 py-3 bg-geo-accent text-white font-black uppercase shadow-xl hover:shadow-blue-500/20 active:translate-y-1 transition-all tracking-tight text-lg">
+                激活并开启调查 / ACTIVATE
+              </button>
+            )}
+          </div>
         </div>
       </section>
     </div>

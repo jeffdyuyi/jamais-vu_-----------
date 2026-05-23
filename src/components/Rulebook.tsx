@@ -138,23 +138,96 @@ export default function Rulebook() {
               </div>
 
               {/* Thought Cabinet */}
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6 lg:col-span-2 shadow-sm">
+                <div>
+                  <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-100 pb-2 md:pb-4 mb-4">
+                    思维内阁
+                  </h4>
+                  <p className="text-sm font-semibold text-slate-700 leading-relaxed bg-slate-50 p-4 border-l-4 border-slate-400">
+                    思维是你角色内在处理周遭事件的方式。它们储存在大脑中一个专为应对大规模混乱武器而设的特殊区域：思维内阁。<br/>
+                    你的思维内阁最多可容纳 5 个思维。当你处理其他事务时，潜意识将在幕后默默加工这些思维。
+                  </p>
+                </div>
+
+                <div className="space-y-8 mt-6">
+                  {/* 内化思维 */}
+                  <div className="space-y-4">
+                    <h5 className="text-sm font-black text-geo-accent uppercase flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-geo-accent rounded-full"/> 内化思维
+                    </h5>
+                    <p className="text-sm text-slate-600 leading-relaxed font-semibold">
+                      游戏中发生的任何事情都可能触发一项思维。其他玩家与主持人可提议思维，但只有你能决定是否将其加入思维内阁。<br/>
+                      当遇到以下情况时，可能是触发思维的良机：
+                    </p>
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-medium text-slate-600">
+                      <li className="bg-slate-50 px-3 py-2 border border-slate-100 rounded flex items-start gap-2"><span className="text-slate-400">♦</span> 某些事物挑战了你角色的世界观。</li>
+                      <li className="bg-slate-50 px-3 py-2 border border-slate-100 rounded flex items-start gap-2"><span className="text-slate-400">♦</span> 无法解释的事件动摇了你的信念。</li>
+                      <li className="bg-slate-50 px-3 py-2 border border-slate-100 rounded flex items-start gap-2"><span className="text-slate-400">♦</span> 角色曾追求的事物变得不再渴望或遥不可及。</li>
+                      <li className="bg-slate-50 px-3 py-2 border border-slate-100 rounded flex items-start gap-2"><span className="text-slate-400">♦</span> 既有思维被事件挑战，需要用新思维取代。</li>
+                    </ul>
+                  </div>
+
+                  {/* 构建思维 */}
+                  <div className="space-y-4">
+                    <h5 className="text-sm font-black text-geo-accent uppercase flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-geo-accent rounded-full"/> 构建思维
+                    </h5>
+                    <p className="text-sm text-slate-600 leading-relaxed font-semibold">
+                      每项思维包含四个独立要素：<span className="text-slate-900 font-bold">触发因素</span>、<span className="text-slate-900 font-bold">问题</span>、<span className="text-slate-900 font-bold">结论</span>与<span className="text-slate-900 font-bold">效果</span>。<br/>
+                      <span className="text-slate-900 font-bold">触发因素</span>是让思维涌入角色脑海的具体或模糊情景；思维的<span className="text-slate-900 font-bold">问题</span>是它的叙事面向，即角色内心反复咀嚼的难题或主题。<br/>
+                      每项思维包含两个可能达成的<span className="text-slate-900 font-bold">结论</span>，这些结论将塑造角色的性格。最终，<span className="text-slate-900 font-bold">效果</span>是思维的机制维度，由结论衍生而来。
+                    </p>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                      <div className="bg-slate-50 p-4 rounded border border-slate-100 space-y-2">
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider">拟定思维问题时需考虑：</div>
+                        <ul className="text-xs text-slate-600 space-y-1">
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>应从虚构情景自然浮现，而非强行生成。</span></li>
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>需描绘充满魔幻超现实色彩的世界。</span></li>
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>可荒诞不经，可情感丰沛，亦可二者兼具。</span></li>
+                        </ul>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded border border-slate-100 space-y-2">
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider">决定可能的结论时需考虑：</div>
+                        <ul className="text-xs text-slate-600 space-y-1">
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>自然源于你在游戏过程中的经历。</span></li>
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>使你的角色更具层次感、趣味性和表现力。</span></li>
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>将游戏导向意想不到的方向。</span></li>
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>若存在多种可能，使用神谕表来决定其一。</span></li>
+                        </ul>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded border border-slate-100 space-y-2">
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider">决定结论的效应时需考虑：</div>
+                        <ul className="text-xs text-slate-600 space-y-1">
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>自然源于该思维的结论。</span></li>
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>使你的游戏体验更具层次感和多样性。</span></li>
+                          <li className="flex items-start gap-1.5"><span className="text-slate-400 text-[8px] mt-0.5">■</span> <span>引入你与世界互动方式的改变。</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 总结思维 */}
+                  <div className="space-y-4">
+                    <h5 className="text-sm font-black text-geo-accent uppercase flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-geo-accent rounded-full"/> 总结思维
+                    </h5>
+                    <p className="text-sm text-slate-600 leading-relaxed font-semibold">
+                      当你在某个思维的进度条累计 3 点进展，且该思维已在意识中巩固时，可滚动神谕表中的是/否表来确定达成的结论。<br/>
+                      根据你此刻对角色的认知调整投骰概率。若你掌握足够角色信息认为某选项可能性更高，则使用可能性高表，甚至近乎确定表。<br/>
+                      若尚未掌握足够角色信息，则使用争议表。
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Character Progression */}
               <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-4 md:space-y-6 lg:col-span-2 shadow-sm">
                 <h4 className="text-lg md:text-xl font-black uppercase tracking-tight border-b border-slate-100 pb-2 md:pb-4">
-                  思维内阁
+                  技能成长
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-sm">
-                  <div className="space-y-3">
-                    <div className="text-[10px] font-black text-geo-accent uppercase">1. 存储或自定义念头</div>
-                    <p className="text-slate-600 leading-relaxed font-semibold">你从世事探索或离奇对话中吸纳念头或疑议。它们将先暂存于大脑思维仓库，作为其“执念研究状态”（modifiers 暂未生效）。</p>
-                  </div>
-                  <div className="space-y-3 border-x border-dashed border-slate-200 px-4">
-                    <div className="text-[10px] font-black text-geo-accent uppercase">2. 顿悟内化 (消耗 5 XP)</div>
-                    <p className="text-slate-600 leading-relaxed font-semibold">当积攒了 5 点经验值时，你可以点击该念头的【内化顿悟】。这将彻底消耗 5 XP，将其内化为永久本能结论，调整项（加成与副作用）实时生效。</p>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="text-[10px] font-black text-geo-accent uppercase">3. 技能升级 (消耗 3 XP)</div>
-                    <p className="text-slate-600 leading-relaxed font-semibold">当遇到艰难检定时，你可以消耗 3 点经验值升级你所需要的核心技能。你可以直接点击相应技能卡片右下角的【升级】按钮，直接消耗 3 XP 将其等级永久提升 1 点。</p>
-                  </div>
+                <div className="space-y-3">
+                  <div className="text-[10px] font-black text-geo-accent uppercase">技能升级 (消耗 3 XP)</div>
+                  <p className="text-sm text-slate-600 leading-relaxed font-semibold">当遇到艰难检定时，你可以消耗 3 点经验值升级你所需要的核心技能。你可以直接点击相应技能卡片右下角的【升级】按钮，直接消耗 3 XP 将其等级永久提升 1 点。</p>
                 </div>
               </div>
 

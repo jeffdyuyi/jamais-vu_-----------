@@ -20,7 +20,8 @@ import {
   Search,
   Book,
   Trash2,
-  X
+  X,
+  HelpCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import InterjectionBoard from "./InterjectionBoard";
@@ -878,7 +879,28 @@ export default function Dashboard({
             {/* XP Section */}
             <div className="border-2 border-geo-border bg-white p-4 text-center flex flex-col justify-between">
               <div>
-                <div className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3">经验 XP 系统</div>
+                <div className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-3 flex items-center justify-center gap-1.5 relative group cursor-help">
+                  经验 XP 系统
+                  <HelpCircle className="w-3 h-3 text-slate-300 group-hover:text-amber-500 transition-colors" />
+                  
+                  {/* Tooltip */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-50 border border-slate-700 shadow-xl z-[100] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all text-left pointer-events-none p-3.5">
+                    <div className="text-[10px] font-black text-amber-500 mb-2.5 border-b border-slate-700 pb-1.5 uppercase tracking-widest">
+                      经验值 (XP) 获取途径
+                    </div>
+                    <div className="text-[9px] text-slate-400 mb-3 leading-relaxed">
+                      经验值是衡量你成就与持续学习的标尺。通过以下方式获取：
+                    </div>
+                    <ul className="space-y-2 text-[10px] font-sans leading-tight">
+                      <li className="flex gap-2"><span className="font-black font-mono text-amber-400 w-8 shrink-0">1 XP</span><span className="text-slate-200">投骰失败。</span></li>
+                      <li className="flex gap-2"><span className="font-black font-mono text-amber-400 w-8 shrink-0">1 XP</span><span className="text-slate-200">以引人入胜的独特方式演绎角色 (每场景最多 3 XP)。</span></li>
+                      <li className="flex gap-2"><span className="font-black font-mono text-amber-400 w-8 shrink-0">2 XP</span><span className="text-slate-200">在技能检定时使用标签阻碍成功率。</span></li>
+                      <li className="flex gap-2"><span className="font-black font-mono text-amber-400 w-8 shrink-0">2 XP</span><span className="text-slate-200">推进案件轨或身份轨。</span></li>
+                      <li className="flex gap-2"><span className="font-black font-mono text-amber-400 w-8 shrink-0">5 XP</span><span className="text-slate-200">破解案件。</span></li>
+                      <li className="flex gap-2"><span className="font-black font-mono text-amber-400 w-8 shrink-0">5 XP</span><span className="text-slate-200">完全发现自身身份。</span></li>
+                    </ul>
+                  </div>
+                </div>
                 <div className="flex justify-center mt-2">
                   <DiamondTracker 
                     value={char.xp % 10} // Display up to 10 for visual representation, or 5? Original design has 5 diamonds per row.
@@ -2153,7 +2175,7 @@ export default function Dashboard({
                     {showAddThought ? (
                       <div className="max-w-2xl bg-slate-50 border-2 border-slate-200 p-4 space-y-4 animate-in fade-in duration-200 text-slate-800">
                         <div className="text-xs font-black text-amber-700 uppercase tracking-widest border-b border-slate-200 pb-2">
-                          思维注入：构建思维执念
+                          构建
                         </div>
 
                         <div className="space-y-1">
@@ -2225,7 +2247,7 @@ export default function Dashboard({
                             onClick={handleAddThought}
                             className="flex-1 py-1.5 bg-amber-500 hover:bg-amber-400 text-amber-950 text-[10px] font-black uppercase tracking-widest cursor-pointer shadow-[2px_2px_0px_#78350f]"
                           >
-                            筑起此思维之茧
+                            接受思维
                           </button>
                           <button
                             onClick={() => {

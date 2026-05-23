@@ -235,6 +235,7 @@ export interface Thought {
   internalized: boolean;
   conclusion?: string;
   modifiers?: { skillId: string; amount: number }[];
+  trigger?: string;
 }
 
 export interface Appearance {

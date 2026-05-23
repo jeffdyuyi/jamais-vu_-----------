@@ -155,12 +155,15 @@ export default function Dashboard({
 
   // Thought Cabinet Manager state
   const [showAddThought, setShowAddThought] = useState(false);
-  const [selectedThoughtPreset, setSelectedThoughtPreset] = useState<string>("apocalypse_cop");
+  const [selectedThoughtPreset, setSelectedThoughtPreset] = useState<string>("custom");
   const [customThoughtName, setCustomThoughtName] = useState("");
+  const [customThoughtTrigger, setCustomThoughtTrigger] = useState("");
   const [customThoughtProblem, setCustomThoughtProblem] = useState("");
-  const [customThoughtConclusion, setCustomThoughtConclusion] = useState("");
-  const [customThoughtPlusSkill, setCustomThoughtPlusSkill] = useState("logic");
-  const [customThoughtMinusSkill, setCustomThoughtMinusSkill] = useState("authority");
+  
+  const [internalizingThoughtId, setInternalizingThoughtId] = useState<string | null>(null);
+  const [internalizeConclusion, setInternalizeConclusion] = useState("");
+  const [internalizePlusSkill, setInternalizePlusSkill] = useState("logic");
+  const [internalizeMinusSkill, setInternalizeMinusSkill] = useState("authority");
 
   // --- CUSTOM GEAR AND DRUG ADD/EDIT STATES ---
   const [showGearModal, setShowGearModal] = useState(false);
@@ -591,6 +594,7 @@ export default function Dashboard({
 
   const handleAddThought = () => {
     let name = "";
+    let trigger = "";
     let problem = "";
     let conclusion = "";
     let modifiers: { skillId: string; amount: number }[] = [];
@@ -605,16 +609,12 @@ export default function Dashboard({
       }
     } else {
       name = customThoughtName.trim();
+      trigger = customThoughtTrigger.trim();
       problem = customThoughtProblem.trim();
-      conclusion = customThoughtConclusion.trim();
-      modifiers = [
-        { skillId: customThoughtPlusSkill, amount: 2 },
-        { skillId: customThoughtMinusSkill, amount: -1 }
-      ];
     }
 
-    if (!name) {
-      showNotification("⚠️ 脑瓜震荡：请输入或选择一个具有实际意识构架的思维。");
+    if (!name || (!problem && selectedThoughtPreset === "custom")) {
+      showNotification("⚠️ 脑瓜震荡：请输入具有实际意义的思维名称和心智难题。");
       return;
     }
 
@@ -626,6 +626,7 @@ export default function Dashboard({
     const newThought = {
       id: `thought_${Date.now()}_${Math.random()}`,
       name,
+      trigger,
       problem,
       conclusion,
       progress: 0, // 0 indicates researching
@@ -638,17 +639,32 @@ export default function Dashboard({
       thoughts: [...(char.thoughts || []), newThought]
     });
 
-    showNotification(`💡 执念筑巢！【${name}】已被吸纳进你的脑海（思维仓库）。消耗 5 XP 可将其永久内化！`);
+    showNotification(`💡 执念入脑！【${name}】开始在你的潜意识中酝酿。`);
     
     // reset form inputs
     setShowAddThought(false);
     setCustomThoughtName("");
+    setCustomThoughtTrigger("");
     setCustomThoughtProblem("");
-    setCustomThoughtConclusion("");
   };
 
-  const handleInternalizeThought = (thoughtId: string) => {
+  const handleDirectInternalize = (thoughtId: string) => {
     const target = (char.thoughts || []).find(t => t.id === thoughtId);
+    if (!target) return;
+    if (char.xp < 5) {
+      showNotification("⚠️ 经验值不足：内化一项思维，将其化为坚不可摧的信息本能需要消耗 5 XP。");
+      return;
+    }
+    const updatedThoughts = char.thoughts.map(t => 
+      t.id === thoughtId ? { ...t, internalized: true, progress: 3 } : t
+    );
+    onUpdate({ ...char, xp: char.xp - 5, thoughts: updatedThoughts });
+    showNotification(`🌟 顿悟！已消耗 5 XP 将思维【${target.name}】完美内化，它的调整值已正式生效。`);
+  };
+
+  const handleInternalizeThoughtSubmit = () => {
+    if (!internalizingThoughtId) return;
+    const target = (char.thoughts || []).find(t => t.id === internalizingThoughtId);
     if (!target) return;
 
     if (char.xp < 5) {
@@ -656,12 +672,30 @@ export default function Dashboard({
       return;
     }
 
+    let finalConclusion = target.conclusion || "";
+    let finalModifiers = target.modifiers || [];
+
+    // Custom thought without predefined conclusions -> set from form
+    if (!target.conclusion && (!target.modifiers || target.modifiers.length === 0)) {
+      finalConclusion = internalizeConclusion.trim();
+      finalModifiers = [
+        { skillId: internalizePlusSkill, amount: 2 },
+        { skillId: internalizeMinusSkill, amount: -1 }
+      ];
+      if (!finalConclusion) {
+        showNotification("⚠️ 顿悟失败：你需要得出一个具体的本能结论。");
+        return;
+      }
+    }
+
     const updatedThoughts = char.thoughts.map(t => {
-      if (t.id === thoughtId) {
+      if (t.id === internalizingThoughtId) {
         return {
           ...t,
           internalized: true,
-          progress: 3 // Completed/Internalized state marker
+          conclusion: finalConclusion,
+          modifiers: finalModifiers,
+          progress: 3
         };
       }
       return t;
@@ -673,7 +707,23 @@ export default function Dashboard({
       thoughts: updatedThoughts
     });
 
-    showNotification(`🌟 顿悟！已消耗 5 XP 将思维【${target.name}】完美内化，现在它的调整值（加成/减值）已正式生效并入你的属性结算。`);
+    showNotification(`🌟 顿悟！已消耗 5 XP 将思维【${target.name}】完美内化，现在它的调整值已正式生效。`);
+    
+    setInternalizingThoughtId(null);
+    setInternalizeConclusion("");
+  };
+
+  const handleProgressThought = (thoughtId: string) => {
+    const updatedThoughts = (char.thoughts || []).map(t => {
+      if (t.id === thoughtId && !t.internalized && t.progress < 3) {
+        return { ...t, progress: t.progress + 1 };
+      }
+      return t;
+    });
+    onUpdate({
+      ...char,
+      thoughts: updatedThoughts
+    });
   };
 
   const handleForgetThought = (thoughtId: string) => {
@@ -2079,9 +2129,21 @@ export default function Dashboard({
                                           ★ 已内化
                                         </span>
                                       ) : (
-                                        <span className="bg-slate-200 text-slate-600 font-bold text-[9px] px-1.5 py-[1px] tracking-tight uppercase border border-slate-300">
-                                          🌀 研究中
-                                        </span>
+                                        <div className="flex items-center gap-1 border border-slate-300 bg-slate-100 px-1.5 py-[1px]">
+                                          <span className="text-slate-600 font-bold text-[9px] tracking-tight uppercase">🌀 研究中</span>
+                                          <div className="flex items-center gap-0.5 ml-1">
+                                            {[1, 2, 3].map(step => (
+                                              <button 
+                                                key={step}
+                                                onClick={() => {
+                                                  if (thought.progress < step) handleProgressThought(thought.id);
+                                                }}
+                                                title="在扮演中推进该思维"
+                                                className={`w-2 h-2 rounded-full border border-slate-400 ${thought.progress >= step ? 'bg-amber-400 border-amber-600' : 'bg-transparent hover:bg-slate-300'}`}
+                                              />
+                                            ))}
+                                          </div>
+                                        </div>
                                       )}
                                       <span className="text-sm font-black text-slate-900">{thought.name}</span>
                                     </div>
@@ -2089,18 +2151,24 @@ export default function Dashboard({
                                   <button
                                     onClick={() => handleForgetThought(thought.id)}
                                     className="text-slate-400 hover:text-red-600 transition-colors p-1"
-                                    title="从大脑中遗忘此思维"
+                                    title={isInternalized ? "用新思维取代它" : "抛弃此未内化思维"}
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
                                 </div>
 
                                 <div className="text-[10px] text-slate-600 font-mono space-y-1 bg-slate-100/65 p-2.5 border border-slate-200 mb-3 w-full">
-                                  <div className="text-slate-800 font-bold">【心智难题】</div>
+                                  {thought.trigger && (
+                                    <div className="mb-2 pb-1 border-b border-slate-200/60">
+                                      <div className="text-slate-800 font-bold mb-0.5">【触发条件】</div>
+                                      <p className="italic leading-relaxed text-slate-550 text-[10px]">“{thought.trigger}”</p>
+                                    </div>
+                                  )}
+                                  <div className="text-slate-800 font-bold mb-0.5">【心智难题】</div>
                                   <p className="italic leading-relaxed text-slate-550 text-[10px]">“{thought.problem}”</p>
                                   {isInternalized && thought.conclusion && (
                                     <div className="pt-2 border-t border-slate-150 mt-2 space-y-1 border-dashed">
-                                      <div className="text-amber-750 font-bold">【本能结论】</div>
+                                      <div className="text-amber-750 font-bold mb-0.5">【本能结论】</div>
                                       <p className="italic leading-relaxed text-slate-555 text-[10px]">“{thought.conclusion}”</p>
                                     </div>
                                   )}
@@ -2109,43 +2177,85 @@ export default function Dashboard({
 
                               <div>
                                 {/* Modifiers List */}
-                                <div className="flex flex-wrap gap-2 text-[9px] font-bold mb-3">
-                                  {thought.modifiers && thought.modifiers.map(m => {
-                                    const skillName = SKILLS.find(s => s.id === m.skillId)?.name || m.skillId;
-                                    const isPositive = m.amount > 0;
-                                    return (
-                                      <span 
-                                        key={m.skillId} 
-                                        className={`px-2 py-0.5 border ${
-                                          isInternalized
-                                            ? (isPositive ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700")
-                                            : "bg-slate-100 border-slate-200 text-slate-400 line-through"
-                                        }`}
-                                        title={isInternalized ? "修正已激活" : "内化后生效"}
-                                      >
-                                        {skillName}{isPositive ? `+${m.amount}` : m.amount}
-                                      </span>
-                                    );
-                                  })}
-                                  {!isInternalized && (
-                                    <span className="text-slate-400 font-mono self-center">(内化加成待生效)</span>
-                                  )}
-                                </div>
+                                {(!isInternalized && internalizingThoughtId === thought.id) ? null : (
+                                  <div className="flex flex-wrap gap-2 text-[9px] font-bold mb-3">
+                                    {thought.modifiers && thought.modifiers.map(m => {
+                                      const skillName = SKILLS.find(s => s.id === m.skillId)?.name || m.skillId;
+                                      const isPositive = m.amount > 0;
+                                      return (
+                                        <span 
+                                          key={m.skillId} 
+                                          className={`px-2 py-0.5 border ${
+                                            isInternalized
+                                              ? (isPositive ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700")
+                                              : "bg-slate-100 border-slate-200 text-slate-400 line-through"
+                                          }`}
+                                          title={isInternalized ? "修正已激活" : "内化后生效"}
+                                        >
+                                          {skillName}{isPositive ? `+${m.amount}` : m.amount}
+                                        </span>
+                                      );
+                                    })}
+                                    {!isInternalized && (!thought.modifiers || thought.modifiers.length === 0) && (
+                                      <span className="text-slate-400 font-mono self-center">(孵化中...结论未定)</span>
+                                    )}
+                                  </div>
+                                )}
 
                                 {/* Actions */}
                                 {!isInternalized && (
-                                  <button
-                                    onClick={() => handleInternalizeThought(thought.id)}
-                                    className={`w-full py-2 text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-1.5 border ${
-                                      char.xp >= 5 
-                                        ? "bg-amber-500 border-amber-600 hover:bg-amber-400 text-amber-950 shadow-[2px_2px_0px_#78350f]" 
-                                        : "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed"
-                                    }`}
-                                    title="内化该执念需要消耗 5 XP"
-                                  >
-                                    <Zap className="w-3 h-3" />
-                                    <span>5 XP 进行内化顿悟</span>
-                                  </button>
+                                  internalizingThoughtId === thought.id ? (
+                                    <div className="mt-3 bg-white p-3 border border-amber-300 shadow-sm space-y-3">
+                                      <div className="text-[10px] font-black text-amber-800 uppercase border-b border-amber-200 pb-1">
+                                        顿悟：记录神谕结论
+                                      </div>
+                                      <textarea
+                                        placeholder="【本能结论】(一旦想通，你达成了什么顿悟？)"
+                                        value={internalizeConclusion}
+                                        onChange={(e) => setInternalizeConclusion(e.target.value)}
+                                        className="w-full h-16 text-[10px] py-1 px-2 bg-slate-50 text-slate-900 border border-slate-300 outline-none resize-none font-sans focus:border-amber-400"
+                                      />
+                                      <div className="grid grid-cols-2 gap-2 text-[10px]">
+                                        <div className="space-y-1">
+                                          <label className="text-emerald-700 uppercase font-black block">加成技能 (+2)</label>
+                                          <select value={internalizePlusSkill} onChange={(e) => setInternalizePlusSkill(e.target.value)} className="w-full text-[10px] py-1 bg-white text-slate-900 border border-slate-300 outline-none cursor-pointer focus:border-amber-400">
+                                            {SKILLS.map(s => <option key={s.id} value={s.id}>{s.name} ({s.category.slice(0, 2)})</option>)}
+                                          </select>
+                                        </div>
+                                        <div className="space-y-1">
+                                          <label className="text-rose-700 uppercase font-black block">副作用 (-1)</label>
+                                          <select value={internalizeMinusSkill} onChange={(e) => setInternalizeMinusSkill(e.target.value)} className="w-full text-[10px] py-1 bg-white text-slate-900 border border-slate-300 outline-none cursor-pointer focus:border-amber-400">
+                                            {SKILLS.map(s => <option key={s.id} value={s.id}>{s.name} ({s.category.slice(0, 2)})</option>)}
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <div className="flex gap-2 mt-2">
+                                        <button onClick={() => setInternalizingThoughtId(null)} className="flex-1 py-1.5 text-[9px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors">取消</button>
+                                        <button onClick={() => handleInternalizeThoughtSubmit()} className="flex-1 py-1.5 text-[9px] font-black text-amber-950 bg-amber-400 hover:bg-amber-300 transition-colors shadow-sm">消耗 5 XP 确认内化</button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    thought.progress >= 3 ? (
+                                      <button
+                                        onClick={() => {
+                                          if (!thought.conclusion && (!thought.modifiers || thought.modifiers.length === 0)) {
+                                            setInternalizingThoughtId(thought.id);
+                                            setInternalizeConclusion("");
+                                          } else {
+                                            handleDirectInternalize(thought.id);
+                                          }
+                                        }}
+                                        className="w-full py-2 text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-1.5 border bg-amber-500 border-amber-600 hover:bg-amber-400 text-amber-950 shadow-[2px_2px_0px_#78350f]"
+                                      >
+                                        <Zap className="w-3 h-3" />
+                                        <span>执行内化顿悟 (5 XP)</span>
+                                      </button>
+                                    ) : (
+                                      <div className="text-[9px] text-center text-slate-400 py-1.5 border border-dashed border-slate-200 bg-slate-50">
+                                        扮演进度尚未达成 ({thought.progress}/3)
+                                      </div>
+                                    )
+                                  )
                                 )}
                               </div>
                             </div>
@@ -2205,46 +2315,22 @@ export default function Dashboard({
                             </div>
                             <div className="space-y-1">
                               <textarea
+                                placeholder="【触发条件】(你是如何遭遇到这个思维的？)"
+                                value={customThoughtTrigger}
+                                onChange={(e) => setCustomThoughtTrigger(e.target.value)}
+                                className="w-full h-12 text-[10px] py-1 px-2 bg-white text-slate-900 border border-slate-300 outline-none resize-none font-sans focus:border-slate-800"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <textarea
                                 placeholder="【心智难题】描述 (你正为什么而苦苦纠结不安)"
                                 value={customThoughtProblem}
                                 onChange={(e) => setCustomThoughtProblem(e.target.value)}
                                 className="w-full h-16 text-[10px] py-1 px-2 bg-white text-slate-900 border border-slate-300 outline-none resize-none font-sans focus:border-slate-800"
                               />
                             </div>
-                            <div className="space-y-1">
-                              <textarea
-                                placeholder="【本能结论】描述 (一旦内化想通，你达成了什么顿悟)"
-                                value={customThoughtConclusion}
-                                onChange={(e) => setCustomThoughtConclusion(e.target.value)}
-                                className="w-full h-16 text-[10px] py-1 px-2 bg-white text-slate-900 border border-slate-300 outline-none resize-none font-sans focus:border-slate-800"
-                              />
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-2 text-[10px]">
-                              <div className="space-y-1">
-                                <label className="text-emerald-700 uppercase font-black block">加成技能 (+2)</label>
-                                <select
-                                  value={customThoughtPlusSkill}
-                                  onChange={(e) => setCustomThoughtPlusSkill(e.target.value)}
-                                  className="w-full text-[10px] py-1 bg-white text-slate-900 border border-slate-300 outline-none cursor-pointer focus:border-slate-800"
-                                >
-                                  {SKILLS.map(s => (
-                                    <option key={s.id} value={s.id}>{s.name} ({s.category.slice(0, 2)})</option>
-                                  ))}
-                                </select>
-                              </div>
-                              <div className="space-y-1">
-                                <label className="text-rose-700 uppercase font-black block">承载代价 (-1)</label>
-                                <select
-                                  value={customThoughtMinusSkill}
-                                  onChange={(e) => setCustomThoughtMinusSkill(e.target.value)}
-                                  className="w-full text-[10px] py-1 bg-white text-slate-900 border border-slate-300 outline-none cursor-pointer focus:border-slate-800"
-                                >
-                                  {SKILLS.map(s => (
-                                    <option key={s.id} value={s.id}>{s.name} ({s.category.slice(0, 2)})</option>
-                                  ))}
-                                </select>
-                              </div>
+                            <div className="text-[9px] text-slate-400 italic">
+                              * 结论与加成项将在该思维研究进度满后，由你在“顿悟”时进行结算。
                             </div>
                           </div>
                         )}
@@ -2267,7 +2353,12 @@ export default function Dashboard({
                         </div>
                       </div>
                     ) : (
-                      <button 
+                      char.thoughts && char.thoughts.length >= 5 ? (
+                        <div className="text-center text-rose-600 text-[10px] font-bold border border-rose-200 bg-rose-50 p-3 mt-4">
+                          大脑容量已满（5/5）。请先用新思维取代已内化思维，或抛弃未内化的心智纠结。
+                        </div>
+                      ) : (
+                        <button 
                         onClick={() => {
                           setShowAddThought(true);
                           setShowAddState(false);
@@ -2276,6 +2367,7 @@ export default function Dashboard({
                       >
                         <span>注入新念头...</span>
                       </button>
+                      )
                     )}
                  </div>
               </div>

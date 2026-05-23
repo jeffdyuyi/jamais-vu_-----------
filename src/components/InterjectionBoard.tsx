@@ -321,7 +321,7 @@ export default function InterjectionBoard({ char, onUpdate }: InterjectionBoardP
           {/* History Scroll Area */}
           <div className="space-y-4">
             <h4 className="text-[11px] font-black tracking-wider text-slate-500 uppercase border-b border-slate-200 pb-2 flex justify-between items-center font-sans">
-              <span>💡 碎碎念与不速之音历史刻印 ({interjections.length})</span>
+              <span>💡 历史记录 ({interjections.length})</span>
               <span className="text-[10px] opacity-40 font-normal">点击垃圾箱按钮可抹消</span>
             </h4>
 

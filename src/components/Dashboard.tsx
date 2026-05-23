@@ -2312,6 +2312,7 @@ export default function Dashboard({
                </div>
             </div>
           )}
+        </div>
 
         {/* Quick Rules Reference Footer */}
         <div className="mt-16 pt-6 border-t-2 border-slate-900 border-dashed text-slate-500 font-mono text-[10px] leading-relaxed pb-8 shrink-0 animate-in fade-in duration-500">

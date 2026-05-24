@@ -6,6 +6,7 @@
 import { useState, useEffect } from "react";
 import { Character, SKILLS, SkillCategory } from "../types";
 import { Trash2, MessageSquare, AlertCircle, Quote } from "lucide-react";
+import DiamondTracker from "./DiamondTracker";
 
 interface InterjectionBoardProps {
   char: Character;
@@ -113,109 +114,27 @@ export default function InterjectionBoard({ char, onUpdate }: InterjectionBoardP
             插叙
           </h1>
         </div>
-        <div className="bg-amber-500 text-slate-950 px-4 py-2 font-black text-xs uppercase tracking-widest font-mono">
-          旧事如新 1.2
+        <div className="flex items-center gap-4 bg-white border border-amber-200 px-4 py-2 shadow-sm">
+           <div className="text-[10px] font-black tracking-widest text-slate-500 uppercase">
+             插叙指示物
+           </div>
+           <DiamondTracker 
+             value={char.tokens} 
+             max={3} 
+             onChange={(newVal) => {
+                const updatedVal = Math.min(3, Math.max(0, newVal));
+                onUpdate({ ...char, tokens: updatedVal });
+             }} 
+           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Side: Instructions and Token tracking */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Rules and Tokens Card */}
-          <div className="border-2 border-amber-500 bg-amber-50/50 p-5 shadow-[4px_4px_0px_#d97706] rounded-none space-y-5">
-            <div className="flex justify-between items-center border-b border-amber-200 pb-2.5">
-              <span className="text-xs font-black uppercase text-amber-950 tracking-widest">
-                当前插叙指示物
-              </span>
-              <span className="text-slate-500 font-mono text-xs font-bold leading-none">
-                容量: 3
-              </span>
-            </div>
-
-            <div className="space-y-4">
-              {/* Circular Dots */}
-              <div className="flex justify-center gap-3 py-3 bg-white border border-amber-200 rounded">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => {
-                      const targetValue = i + 1;
-                      const delta = targetValue - char.tokens;
-                      let updatedVal = Math.min(3, Math.max(0, char.tokens + delta));
-                      onUpdate({
-                        ...char,
-                        tokens: updatedVal
-                      });
-                    }}
-                    className={`w-11 h-11 rounded-full border-2 cursor-pointer flex flex-col items-center justify-center font-black transition-all ${
-                      i < char.tokens 
-                        ? "bg-amber-500 border-amber-600 text-slate-950 shadow-md hover:scale-110" 
-                        : "bg-white border-dashed border-slate-300 text-slate-400 hover:border-slate-400 hover:text-slate-600 text-sm"
-                    }`}
-                    title={`插叙指示物 Slot ${i + 1}`}
-                  >
-                    {i < char.tokens ? (
-                      <>
-                        <span className="text-sm select-none leading-none">★</span>
-                        <span className="text-[7px] leading-none font-sans font-bold mt-0.5">已满</span>
-                      </>
-                    ) : (
-                      <span className="text-xs font-mono font-bold leading-none">{i + 1}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* Adjust text manual buttons */}
-              <div className="flex justify-between items-center px-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    let updatedVal = Math.max(0, char.tokens - 1);
-                    onUpdate({ ...char, tokens: updatedVal });
-                    showNotification("🪙 已消耗或手动减少 1 枚插叙指示物。");
-                  }}
-                  className="bg-white hover:bg-slate-100 text-slate-700 font-bold px-3 py-1.5 text-xs border border-slate-300 transition-colors uppercase cursor-pointer"
-                >
-                  - 减少 1 枚
-                </button>
-                <div className="text-center">
-                  <span className="text-2xl font-black font-mono text-amber-600 block leading-tight">
-                    {char.tokens} / 3
-                  </span>
-                  <span className="text-[8px] tracking-tight font-black text-slate-500 uppercase font-mono">
-                    当前数量
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (char.tokens >= 3) {
-                      showNotification("⚠️ 已经达到上限 3 枚。已持有 3 枚此指示物的调查员不可再被递交。");
-                    } else {
-                      let updatedVal = Math.min(3, char.tokens + 1);
-                      onUpdate({ ...char, tokens: updatedVal });
-                      showNotification("🪙 手动增加 1 枚外部玩家插叙指示物。");
-                    }
-                  }}
-                  className="bg-amber-500 hover:bg-amber-600 border-2 border-amber-600 text-white font-black px-3 py-1 text-xs transition-all uppercase cursor-pointer"
-                >
-                  + 增加 1 枚
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side: Create Interjection and History (Right 8 cols) */}
-        <div className="lg:col-span-8 space-y-6">
+      <div className="space-y-6 items-start">
+        {/* Main Content (Full Width) */}
+        <div className="space-y-6">
           {/* Create Interjection Statement */}
           <div className="border border-slate-200 bg-white p-6 shadow-sm space-y-5">
-            <h3 className="text-lg font-black text-slate-900 uppercase tracking-wider flex items-center gap-2 font-sans border-b border-slate-200 pb-3">
-              <MessageSquare className="w-4 h-4 text-amber-550" />
-              <span>录入新心灵插叙</span>
-            </h3>
+            {/* Title Removed */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Skill Selector */}

@@ -902,16 +902,7 @@ export default function Dashboard({
                   </div>
                 </div>
                 <div className="flex justify-center mt-2">
-                  <DiamondTracker 
-                    value={char.xp % 10} // Display up to 10 for visual representation, or 5? Original design has 5 diamonds per row.
-                    max={5} 
-                    onChange={(newVal) => {
-                      // Adjust to nearest multiple of 5
-                      const base = Math.floor(char.xp / 5) * 5;
-                      const target = base + newVal;
-                      updateStat("xp", target - char.xp);
-                    }} 
-                  />
+                  <span className="text-[9px] text-slate-400 font-bold italic tracking-wider">EXP TRACKER</span>
                 </div>
                 <div className="text-xl font-black text-slate-900 font-mono mt-3">总计: {char.xp}</div>
               </div>
@@ -1401,7 +1392,7 @@ export default function Dashboard({
              </p>
            </div>
            <div className="bg-geo-accent text-white px-4 py-2 font-black text-xs uppercase tracking-widest">
-             既视感与认知回路 // {currentTab === "attributes" ? "属性与技能" : currentTab === "gear" ? "行囊配备" : currentTab === "thoughts" ? "思维内阁" : currentTab === "clues" ? "案情拼图" : "外观印象"}
+             {currentTab === "attributes" ? "属性与技能" : currentTab === "gear" ? "行囊配备" : currentTab === "thoughts" ? "思维内阁" : currentTab === "clues" ? "案情拼图" : "外观印象"}
            </div>
         </div>
 
@@ -2004,6 +1995,9 @@ export default function Dashboard({
               <div className="space-y-6 relative z-10">
                  <div className="flex items-center gap-4">
                    <h3 className="text-xl font-black uppercase">思维内阁</h3>
+                   <div className="bg-slate-200 text-slate-800 text-[10px] font-black px-2 py-0.5 rounded-sm uppercase tracking-widest">
+                     容量 {char.thoughts?.length || 0} / 5
+                   </div>
                    <div className="h-0.5 flex-1 bg-slate-200" />
                  </div>
                
@@ -2282,7 +2276,7 @@ export default function Dashboard({
               {/* Row 2: 思维插叙 Mental Monologue log */}
               <div className="space-y-6 relative z-10">
                  <div className="flex items-center gap-4">
-                   <h3 className="text-xl font-black uppercase">脑内对话与认知碰撞</h3>
+                   {/* removed title */}
                    <div className="h-0.5 flex-1 bg-slate-200" />
                  </div>
                  

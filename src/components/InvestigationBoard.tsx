@@ -81,6 +81,9 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
   // Page level notification
   const [notification, setNotification] = useState<string | null>(null);
 
+  // Tabs for progress
+  const [activeProgressTab, setActiveProgressTab] = useState<"case" | "identity">("case");
+
   // Core structured database state
   const [data, setData] = useState<InvestigationData>({
     caseProgress: 1,
@@ -349,12 +352,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
         </div>
       )}
 
-      {/* Main Title Banner */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-4 shrink-0">
-        <h1 className="text-2xl md:text-3xl font-black tracking-tighter uppercase text-slate-900 font-sans">
-          线索搜集与直觉推理黑板
-        </h1>
-      </div>
+      {/* Main Title Banner was here, removed text */}
 
       {/* TOP SECTION: Atmospheric Direction & Scene control */}
       <div className="w-full">
@@ -366,7 +364,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
               <div className="flex items-center gap-2 font-sans">
                 <TrendingUp className="w-5 h-5 text-geo-accent" />
                 <span className="text-xs font-black text-slate-800 uppercase tracking-widest">
-                  调查档案刻印网络
+                  调查进度
                 </span>
               </div>
               <button
@@ -379,107 +377,105 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
               </button>
             </div>
 
+            {/* Tabs Selector */}
+            <div className="flex border-b border-slate-200 gap-4 mt-2">
+              <button 
+                onClick={() => setActiveProgressTab("case")}
+                className={`pb-2 text-xs font-black uppercase tracking-widest transition-colors ${activeProgressTab === "case" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-400 hover:text-slate-600"}`}
+              >
+                案件侦破进度
+              </button>
+              <button 
+                onClick={() => setActiveProgressTab("identity")}
+                className={`pb-2 text-xs font-black uppercase tracking-widest transition-colors ${activeProgressTab === "identity" ? "text-purple-600 border-b-2 border-purple-600" : "text-slate-400 hover:text-slate-600"}`}
+              >
+                身份记忆重构
+              </button>
+            </div>
+
             {/* Progress Bars */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Case Progress Bar */}
-              <div className="space-y-3.5 p-4 bg-slate-50 border border-slate-150 rounded-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5 font-sans">
-                    🔎 案件侦破进度条
-                  </span>
-                  <div className="flex gap-1">
-                    <button onClick={() => handleAdjustTracker("case", -1)} className="w-5 h-5 bg-white text-slate-500 text-xs hover:text-slate-800 flex items-center justify-center border border-slate-200 rounded cursor-pointer">-</button>
-                    <button onClick={() => handleAdjustTracker("case", 1)} className="w-5 h-5 bg-white text-slate-500 text-xs hover:text-slate-800 flex items-center justify-center border border-slate-200 rounded cursor-pointer">+</button>
+            <div className="pt-2">
+              {activeProgressTab === "case" ? (
+                <div className="space-y-3.5 p-4 bg-slate-50 border border-slate-150 rounded-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5 font-sans">
+                      🔎 案件侦破进度条
+                    </span>
+                    <div className="flex gap-1">
+                      <button onClick={() => handleAdjustTracker("case", -1)} className="w-5 h-5 bg-white text-slate-500 text-xs hover:text-slate-800 flex items-center justify-center border border-slate-200 rounded cursor-pointer">-</button>
+                      <button onClick={() => handleAdjustTracker("case", 1)} className="w-5 h-5 bg-white text-slate-500 text-xs hover:text-slate-800 flex items-center justify-center border border-slate-200 rounded cursor-pointer">+</button>
+                    </div>
                   </div>
-                </div>
 
-                {/* Progress dot slots representation */}
-                <div className="flex flex-col space-y-1">
-                  <div className="flex items-center gap-1.5">
-                    {Array.from({ length: 10 }).map((_, idx) => (
-                      <div
-                        key={idx}
-                        className={`flex-1 h-5 rounded-none border border-slate-300 transition-all cursor-pointer flex items-center justify-center ${
-                          idx < data.caseProgress 
-                            ? "bg-blue-600 border-blue-750 shadow-sm" 
-                            : "bg-white border-dashed border-slate-300 hover:border-slate-500"
-                        }`}
-                        onClick={() => {
-                          const updated = { ...data, caseProgress: idx + 1 };
-                          saveState(updated);
-                        }}
-                        title={`第 ${idx + 1} 格 (点击跳转)`}
-                      >
-                        {idx < data.caseProgress && (
-                          <span className="text-white text-[8px] font-bold font-mono">OK</span>
-                        )}
-                      </div>
-                    ))}
+                  <div className="flex flex-col space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      {Array.from({ length: 10 }).map((_, idx) => (
+                        <div
+                          key={idx}
+                          className={`flex-1 h-5 rounded-none border border-slate-300 transition-all cursor-pointer flex items-center justify-center ${
+                            idx < data.caseProgress 
+                              ? "bg-blue-600 border-blue-750 shadow-sm" 
+                              : "bg-white border-dashed border-slate-300 hover:border-slate-500"
+                          }`}
+                          onClick={() => saveState({ ...data, caseProgress: idx + 1 })}
+                        >
+                          {idx < data.caseProgress && <span className="text-white text-[8px] font-bold font-mono">OK</span>}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex justify-between text-[9px] font-mono text-slate-500 font-bold px-0.5 pt-0.5">
+                      <span>迷糊真相 (0/10)</span>
+                      <span className="text-blue-600">目前: {data.caseProgress}/10</span>
+                      <span>大白于天下</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-[9px] font-mono text-slate-500 font-bold px-0.5 pt-0.5">
-                    <span>迷糊真相 (0/10)</span>
-                    <span className="text-blue-600">目前: {data.caseProgress}/10</span>
-                    <span>大白于天下</span>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-2 pt-1 border-t border-slate-200 text-[10px] text-slate-600 font-serif">
-                  <div className={`w-2.5 h-2.5 rounded-full border ${data.caseMarkedInActiveScene ? "bg-amber-500 border-amber-600" : "bg-slate-200 border-slate-300"}`} />
-                  <span>
-                    {data.caseMarkedInActiveScene ? "⚠️ 本场景已标记过一次案件直觉，处于锁定状态。" : "✓ 当前场景可继续追加一次案件直觉进度。"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Identity Regain Progress Bar */}
-              <div className="space-y-3.5 p-4 bg-slate-50 border border-slate-150 rounded-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5 font-sans">
-                    🧠 身份记忆重构进度
-                  </span>
-                  <div className="flex gap-1">
-                    <button onClick={() => handleAdjustTracker("identity", -1)} className="w-5 h-5 bg-white text-slate-500 text-xs hover:text-slate-800 flex items-center justify-center border border-slate-200 rounded cursor-pointer">-</button>
-                    <button onClick={() => handleAdjustTracker("identity", 1)} className="w-5 h-5 bg-white text-slate-500 text-xs hover:text-slate-800 flex items-center justify-center border border-slate-200 rounded cursor-pointer">+</button>
+                  <div className="flex items-center gap-2 pt-1 border-t border-slate-200 text-[10px] text-slate-600 font-serif">
+                    <div className={`w-2.5 h-2.5 rounded-full border ${data.caseMarkedInActiveScene ? "bg-amber-500 border-amber-600" : "bg-slate-200 border-slate-300"}`} />
+                    <span>{data.caseMarkedInActiveScene ? "⚠️ 本场景已标记过一次案件直觉，处于锁定状态。" : "✓ 当前场景可继续追加一次案件直觉进度。"}</span>
                   </div>
                 </div>
-
-                {/* Progress dot slots representation */}
-                <div className="flex flex-col space-y-1">
-                  <div className="flex items-center gap-1.5">
-                    {Array.from({ length: 10 }).map((_, idx) => (
-                      <div
-                        key={idx}
-                        className={`flex-1 h-5 rounded-none border border-slate-300 transition-all cursor-pointer flex items-center justify-center ${
-                          idx < data.identityProgress 
-                            ? "bg-purple-600 border-purple-750 shadow-sm" 
-                            : "bg-white border-dashed border-slate-300 hover:border-slate-500"
-                        }`}
-                        onClick={() => {
-                          const updated = { ...data, identityProgress: idx + 1 };
-                          saveState(updated);
-                        }}
-                        title={`第 ${idx + 1} 格 (点击跳转)`}
-                      >
-                        {idx < data.identityProgress && (
-                          <span className="text-white text-[8px] font-bold font-mono">OK</span>
-                        )}
-                      </div>
-                    ))}
+              ) : (
+                <div className="space-y-3.5 p-4 bg-slate-50 border border-slate-150 rounded-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5 font-sans">
+                      🧠 身份记忆重构进度
+                    </span>
+                    <div className="flex gap-1">
+                      <button onClick={() => handleAdjustTracker("identity", -1)} className="w-5 h-5 bg-white text-slate-500 text-xs hover:text-slate-800 flex items-center justify-center border border-slate-200 rounded cursor-pointer">-</button>
+                      <button onClick={() => handleAdjustTracker("identity", 1)} className="w-5 h-5 bg-white text-slate-500 text-xs hover:text-slate-800 flex items-center justify-center border border-slate-200 rounded cursor-pointer">+</button>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-[9px] font-mono text-slate-500 font-bold px-0.5 pt-0.5">
-                    <span>完全遗忘 (0/10)</span>
-                    <span className="text-purple-600">目前: {data.identityProgress}/10</span>
-                    <span>宿命苏醒</span>
+
+                  <div className="flex flex-col space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      {Array.from({ length: 10 }).map((_, idx) => (
+                        <div
+                          key={idx}
+                          className={`flex-1 h-5 rounded-none border border-slate-300 transition-all cursor-pointer flex items-center justify-center ${
+                            idx < data.identityProgress 
+                              ? "bg-purple-600 border-purple-750 shadow-sm" 
+                              : "bg-white border-dashed border-slate-300 hover:border-slate-500"
+                          }`}
+                          onClick={() => saveState({ ...data, identityProgress: idx + 1 })}
+                        >
+                          {idx < data.identityProgress && <span className="text-white text-[8px] font-bold font-mono">OK</span>}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex justify-between text-[9px] font-mono text-slate-500 font-bold px-0.5 pt-0.5">
+                      <span>完全遗忘 (0/10)</span>
+                      <span className="text-purple-600">目前: {data.identityProgress}/10</span>
+                      <span>宿命苏醒</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1 border-t border-slate-200 text-[10px] text-slate-600 font-serif">
+                    <div className={`w-2.5 h-2.5 rounded-full border ${data.identityMarkedInActiveScene ? "bg-amber-500 border-amber-600" : "bg-slate-200 border-slate-300"}`} />
+                    <span>{data.identityMarkedInActiveScene ? "⚠️ 本场景已标记过一次身份直觉，处于锁定状态。" : "✓ 当前场景可继续追加一次身份直觉进度。"}</span>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2 pt-1 border-t border-slate-200 text-[10px] text-slate-600 font-serif">
-                  <div className={`w-2.5 h-2.5 rounded-full border ${data.identityMarkedInActiveScene ? "bg-amber-500 border-amber-600" : "bg-slate-200 border-slate-300"}`} />
-                  <span>
-                    {data.identityMarkedInActiveScene ? "⚠️ 本场景已标记过一次身份直觉，处于锁定状态。" : "✓ 当前场景可继续追加一次身份直觉进度。"}
-                  </span>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -644,7 +640,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
             <h4 className="text-sm font-black text-amber-900 tracking-wider flex items-center justify-between font-sans border-b border-amber-200 pb-3">
               <span className="flex items-center gap-2">
                 <Link2 className="w-4 h-4 text-amber-600" />
-                <span>直觉拼凑连线台 ({selectedClueIds.length}/3)</span>
+                <span>开始推理 ({selectedClueIds.length}/3)</span>
               </span>
               {selectedClueIds.length > 0 && (
                 <button 

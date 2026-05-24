@@ -56,75 +56,46 @@ const PRESET_THOUGHTS = [
   {
     id: "apocalypse_cop",
     name: "末日警探",
-    problem: "如果你无法拯救这个世界，至少你可以预测它的终结。你觉得街角的水泥正在加速腐烂，世界的末日即将来临。",
-    conclusion: "你承认了末日，不再为此无端焦虑。你竖起了耳朵，开始捕捉世界细微的颤动。",
-    modifiers: [
-      { skillId: "shivers", amount: 2 },
-      { skillId: "halfLight", amount: 1 },
-      { skillId: "logic", amount: -1 }
+    problem: "你觉得街角的水泥正在加速腐烂，世界的末日即将来临。",
+    options: [
+      {
+        text: "末日不可避免。不再焦虑，静静捕捉世界的颤动。",
+        modifiers: [ { skillId: "shivers", amount: 2 }, { skillId: "halfLight", amount: 1 }, { skillId: "logic", amount: -1 } ]
+      },
+      {
+        text: "世界不会毁灭，毁灭的只是人心。我必须更加警惕。",
+        modifiers: [ { skillId: "perception", amount: 2 }, { skillId: "logic", amount: 1 }, { skillId: "empathy", amount: -1 } ]
+      }
     ]
   },
   {
     id: "chem_theory",
-    name: "先进的化学理论",
-    problem: "物质通过微观分子的流转互相侵占，你的肺部似乎能过滤并闻出空气中所有潜在的游离酒精分子。",
-    conclusion: "你发现肉体只是纯粹的能量发生器。在彻底透支前，你对痛苦和化学物质的耐受性获得了颠覆性加强。",
-    modifiers: [
-      { skillId: "electrochemistry", amount: 2 },
-      { skillId: "painThreshold", amount: 1 },
-      { skillId: "composure", amount: -1 }
+    name: "先进化学理论",
+    problem: "你的肺部似乎能过滤并闻出空气中潜在的游离酒精与化学分子。",
+    options: [
+      {
+        text: "肉体是能量发生器。对痛苦和化学物质耐受性颠覆性加强。",
+        modifiers: [ { skillId: "electrochemistry", amount: 2 }, { skillId: "painThreshold", amount: 1 }, { skillId: "composure", amount: -1 } ]
+      },
+      {
+        text: "这是一种毒药。我必须拒绝一切化学诱惑，保持绝对清醒。",
+        modifiers: [ { skillId: "volition", amount: 2 }, { skillId: "endurance", amount: 1 }, { skillId: "electrochemistry", amount: -1 } ]
+      }
     ]
   },
   {
-    id: "esprit_de_corps_whisper",
-    name: "同舟共济的低语",
-    problem: "你开始听到远方同僚巡逻车上的闲聊和无线电破喇叭里传来的风声，仿佛有一根无形的蓝色长线连系着你们。",
-    conclusion: "警队的幽灵与誓言在此刻时刻与你同在。你不需要强充威严，同僚沉甸甸的肩膀给了你最可靠的支撑。",
-    modifiers: [
-      { skillId: "espritDeCorps", amount: 2 },
-      { skillId: "authority", amount: -1 }
-    ]
-  },
-  {
-    id: "art_cop_thought",
-    name: "艺术自负",
-    problem: "世界不仅仅是一个案发现场，它更是一幅尚未完成的宏伟坦培拉。一切污垢皆在展现某种非凡而隐秘的美学结构。",
-    conclusion: "你用夸张而荒唐的后现代艺术品味武装了自己。从此你一眼就能看破庸俗之辈那粗鲁而平庸的欺骗行为。",
-    modifiers: [
-      { skillId: "conceptualization", amount: 2 },
-      { skillId: "perception", amount: 1 },
-      { skillId: "logic", amount: -1 }
-    ]
-  },
-  {
-    id: "rectify_fate",
-    name: "重构宿命",
-    problem: "当你盯着地上的几道轮胎痕迹和破碎玻璃，时间的指针开始狂暴地倒退。你渴望重写他们离去的那一刻。",
-    conclusion: "世间绝无不可理喻的巧合，只有尚未被你计算出来的引力轨迹。你成了在脑海中重构物理与罪案轨迹的高手。",
-    modifiers: [
-      { skillId: "visualCalculus", amount: 2 },
-      { skillId: "inlandEmpire", amount: 1 }
-    ]
-  },
-  {
-    id: "boring_cop_thought",
-    name: "无聊警探",
-    problem: "把一切疯狂而充满超凡气息的怪异假设抛开。只去登记指纹，测量鞋印。甘当一台平庸、安全而守序的办案机器。",
-    conclusion: "枯燥是抵抗城市重力最伟大的伪装。任何波澜起伏与精神潮汐都无法撼动一块纯粹、无趣的水泥钢筋。",
-    modifiers: [
-      { skillId: "composure", amount: 2 },
-      { skillId: "suggestion", amount: -1 }
-    ]
-  },
-  {
-    id: "peoples_protector",
-    name: "平民保护者",
-    problem: "那些在城市底角挣扎谋生的工人们，他们的无力叹息不该只被官僚冷冰冰的皮包遮掩。你想为他们发出微弱的呜咽。",
-    conclusion: "你站在被遗忘的大多数人之中。你那滚烫的同理心让你能理解一切不洁与怯懦，并坚韧地忍受这世界的敌意。",
-    modifiers: [
-      { skillId: "empathy", amount: 2 },
-      { skillId: "painThreshold", amount: 1 },
-      { skillId: "authority", amount: -1 }
+    id: "chemtrail_defender",
+    name: "化学尾迹辩护者",
+    problem: "晴空万里的日子里，可疑的白色尾迹划破碧空。仿佛政府正在往空气中投放化学品。谁知道呢；或许他们有充分的理由这样做。",
+    options: [
+      {
+        text: "政府拥有专家军团。如果他们通过化学品优化人口素质，我又有什么资格质疑？为了大局着想。",
+        modifiers: [ { skillId: "composure", amount: 2 }, { skillId: "endurance", amount: 2 }, { skillId: "drama", amount: -1 } ]
+      },
+      {
+        text: "那究竟是什么药物？想必是顶级货。真希望能吸入这些云朵。云层会散发何种气息？",
+        modifiers: [ { skillId: "electrochemistry", amount: 4 } ]
+      }
     ]
   }
 ];
@@ -161,6 +132,13 @@ export default function Dashboard({
   const [customThoughtName, setCustomThoughtName] = useState("");
   const [customThoughtTrigger, setCustomThoughtTrigger] = useState("");
   const [customThoughtProblem, setCustomThoughtProblem] = useState("");
+  const [customThoughtConclusion1, setCustomThoughtConclusion1] = useState("");
+  const [customThoughtModifier1Plus, setCustomThoughtModifier1Plus] = useState("logic");
+  const [customThoughtModifier1Minus, setCustomThoughtModifier1Minus] = useState("logic");
+  const [customThoughtConclusion2, setCustomThoughtConclusion2] = useState("");
+  const [customThoughtModifier2Plus, setCustomThoughtModifier2Plus] = useState("logic");
+  const [customThoughtModifier2Minus, setCustomThoughtModifier2Minus] = useState("logic");
+  const [showOracleOracleForThoughtId, setShowOracleOracleForThoughtId] = useState<string | null>(null);
   
   const [internalizingThoughtId, setInternalizingThoughtId] = useState<string | null>(null);
   const [internalizeConclusion, setInternalizeConclusion] = useState("");
@@ -598,25 +576,45 @@ export default function Dashboard({
     let name = "";
     let trigger = "";
     let problem = "";
-    let conclusion = "";
-    let modifiers: { skillId: string; amount: number }[] = [];
+        let options: any[] = [];
 
     if (selectedThoughtPreset !== "custom") {
       const preset = PRESET_THOUGHTS.find(p => p.id === selectedThoughtPreset);
       if (preset) {
         name = preset.name;
         problem = preset.problem;
-        conclusion = preset.conclusion;
-        modifiers = preset.modifiers;
+        options = preset.options || [];
       }
     } else {
       name = customThoughtName.trim();
       trigger = customThoughtTrigger.trim();
       problem = customThoughtProblem.trim();
+      
+      const opt1 = {
+        text: customThoughtConclusion1.trim(),
+        modifiers: [
+          { skillId: customThoughtModifier1Plus, amount: 2 },
+          { skillId: customThoughtModifier1Minus, amount: -1 }
+        ]
+      };
+      
+      const opt2 = {
+        text: customThoughtConclusion2.trim(),
+        modifiers: [
+          { skillId: customThoughtModifier2Plus, amount: 2 },
+          { skillId: customThoughtModifier2Minus, amount: -1 }
+        ]
+      };
+      options = [opt1, opt2];
     }
 
     if (!name || (!problem && selectedThoughtPreset === "custom")) {
       showNotification("⚠️ 脑瓜震荡：请输入具有实际意义的思维名称和心智难题。");
+      return;
+    }
+
+    if (selectedThoughtPreset === "custom" && (!customThoughtConclusion1 || !customThoughtConclusion2)) {
+      showNotification("⚠️ 脑瓜震荡：自定义思维必须完整填写两个可能的结论。");
       return;
     }
 
@@ -630,10 +628,9 @@ export default function Dashboard({
       name,
       trigger,
       problem,
-      conclusion,
+      options,
       progress: 0, // 0 indicates researching
-      internalized: false,
-      modifiers
+      internalized: false
     };
 
     onUpdate({
@@ -648,6 +645,8 @@ export default function Dashboard({
     setCustomThoughtName("");
     setCustomThoughtTrigger("");
     setCustomThoughtProblem("");
+    setCustomThoughtConclusion1("");
+    setCustomThoughtConclusion2("");
   };
 
   const handleDirectInternalize = (thoughtId: string) => {
@@ -714,6 +713,36 @@ export default function Dashboard({
     setInternalizingThoughtId(null);
     setInternalizeConclusion("");
   };
+
+  const handleConfirmInternalizeOption = (thoughtId: string, option: any) => {
+    if (char.xp < 5) {
+      showNotification("⚠️ 经验值不足：内化一项思维需要 5 XP。");
+      return;
+    }
+    
+    const updatedThoughts = char.thoughts.map(t => {
+      if (t.id === thoughtId) {
+        return {
+          ...t,
+          internalized: true,
+          conclusion: option.text,
+          modifiers: option.modifiers,
+          progress: 3
+        };
+      }
+      return t;
+    });
+
+    onUpdate({
+      ...char,
+      xp: char.xp - 5,
+      thoughts: updatedThoughts
+    });
+
+    showNotification(`🌟 顿悟！已消耗 5 XP 将思维结论完美内化，调整值已正式生效。`);
+    setInternalizingThoughtId(null);
+  };
+
 
   const handleProgressThought = (thoughtId: string) => {
     const updatedThoughts = (char.thoughts || []).map(t => {
@@ -2136,35 +2165,52 @@ export default function Dashboard({
                                 {!isInternalized && (
                                   internalizingThoughtId === thought.id ? (
                                     <div className="mt-3 bg-white p-3 border border-amber-300 shadow-sm space-y-3">
-                                      <div className="text-[10px] font-black text-amber-800 uppercase border-b border-amber-200 pb-1">
-                                        顿悟：记录思维结论
+                                      <div className="text-[10px] font-black text-amber-800 uppercase border-b border-amber-200 pb-1 flex justify-between items-center">
+                                        <span>顿悟：确定思维结论</span>
+                                        <button 
+                                          onClick={() => {
+                                            const options = thought.options || [];
+                                            if (options.length === 0) return;
+                                            const randomOpt = options[Math.floor(Math.random() * options.length)];
+                                            if (window.confirm(`神谕判定：命运将你引向了【结论 ${options.indexOf(randomOpt) + 1}】。是否接受？`)) {
+                                              handleConfirmInternalizeOption(thought.id, randomOpt);
+                                            }
+                                          }}
+                                          className="px-2 py-0.5 bg-purple-600 hover:bg-purple-700 text-white rounded text-[8px] transition-colors"
+                                          title="使用神谕表随机决定"
+                                        >
+                                          🎲 投掷神谕决定
+                                        </button>
                                       </div>
-                                      <textarea
-                                        placeholder="【结论】(想通之后，你达成了什么顿悟？)"
-                                        value={internalizeConclusion}
-                                        onChange={(e) => setInternalizeConclusion(e.target.value)}
-                                        className="w-full h-16 text-[10px] py-1 px-2 bg-slate-50 text-slate-900 border border-slate-300 outline-none resize-none font-sans focus:border-amber-400"
-                                      />
-                                      <div className="grid grid-cols-2 gap-2 text-[10px]">
-                                        <div className="space-y-1">
-                                          <label className="text-emerald-700 uppercase font-black block">加成技能 (+2)</label>
-                                          <select value={internalizePlusSkill} onChange={(e) => setInternalizePlusSkill(e.target.value)} className="w-full text-[10px] py-1 bg-white text-slate-900 border border-slate-300 outline-none cursor-pointer focus:border-amber-400">
-                                            {SKILLS.map(s => <option key={s.id} value={s.id}>{s.name} ({s.category.slice(0, 2)})</option>)}
-                                          </select>
-                                        </div>
-                                        <div className="space-y-1">
-                                          <label className="text-rose-700 uppercase font-black block">副作用 (-1)</label>
-                                          <select value={internalizeMinusSkill} onChange={(e) => setInternalizeMinusSkill(e.target.value)} className="w-full text-[10px] py-1 bg-white text-slate-900 border border-slate-300 outline-none cursor-pointer focus:border-amber-400">
-                                            {SKILLS.map(s => <option key={s.id} value={s.id}>{s.name} ({s.category.slice(0, 2)})</option>)}
-                                          </select>
-                                        </div>
+                                      
+                                      <div className="grid grid-cols-1 gap-2">
+                                        {(thought.options || []).map((opt, idx) => (
+                                          <div 
+                                            key={idx} 
+                                            className="p-2 border border-slate-200 bg-slate-50 hover:border-amber-400 cursor-pointer transition-colors" 
+                                            onClick={() => {
+                                              if (window.confirm(`确定要消耗 5 XP 将此结论内化吗？`)) {
+                                                handleConfirmInternalizeOption(thought.id, opt);
+                                              }
+                                            }}
+                                          >
+                                            <div className="text-[10px] font-bold text-slate-800 mb-1">结论 {idx + 1}</div>
+                                            <p className="text-[9px] text-slate-600 italic leading-relaxed mb-1">“{opt.text}”</p>
+                                            <div className="flex flex-wrap gap-1 mt-1 font-mono">
+                                              {opt.modifiers.map(m => (
+                                                <span key={m.skillId} className={`text-[8px] px-1 border ${m.amount > 0 ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"}`}>
+                                                  {SKILLS.find(s => s.id === m.skillId)?.name}{m.amount > 0 ? `+${m.amount}` : m.amount}
+                                                </span>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        ))}
                                       </div>
-                                      <div className="flex gap-2 mt-2">
-                                        <button onClick={() => setInternalizingThoughtId(null)} className="flex-1 py-1.5 text-[9px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors">取消</button>
-                                        <button onClick={() => handleInternalizeThoughtSubmit()} className="flex-1 py-1.5 text-[9px] font-black text-amber-950 bg-amber-400 hover:bg-amber-300 transition-colors shadow-sm">消耗 5 XP 确认内化</button>
-                                      </div>
+                                      
+                                      <button onClick={() => setInternalizingThoughtId(null)} className="w-full py-1.5 text-[9px] font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors mt-2">取消</button>
                                     </div>
-                                  ) : (
+                                  )
+                                  : (
                                     thought.progress >= 3 ? (
                                       <button
                                         onClick={() => {

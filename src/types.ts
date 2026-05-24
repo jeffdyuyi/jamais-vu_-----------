@@ -228,12 +228,18 @@ export const INITIAL_DRUGS: Drug[] = [
   }
 ];
 
+export interface ThoughtOption {
+  text: string;
+  modifiers: { skillId: string; amount: number }[];
+}
+
 export interface Thought {
   id: string;
   name: string;
   problem: string;
   progress: number; // 0-3
   internalized: boolean;
+  options?: ThoughtOption[];
   conclusion?: string;
   modifiers?: { skillId: string; amount: number }[];
   trigger?: string;

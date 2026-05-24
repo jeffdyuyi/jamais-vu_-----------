@@ -111,7 +111,7 @@ export default function App() {
   };
 
   const handleDeleteCharacter = (id: string) => {
-    if (window.confirm("你确定要永久撕毁并销毁此页调查员档案吗？此操作无法撤销。")) {
+    if (window.confirm("确定要销毁该调查员档案吗？此操作无法撤销。")) {
       const filtered = characters.filter(c => c.id !== id);
       setCharacters(filtered);
       localStorage.setItem("jamais_vu_characters", JSON.stringify(filtered));
@@ -155,7 +155,7 @@ export default function App() {
       const parsed = JSON.parse(jsonStr);
       
       if (!parsed.name || typeof parsed.skills !== 'object') {
-        return "错误的 JSON 格式。必须包含姓名 (name) 与子技能分布 (skills)。";
+        return "格式错误：文件必须包含姓名 (name) 与技能分布 (skills)。";
       }
       
       const imported: Character = {

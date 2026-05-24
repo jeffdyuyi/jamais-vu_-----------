@@ -2108,10 +2108,10 @@ export default function Dashboard({
                                   internalizingThoughtId === thought.id ? (
                                     <div className="mt-3 bg-white p-3 border border-amber-300 shadow-sm space-y-3">
                                       <div className="text-[10px] font-black text-amber-800 uppercase border-b border-amber-200 pb-1">
-                                        顿悟：记录神谕结论
+                                        顿悟：记录思维结论
                                       </div>
                                       <textarea
-                                        placeholder="【本能结论】(一旦想通，你达成了什么顿悟？)"
+                                        placeholder="【结论】(想通之后，你达成了什么顿悟？)"
                                         value={internalizeConclusion}
                                         onChange={(e) => setInternalizeConclusion(e.target.value)}
                                         className="w-full h-16 text-[10px] py-1 px-2 bg-slate-50 text-slate-900 border border-slate-300 outline-none resize-none font-sans focus:border-amber-400"
@@ -2149,7 +2149,7 @@ export default function Dashboard({
                                         className="w-full py-2 text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-1.5 border bg-amber-500 border-amber-600 hover:bg-amber-400 text-amber-950 shadow-[2px_2px_0px_#78350f]"
                                       >
                                         <Zap className="w-3 h-3" />
-                                        <span>执行内化顿悟 (5 XP)</span>
+                                        <span>执行内化 (5 XP)</span>
                                       </button>
                                     ) : (
                                       <div className="text-[9px] text-center text-slate-400 py-1.5 border border-dashed border-slate-200 bg-slate-50">

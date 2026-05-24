@@ -105,7 +105,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
   const [logicalConnection, setLogicalConnection] = useState("");
   const [selectedSkillId, setSelectedSkillId] = useState("logic");
   const [roleplayDesc, setRoleplayDesc] = useState("");
-  const [trackerToAdvance, setTrackerToAdvance] = useState<"case" | "identity" | "none">("case");
+  const [advanceProgress, setAdvanceProgress] = useState(true);
 
   // Load persistence
   useEffect(() => {
@@ -264,14 +264,16 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
     }
 
     // Single scene rules checks
-    if (trackerToAdvance === "case" && data.caseMarkedInActiveScene) {
-      showNotification("🚨 当前场景内你已标记过一个【案件进度】！你可以选择「不标记进度」来单纯存储该直觉。");
+    if (advanceProgress && activeProgressTab === "case" && data.caseMarkedInActiveScene) {
+      showNotification("🚨 当前场景内你已标记过一个【案件进度】！你可以取消勾选「刻印进度」来单纯存储该直觉。");
       return;
     }
-    if (trackerToAdvance === "identity" && data.identityMarkedInActiveScene) {
-      showNotification("🚨 当前场景内你已标记过一个【身份进度】！你可以选择「不标记进度」来单纯存储该直觉。");
+    if (advanceProgress && activeProgressTab === "identity" && data.identityMarkedInActiveScene) {
+      showNotification("🚨 当前场景内你已标记过一个【身份进度】！你可以取消勾选「刻印进度」来单纯存储该直觉。");
       return;
     }
+
+    const actualTracker = advanceProgress ? activeProgressTab : "none";
 
     // Ready to consolidate
     const newIntuitionId = `intuition_${Date.now()}_${Math.random()}`;
@@ -284,7 +286,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
       skillId: selectedSkillId,
       roleplayDesc: roleplayDesc.trim(),
       timestamp: new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }),
-      trackerAdvanced: trackerToAdvance
+      trackerAdvanced: actualTracker
     };
 
     // Update clues to refer to this intuition to lock them
@@ -301,10 +303,10 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
     let markedCase = data.caseMarkedInActiveScene;
     let markedIdent = data.identityMarkedInActiveScene;
 
-    if (trackerToAdvance === "case") {
+    if (actualTracker === "case") {
       nextCaseProg = Math.min(10, data.caseProgress + 1);
       markedCase = true;
-    } else if (trackerToAdvance === "identity") {
+    } else if (actualTracker === "identity") {
       nextIdentProg = Math.min(10, data.identityProgress + 1);
       markedIdent = true;
     }
@@ -333,7 +335,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
     setLogicalConnection("");
     setRoleplayDesc("");
     
-    showNotification(`🌟 直觉结晶：【${newIntuition.title}】凝聚成功！调查进度推进，你收获了 2 点经验 (XP)！`);
+    showNotification(`🌟 直觉成型：【${newIntuition.title}】构建成功！调查进度已推进，获得 2 点 XP！`);
   };
 
   // Back-out selection if clicked in workspace
@@ -353,6 +355,156 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
       )}
 
       {/* Main Title Banner was here, removed text */}
+
+      {/* MID SECTION: CLUE SYSTEM (Record and Deck) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* Record New Clue Pane (Left 4 cols) */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+            <h3 className="text-md font-black text-slate-800 uppercase tracking-wider flex items-center gap-2 font-sans border-b border-slate-200 pb-2.5">
+              <Plus className="w-4 h-4 text-blue-600" />
+              <span>记事簿：收集新线索</span>
+            </h3>
+
+            {/* Input fields */}
+            <div className="space-y-3.5">
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">
+                  线索与证据名称:
+                </label>
+                <input
+                  type="text"
+                  className="w-full text-xs font-bold p-2 bg-slate-50 border border-slate-200 text-slate-800 outline-none focus:border-blue-500 font-mono"
+                  placeholder="例：口袋里的借书卡"
+                  value={clueTitle}
+                  onChange={(e) => setClueTitle(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">
+                  线索分类:
+                </label>
+                <select 
+                  value={clueCategory}
+                  onChange={(e) => setClueCategory(e.target.value as keyof typeof CLUE_CATEGORIES)}
+                  className="w-full text-xs font-black p-2.5 bg-slate-50 border border-slate-200 text-slate-800 outline-none focus:border-blue-500 cursor-pointer"
+                >
+                  {Object.entries(CLUE_CATEGORIES).map(([key, item]) => (
+                    <option key={key} value={key}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">
+                  细节特征详细描述:
+                </label>
+                <textarea
+                  className="w-full h-24 p-2 bg-slate-50 border border-slate-200 text-slate-800 outline-none focus:border-blue-500 text-xs italic leading-relaxed font-mono resize-none font-serif"
+                  placeholder="详细描述你发掘的蛛丝马迹与细节..."
+                  value={clueDesc}
+                  onChange={(e) => setClueDesc(e.target.value)}
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={handleAddClue}
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-750 text-white font-black text-xs uppercase tracking-widest transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <span>✓ 钉入证据黑板</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Clues Board Grid (Right 8 cols) */}
+        <div className="lg:col-span-8 space-y-4">
+          <div className="flex justify-between items-center border-b border-slate-200 pb-2.5">
+            <h3 className="text-xs font-black tracking-widest text-slate-500 uppercase flex items-center gap-2 font-sans">
+              <Layers className="w-4 h-4 text-blue-600" />
+              <span>证据黑板 (点击线索将其引入连线台)</span>
+            </h3>
+            <span className="text-[10px] text-slate-400 font-mono font-bold uppercase font-sans">
+              已收集线索/证据: {data.clues.length} 枚
+            </span>
+          </div>
+
+          {data.clues.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+              {data.clues.map((clue) => {
+                const spec = CLUE_CATEGORIES[clue.category];
+                const isSelected = selectedClueIds.includes(clue.id);
+                const isUsedInIntuition = !!clue.usedInIntuitionId;
+
+                return (
+                  <div
+                    key={clue.id}
+                    onClick={() => handleToggleClueSelection(clue.id, isUsedInIntuition)}
+                    className={`border-2 p-4 cursor-pointer relative transition-all group rounded-none flex flex-col justify-between select-none ${
+                      isUsedInIntuition
+                        ? "opacity-60 border-slate-200 bg-slate-100/60 cursor-not-allowed"
+                        : isSelected
+                        ? "border-amber-500 bg-amber-50/70 shadow-[3px_3px_0px_#d97706] -translate-x-[2px] -translate-y-[2px]"
+                        : "border-slate-200 bg-white hover:border-slate-350 shadow-sm"
+                    }`}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-start gap-2">
+                        <span className={`px-2 py-0.5 text-[8px] font-black rounded border font-sans uppercase tracking-[0.1em] ${spec.bg}`}>
+                          {spec.label.split(" (")[0]}
+                        </span>
+                        
+                        {isUsedInIntuition ? (
+                          <span className="text-[7.5px] leading-none text-slate-500 font-sans font-bold uppercase py-0.5 border border-slate-200 px-1 bg-slate-100/80">
+                            已锁定在直觉推论内
+                          </span>
+                        ) : isSelected ? (
+                          <span className="text-[8px] leading-none text-amber-800 font-mono font-bold uppercase tracking-wider bg-amber-200/60 px-1.5 py-0.5 border border-amber-300">
+                            已选中
+                          </span>
+                        ) : (
+                          <span className="text-[9px] text-slate-400 font-sans">{clue.timestamp}</span>
+                        )}
+                      </div>
+
+                      <h4 className="text-sm font-black text-slate-800 tracking-tight font-sans">
+                        {clue.title}
+                      </h4>
+                      <p className="text-xs text-slate-600 font-serif leading-relaxed line-clamp-3 italic">
+                        “{clue.description}”
+                      </p>
+                    </div>
+
+                    <div className="flex gap-2 justify-end border-t border-slate-100 pt-2.5 mt-3.5">
+                      {!isUsedInIntuition && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveClue(clue.id);
+                          }}
+                          className="hover:bg-slate-100 p-1 rounded-sm text-slate-450 hover:text-red-500 transition-colors cursor-pointer opacity-30 group-hover:opacity-100 text-xs"
+                          title="销毁该条线索纸片"
+                        >
+                          <Trash2 className="w-3 h-3" /><span>删除猜想</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="p-12 border border-dashed border-slate-200 text-center rounded text-xs text-slate-500 bg-slate-50 italic font-serif">
+              “证据黑板空无一物。请通过左侧面板搜集线索。”
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* TOP SECTION: Atmospheric Direction & Scene control */}
       <div className="w-full">
@@ -481,156 +633,6 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
         </div>
       </div>
 
-      {/* MID SECTION: CLUE SYSTEM (Record and Deck) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Record New Clue Pane (Left 4 cols) */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="border border-slate-200 bg-white p-6 shadow-sm space-y-4">
-            <h3 className="text-md font-black text-slate-800 uppercase tracking-wider flex items-center gap-2 font-sans border-b border-slate-200 pb-2.5">
-              <Plus className="w-4 h-4 text-blue-600" />
-              <span>记事簿：收集新线索</span>
-            </h3>
-
-            {/* Input fields */}
-            <div className="space-y-3.5">
-              <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">
-                  线索与证据名称:
-                </label>
-                <input
-                  type="text"
-                  className="w-full text-xs font-bold p-2 bg-slate-50 border border-slate-200 text-slate-800 outline-none focus:border-blue-500 font-mono"
-                  placeholder="例：口袋里的借书卡"
-                  value={clueTitle}
-                  onChange={(e) => setClueTitle(e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">
-                  线索分类:
-                </label>
-                <select 
-                  value={clueCategory}
-                  onChange={(e) => setClueCategory(e.target.value as keyof typeof CLUE_CATEGORIES)}
-                  className="w-full text-xs font-black p-2.5 bg-slate-50 border border-slate-200 text-slate-800 outline-none focus:border-blue-500 cursor-pointer"
-                >
-                  {Object.entries(CLUE_CATEGORIES).map(([key, item]) => (
-                    <option key={key} value={key}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">
-                  细节特征详细描述:
-                </label>
-                <textarea
-                  className="w-full h-24 p-2 bg-slate-50 border border-slate-200 text-slate-800 outline-none focus:border-blue-500 text-xs italic leading-relaxed font-mono resize-none font-serif"
-                  placeholder="写下你脑海中联想或发掘、看穿的具体蛛丝马迹细节..."
-                  value={clueDesc}
-                  onChange={(e) => setClueDesc(e.target.value)}
-                />
-              </div>
-
-              <button
-                type="button"
-                onClick={handleAddClue}
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-750 text-white font-black text-xs uppercase tracking-widest transition-colors cursor-pointer flex items-center justify-center gap-1.5"
-              >
-                <span>✓ 将线索打在黑板上</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Clues Board Grid (Right 8 cols) */}
-        <div className="lg:col-span-8 space-y-4">
-          <div className="flex justify-between items-center border-b border-slate-200 pb-2.5">
-            <h3 className="text-xs font-black tracking-widest text-slate-500 uppercase flex items-center gap-2 font-sans">
-              <Layers className="w-4 h-4 text-blue-600" />
-              <span>证据黑板 (点击线索将其引入连线台)</span>
-            </h3>
-            <span className="text-[10px] text-slate-400 font-mono font-bold uppercase font-sans">
-              已收集线索/证据: {data.clues.length} 枚
-            </span>
-          </div>
-
-          {data.clues.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
-              {data.clues.map((clue) => {
-                const spec = CLUE_CATEGORIES[clue.category];
-                const isSelected = selectedClueIds.includes(clue.id);
-                const isUsedInIntuition = !!clue.usedInIntuitionId;
-
-                return (
-                  <div
-                    key={clue.id}
-                    onClick={() => handleToggleClueSelection(clue.id, isUsedInIntuition)}
-                    className={`border-2 p-4 cursor-pointer relative transition-all group rounded-none flex flex-col justify-between select-none ${
-                      isUsedInIntuition
-                        ? "opacity-60 border-slate-200 bg-slate-100/60 cursor-not-allowed"
-                        : isSelected
-                        ? "border-amber-500 bg-amber-50/70 shadow-[3px_3px_0px_#d97706] -translate-x-[2px] -translate-y-[2px]"
-                        : "border-slate-200 bg-white hover:border-slate-350 shadow-sm"
-                    }`}
-                  >
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-start gap-2">
-                        <span className={`px-2 py-0.5 text-[8px] font-black rounded border font-sans uppercase tracking-[0.1em] ${spec.bg}`}>
-                          {spec.label.split(" (")[0]}
-                        </span>
-                        
-                        {isUsedInIntuition ? (
-                          <span className="text-[7.5px] leading-none text-slate-500 font-sans font-bold uppercase py-0.5 border border-slate-200 px-1 bg-slate-100/80">
-                            已锁定在直觉推论内
-                          </span>
-                        ) : isSelected ? (
-                          <span className="text-[8px] leading-none text-amber-800 font-mono font-bold uppercase tracking-wider bg-amber-200/60 px-1.5 py-0.5 border border-amber-300">
-                            已选中
-                          </span>
-                        ) : (
-                          <span className="text-[9px] text-slate-400 font-sans">{clue.timestamp}</span>
-                        )}
-                      </div>
-
-                      <h4 className="text-sm font-black text-slate-800 tracking-tight font-sans">
-                        {clue.title}
-                      </h4>
-                      <p className="text-xs text-slate-600 font-serif leading-relaxed line-clamp-3 italic">
-                        “{clue.description}”
-                      </p>
-                    </div>
-
-                    <div className="flex gap-2 justify-end border-t border-slate-100 pt-2.5 mt-3.5">
-                      {!isUsedInIntuition && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveClue(clue.id);
-                          }}
-                          className="hover:bg-slate-100 p-1 rounded-sm text-slate-450 hover:text-red-500 transition-colors cursor-pointer opacity-30 group-hover:opacity-100 text-xs"
-                          title="销毁该条线索纸片"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="p-12 border border-dashed border-slate-200 text-center rounded text-xs text-slate-500 bg-slate-50 italic font-serif">
-              “黑板前空荡荡的，蛛网在昏暗处摇曳。看来目前还没有任何能够被记录的迹象。通过左侧书写面板去搜集点什么吧。”
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* LOWER SECTION: INTUITION CONSOLIDATOR (Workspace & Logs) */}
       <div className="border-t-2 border-slate-200 pt-5 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
@@ -655,7 +657,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
             {/* Selected Clues Preview */}
             <div className="space-y-2">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">
-                已选中作为关联起因的线索（需包含最少两类的 3 枚线索）:
+                已选关联线索（至少 3 枚，且跨越 2 种类别）:
               </span>
 
               {selectedClueIds.length > 0 ? (
@@ -676,7 +678,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
                 </div>
               ) : (
                 <div className="p-4 border border-dashed border-slate-200 bg-white p-4 text-center rounded text-xs text-amber-800/80 italic font-serif leading-relaxed">
-                  ⬇ 点击上方证据黑板上的线索纸片，将其置入此处进行连线拼凑 ⬇
+                  ⬇ 点击上方线索，将其置入此处进行拼凑 ⬇
                 </div>
               )}
             </div>
@@ -703,20 +705,24 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
                 </div>
 
                 {/* Progress Advancement Selector */}
-                <div className="space-y-1 font-sans">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-sans">
-                    将刻印哪个进度条 :
+                
+                <div className="space-y-1 font-sans flex flex-col justify-end pb-2">
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      checked={advanceProgress}
+                      onChange={(e) => setAdvanceProgress(e.target.checked)}
+                      className="w-4 h-4 text-amber-600 rounded border-slate-300 focus:ring-amber-500 cursor-pointer"
+                    />
+                    <span className="text-xs font-black text-slate-700 uppercase tracking-widest group-hover:text-amber-700 transition-colors">
+                      刻印此直觉并推进当前标签页的进度 (+1)
+                    </span>
                   </label>
-                  <select 
-                    value={trackerToAdvance}
-                    onChange={(e) => setTrackerToAdvance(e.target.value as "case" | "identity" | "none")}
-                    className="w-full text-xs font-black p-2 bg-white border border-slate-200 text-slate-800 outline-none focus:border-amber-500 cursor-pointer"
-                  >
-                    <option value="case">🔎 推进案件进度条 (+1)</option>
-                    <option value="identity">🧠 推进身份记忆进度条 (+1)</option>
-                    <option value="none">✓ 纯作档案记录 (不推进进度)</option>
-                  </select>
+                  <p className="text-[9px] text-slate-400 pl-6 mt-0.5 font-sans">
+                    如果不勾选，则仅作为纯叙事记录。
+                  </p>
                 </div>
+  
               </div>
 
               {/* Logical Connection explanation */}
@@ -726,7 +732,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
                 </label>
                 <textarea
                   className="w-full h-16 p-2 bg-white border border-slate-200 text-slate-800 outline-none focus:border-amber-500 text-xs italic leading-relaxed font-mono resize-none font-serif"
-                  placeholder="例：被借书卡里那家深夜咖啡馆，与现场垃圾桶中偶然遗留的冷咖啡杯完全一致。这不是巧合，而是有人提前盯上了这里..."
+                  placeholder="例：借书卡上的深夜咖啡馆，与现场遗留的咖啡杯完全一致。这不是巧合，有人提前盯上了这里..."
                   value={logicalConnection}
                   onChange={(e) => setLogicalConnection(e.target.value)}
                 />
@@ -736,7 +742,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
                 <div className="md:col-span-4 space-y-1 font-sans">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block leading-none mb-1">
-                    串联此推论的心灵声音 :
+                    主导推论的心灵声音 :
                   </label>
                   <select 
                     value={selectedSkillId}
@@ -754,7 +760,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
                   <input
                     type="text"
                     className="w-full text-xs p-2 bg-white border border-slate-200 text-slate-800 outline-none focus:border-amber-500 font-mono"
-                    placeholder="角色扮演：该技能如何灵光一闪看穿真相..."
+                    placeholder="角色扮演：描述该技能如何看穿真相..."
                     value={roleplayDesc}
                     onChange={(e) => setRoleplayDesc(e.target.value)}
                   />
@@ -762,7 +768,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
               </div>
 
               <div className="bg-amber-100/30 p-3 text-[10px] text-slate-600 font-sans rounded border border-amber-200 leading-relaxed">
-                🧑‍⚖️ <strong>主持人否决机制：</strong>你的推论须与游戏实况的案件调查氛围和逻辑相符。若推论过于荒诞或平庸，主持人（GM）可予以否决。在此你随时可清空拼凑板并重新调整关联说辞。
+                🧑‍⚖️ 你的推论须符合当前调查的逻辑与氛围。若过于荒诞或牵强，GM 有权予以否决。你可随时清空重组说辞。
               </div>
 
               {/* Submit trigger button */}
@@ -772,7 +778,7 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
                 className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest transition-all cursor-pointer shadow-[3px_3px_0px_#020617] active:translate-y-0.5 flex items-center justify-center gap-2"
               >
                 <Award className="w-4 h-4" />
-                <span>★ 凝聚这一直觉：推进进度并获取 2 点 XP !</span>
+                <span>★ 凝聚直觉：推进进度并获取 2 点 XP !</span>
               </button>
             </div>
           </div>
@@ -786,13 +792,15 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
               <span>已经固化的直觉推理历史</span>
             </span>
             <span className="text-[10px] font-mono select-none font-bold text-slate-400 font-sans">
-              直觉数量: {data.intuitions.length}
+              直觉数量: {data.intuitions.filter(i => i.trackerAdvanced === activeProgressTab || i.trackerAdvanced === "none").length}
             </span>
           </h4>
 
-          {data.intuitions.length > 0 ? (
+          {(() => {
+            const filteredIntuitions = data.intuitions.filter(i => i.trackerAdvanced === activeProgressTab || i.trackerAdvanced === "none");
+            return filteredIntuitions.length > 0 ? (
             <div className="space-y-4 max-h-[580px] overflow-y-auto pr-2 custom-scrollbar">
-              {data.intuitions.map((intuition) => {
+              {filteredIntuitions.map((intuition) => {
                 const associatedClues = data.clues.filter(c => intuition.clueIds.includes(c.id));
                 const sName = SKILLS.find(s => s.id === intuition.skillId)?.name || intuition.skillId;
 
@@ -887,12 +895,12 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
                           };
 
                           saveState(updated);
-                          showNotification("💨 已解固该直觉关联，锁定的线索卡已恢复自由流通。");
+                          showNotification("💨 已解除该直觉，相关线索恢复可用状态。");
                         }}
-                        className="text-slate-400 hover:text-red-500 opacity-20 hover:opacity-100 transition-opacity p-1 cursor-pointer text-xs font-sans"
+                        className="text-white bg-red-500 hover:bg-red-600 shadow-sm transition-all px-2 py-1 cursor-pointer text-[10px] font-black font-sans uppercase rounded-sm flex items-center gap-1"
                         title="解固直觉：释放被锁定的线索卡"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-3 h-3" /><span>删除猜想</span>
                       </button>
                     </div>
                   </div>
@@ -901,9 +909,10 @@ export default function InvestigationBoard({ char, onUpdate }: InvestigationBoar
             </div>
           ) : (
             <div className="p-12 border border-dashed border-slate-200 text-center rounded text-xs text-slate-500 bg-slate-50/50 italic font-serif">
-              “脑腔内寂静无声。尚未孕育出任何将零碎线索引证而合的警探本能假设。”
+              “推论历史为空。尚未产生任何将线索串联的直觉假设。”
             </div>
-          )}
+          );
+          })()}
         </div>
       </div>
     </div>

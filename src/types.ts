@@ -50,70 +50,71 @@ export interface Gear {
   id: string;
   name: string;
   type: "衣物" | "工具" | "武器";
+  slot?: "眼镜" | "手部" | "头部" | "外套" | "下装" | "颈饰" | "上衣" | "鞋履" | string;
   modifiers: { skillId: string; amount: number }[];
   description: string;
 }
 
 export const INITIAL_GEAR: Gear[] = [
   // 眼镜
-  { id: "art_critic_glasses", name: "艺术评论家眼镜", type: "衣物", modifiers: [{ skillId: "conceptualization", amount: 2 }, { skillId: "rhetoric", amount: 1 }, { skillId: "interfacing", amount: -2 }], description: "谨防先锋派舞台布景中那种看似天真实则迷惑人眼的视错觉效果。" },
-  { id: "biker_shades", name: "机车党墨镜", type: "衣物", modifiers: [{ skillId: "endurance", amount: 2 }], description: "保护太阳免受你的光辉所扰。" },
-  { id: "black_shades", name: "黑超", type: "衣物", modifiers: [{ skillId: "savoirFaire", amount: 1 }, { skillId: "authority", amount: 1 }], description: "烂片导演与摇滚巨星的秘密武器。" },
-  { id: "bourgeois_monocle", name: "资产阶级单片镜", type: "衣物", modifiers: [{ skillId: "rhetoric", amount: 2 }, { skillId: "empathy", amount: -2 }], description: "赋予你俯瞰世界与凡人的特权视角。" },
-  { id: "weird_reporter_glasses", name: "怪咖记者眼镜", type: "衣物", modifiers: [{ skillId: "electrochemistry", amount: 1 }, { skillId: "visualCalculus", amount: 1 }, { skillId: "savoirFaire", amount: -1 }], description: "红圆镜片配绿方镜片，镶嵌在铜框里。俗不可耐。" },
-  { id: "librarian_glasses", name: "图书管理员眼镜", type: "衣物", modifiers: [{ skillId: "encyclopedia", amount: 1 }, { skillId: "perception", amount: 1 }], description: "戴上它，一英里内任何放错位置的书都无所遁形。" },
-  { id: "pirate_eyepatch", name: "海盗眼罩", type: "衣物", modifiers: [{ skillId: "authority", amount: 1 }, { skillId: "drama", amount: 1 }], description: "一眼望未来，一眼窥往昔。那往昔是深不见底的虚空。" },
+  { id: "art_critic_glasses", name: "艺术评论家眼镜", type: "衣物", slot: "眼镜", modifiers: [{ skillId: "conceptualization", amount: 2 }, { skillId: "rhetoric", amount: 1 }, { skillId: "interfacing", amount: -2 }], description: "谨防先锋派舞台布景中那种看似天真实则迷惑人眼的视错觉效果。" },
+  { id: "biker_shades", name: "机车党墨镜", type: "衣物", slot: "眼镜", modifiers: [{ skillId: "endurance", amount: 2 }], description: "保护太阳免受你的光辉所扰。" },
+  { id: "black_shades", name: "黑超", type: "衣物", slot: "眼镜", modifiers: [{ skillId: "savoirFaire", amount: 1 }, { skillId: "authority", amount: 1 }], description: "烂片导演与摇滚巨星的秘密武器。" },
+  { id: "bourgeois_monocle", name: "资产阶级单片镜", type: "衣物", slot: "眼镜", modifiers: [{ skillId: "rhetoric", amount: 2 }, { skillId: "empathy", amount: -2 }], description: "赋予你俯瞰世界与凡人的特权视角。" },
+  { id: "weird_reporter_glasses", name: "怪咖记者眼镜", type: "衣物", slot: "眼镜", modifiers: [{ skillId: "electrochemistry", amount: 1 }, { skillId: "visualCalculus", amount: 1 }, { skillId: "savoirFaire", amount: -1 }], description: "红圆镜片配绿方镜片，镶嵌在铜框里。俗不可耐。" },
+  { id: "librarian_glasses", name: "图书管理员眼镜", type: "衣物", slot: "眼镜", modifiers: [{ skillId: "encyclopedia", amount: 1 }, { skillId: "perception", amount: 1 }], description: "戴上它，一英里内任何放错位置的书都无所遁形。" },
+  { id: "pirate_eyepatch", name: "海盗眼罩", type: "衣物", slot: "眼镜", modifiers: [{ skillId: "authority", amount: 1 }, { skillId: "drama", amount: 1 }], description: "一眼望未来，一眼窥往昔。那往昔是深不见底的虚空。" },
 
   // 手部饰品
-  { id: "ruby_ring", name: "大红宝石戒指", type: "衣物", modifiers: [{ skillId: "drama", amount: 3 }, { skillId: "handEyeCoordination", amount: -1 }], description: "拥抱内心的天后。" },
-  { id: "cleaning_gloves", name: "清洁手套", type: "衣物", modifiers: [{ skillId: "endurance", amount: 2 }], description: "橡胶覆层为最肮脏的任务提供防护。" },
-  { id: "emerald_ring", name: "翡翠戒指", type: "衣物", modifiers: [{ skillId: "composure", amount: 1 }, { skillId: "savoirFaire", amount: 1 }], description: "低调而精致，某位贵妇的传世之物。" },
-  { id: "floral_bracelet", name: "花饰手镯", type: "衣物", modifiers: [{ skillId: "shivers", amount: 2 }, { skillId: "volition", amount: 1 }], description: "花朵铭刻着自然之美与不可逆转的衰败。" },
-  { id: "latex_gloves", name: "乳胶手套", type: "衣物", modifiers: [{ skillId: "interfacing", amount: 2 }], description: "防护性与触感的最佳平衡。" },
-  { id: "leather_wristband", name: "皮革手链", type: "衣物", modifiers: [{ skillId: "physicalInstrument", amount: 1 }, { skillId: "painThreshold", amount: 1 }], description: "让你的手腕真正嘶吼出“究极硬核”。" },
-  { id: "northern_mittens", name: "北方连指手套", type: "衣物", modifiers: [{ skillId: "composure", amount: 2 }, { skillId: "endurance", amount: 2 }, { skillId: "interfacing", amount: -3 }], description: "可爱但笨重。让你的手指像木偶嘴巴般僵硬。" },
+  { id: "ruby_ring", name: "大红宝石戒指", type: "衣物", slot: "手部", modifiers: [{ skillId: "drama", amount: 3 }, { skillId: "handEyeCoordination", amount: -1 }], description: "拥抱内心的天后。" },
+  { id: "cleaning_gloves", name: "清洁手套", type: "衣物", slot: "手部", modifiers: [{ skillId: "endurance", amount: 2 }], description: "橡胶覆层为最肮脏的任务提供防护。" },
+  { id: "emerald_ring", name: "翡翠戒指", type: "衣物", slot: "手部", modifiers: [{ skillId: "composure", amount: 1 }, { skillId: "savoirFaire", amount: 1 }], description: "低调而精致，某位贵妇的传世之物。" },
+  { id: "floral_bracelet", name: "花饰手镯", type: "衣物", slot: "手部", modifiers: [{ skillId: "shivers", amount: 2 }, { skillId: "volition", amount: 1 }], description: "花朵铭刻着自然之美与不可逆转的衰败。" },
+  { id: "latex_gloves", name: "乳胶手套", type: "衣物", slot: "手部", modifiers: [{ skillId: "interfacing", amount: 2 }], description: "防护性与触感的最佳平衡。" },
+  { id: "leather_wristband", name: "皮革手链", type: "衣物", slot: "手部", modifiers: [{ skillId: "physicalInstrument", amount: 1 }, { skillId: "painThreshold", amount: 1 }], description: "让你的手腕真正嘶吼出“究极硬核”。" },
+  { id: "northern_mittens", name: "北方连指手套", type: "衣物", slot: "手部", modifiers: [{ skillId: "composure", amount: 2 }, { skillId: "endurance", amount: 2 }, { skillId: "interfacing", amount: -3 }], description: "可爱但笨重。让你的手指像木偶嘴巴般僵硬。" },
 
   // 头部饰品
-  { id: "bachelor_party_shame_hat", name: "单身派对羞耻帽", type: "衣物", modifiers: [{ skillId: "electrochemistry", amount: 2 }, { skillId: "composure", amount: -1 }], description: "有人在同个周末失去了单身身份与自尊。" },
-  { id: "banana_headband", name: "香蕉头带", type: "衣物", modifiers: [{ skillId: "painThreshold", amount: 2 }, { skillId: "endurance", amount: 1 }], description: "嘭的一声劈开砖块！" },
-  { id: "dealer_hat", name: "赌场荷官帽", type: "衣物", modifiers: [{ skillId: "composure", amount: 2 }, { skillId: "reactionSpeed", amount: 1 }, { skillId: "empathy", amount: -1 }], description: "赋予你对他人迅速破产的绝对冷漠。" },
-  { id: "detective_fedora", name: "侦探软呢帽", type: "衣物", modifiers: [{ skillId: "reactionSpeed", amount: 1 }, { skillId: "encyclopedia", amount: 1 }], description: "若不像个调查员，当侦探的意义何在？" },
-  { id: "beanie_hat", name: "针织帽", type: "衣物", modifiers: [{ skillId: "inlandEmpire", amount: 2 }], description: "某人的祖母倾注了无尽爱意编织。复古魅力。" },
-  { id: "princess_crown", name: "公主头冠", type: "衣物", modifiers: [{ skillId: "inlandEmpire", amount: 2 }, { skillId: "authority", amount: -1 }], description: "独角兽！我的王国需要独角兽！" },
-  { id: "straw_visor", name: "草编遮阳帽", type: "衣物", modifiers: [{ skillId: "shivers", amount: 1 }], description: "放松。闭眼。深呼吸。真相终将显现。" },
-  { id: "old_baseball_cap", name: "旧棒球帽", type: "衣物", modifiers: [{ skillId: "handEyeCoordination", amount: 1 }, { skillId: "visualCalculus", amount: 1 }, { skillId: "rhetoric", amount: -1 }], description: "啊，这顶浸透了无数荣耀午后与阁楼尘埃的振奋气息。" },
+  { id: "bachelor_party_shame_hat", name: "单身派对羞耻帽", type: "衣物", slot: "头部", modifiers: [{ skillId: "electrochemistry", amount: 2 }, { skillId: "composure", amount: -1 }], description: "有人在同个周末失去了单身身份与自尊。" },
+  { id: "banana_headband", name: "香蕉头带", type: "衣物", slot: "头部", modifiers: [{ skillId: "painThreshold", amount: 2 }, { skillId: "endurance", amount: 1 }], description: "嘭的一声劈开砖块！" },
+  { id: "dealer_hat", name: "赌场荷官帽", type: "衣物", slot: "头部", modifiers: [{ skillId: "composure", amount: 2 }, { skillId: "reactionSpeed", amount: 1 }, { skillId: "empathy", amount: -1 }], description: "赋予你对他人迅速破产的绝对冷漠。" },
+  { id: "detective_fedora", name: "侦探软呢帽", type: "衣物", slot: "头部", modifiers: [{ skillId: "reactionSpeed", amount: 1 }, { skillId: "encyclopedia", amount: 1 }], description: "若不像个调查员，当侦探的意义何在？" },
+  { id: "beanie_hat", name: "针织帽", type: "衣物", slot: "头部", modifiers: [{ skillId: "inlandEmpire", amount: 2 }], description: "某人的祖母倾注了无尽爱意编织。复古魅力。" },
+  { id: "princess_crown", name: "公主头冠", type: "衣物", slot: "头部", modifiers: [{ skillId: "inlandEmpire", amount: 2 }, { skillId: "authority", amount: -1 }], description: "独角兽！我的王国需要独角兽！" },
+  { id: "straw_visor", name: "草编遮阳帽", type: "衣物", slot: "头部", modifiers: [{ skillId: "shivers", amount: 1 }], description: "放松。闭眼。深呼吸。真相终将显现。" },
+  { id: "old_baseball_cap", name: "旧棒球帽", type: "衣物", slot: "头部", modifiers: [{ skillId: "handEyeCoordination", amount: 1 }, { skillId: "visualCalculus", amount: 1 }, { skillId: "rhetoric", amount: -1 }], description: "啊，这顶浸透了无数荣耀午后与阁楼尘埃的振奋气息。" },
 
   // 外套
-  { id: "parka_coat", name: "御寒派克大衣", type: "衣物", modifiers: [{ skillId: "composure", amount: 1 }, { skillId: "physicalInstrument", amount: -1 }], description: "穿上它，你仿佛化身企鹅——一只温暖又幸福的企鹅。" },
-  { id: "business_suit_jacket", name: "商务西装外套", type: "衣物", modifiers: [{ skillId: "electrochemistry", amount: 1 }, { skillId: "empathy", amount: -1 }], description: "曝光度。投资回报率。头脑风暴。客户旅程。" },
-  { id: "leather_jacket", name: "皮夹克", type: "衣物", modifiers: [{ skillId: "savoirFaire", amount: 2 }], description: "硬核风范。" },
-  { id: "trench_coat", name: "风衣", type: "衣物", modifiers: [{ skillId: "halfLight", amount: 1 }, { skillId: "rhetoric", amount: 1 }], description: "足以藏匿任何秘密。" },
+  { id: "parka_coat", name: "御寒派克大衣", type: "衣物", slot: "外套", modifiers: [{ skillId: "composure", amount: 1 }, { skillId: "physicalInstrument", amount: -1 }], description: "穿上它，你仿佛化身企鹅——一只温暖又幸福的企鹅。" },
+  { id: "business_suit_jacket", name: "商务西装外套", type: "衣物", slot: "外套", modifiers: [{ skillId: "electrochemistry", amount: 1 }, { skillId: "empathy", amount: -1 }], description: "曝光度。投资回报率。头脑风暴。客户旅程。" },
+  { id: "leather_jacket", name: "皮夹克", type: "衣物", slot: "外套", modifiers: [{ skillId: "savoirFaire", amount: 2 }], description: "硬核风范。" },
+  { id: "trench_coat", name: "风衣", type: "衣物", slot: "外套", modifiers: [{ skillId: "halfLight", amount: 1 }, { skillId: "rhetoric", amount: 1 }], description: "足以藏匿任何秘密。" },
 
   // 下装
-  { id: "yoga_pants", name: "俏皮瑜伽裤", type: "衣物", modifiers: [{ skillId: "composure", amount: 1 }], description: "仿若无物。无物。" },
-  { id: "punk_jeans", name: "铆钉破洞牛仔裤", type: "衣物", modifiers: [{ skillId: "electrochemistry", amount: 1 }, { skillId: "suggestion", amount: 1 }], description: "青春叛逆气息以最刺鼻的形式呈现。" },
-  { id: "tartan_skirt", name: "格子呢短裙", type: "衣物", modifiers: [{ skillId: "shivers", amount: 1 }], description: "你能感受到变革之风。" },
-  { id: "work_boots", name: "工装水靴", type: "衣物", modifiers: [{ skillId: "espritDeCorps", amount: 2 }], description: "埋头苦干时无暇顾及时尚。" },
+  { id: "yoga_pants", name: "俏皮瑜伽裤", type: "衣物", slot: "下装", modifiers: [{ skillId: "composure", amount: 1 }], description: "仿若无物。无物。" },
+  { id: "punk_jeans", name: "铆钉破洞牛仔裤", type: "衣物", slot: "下装", modifiers: [{ skillId: "electrochemistry", amount: 1 }, { skillId: "suggestion", amount: 1 }], description: "青春叛逆气息以最刺鼻的形式呈现。" },
+  { id: "tartan_skirt", name: "格子呢短裙", type: "衣物", slot: "下装", modifiers: [{ skillId: "shivers", amount: 1 }], description: "你能感受到变革之风。" },
+  { id: "work_boots", name: "工装水靴", type: "衣物", slot: "鞋履", modifiers: [{ skillId: "espritDeCorps", amount: 2 }], description: "埋头苦干时无暇顾及时尚。" },
 
   // 颈饰
-  { id: "expressionist_tie", name: "表现主义领带", type: "衣物", modifiers: [{ skillId: "conceptualization", amount: 1 }, { skillId: "inlandEmpire", amount: 1 }], description: "鲜艳色彩与扭曲形态仿佛在向你低语。" },
-  { id: "masonic_talisman", name: "共济会护符", type: "衣物", modifiers: [{ skillId: "inlandEmpire", amount: 3 }, { skillId: "logic", amount: -1 }], description: "凝聚百年智慧的抛光金属。" },
-  { id: "clerical_collar", name: "牧师领", type: "衣物", modifiers: [{ skillId: "authority", amount: 1 }, { skillId: "suggestion", amount: -1 }], description: "这枚神圣徽章令你在人群中卓尔不群。" },
-  { id: "spiked_collar", name: "尖刺项圈", type: "衣物", modifiers: [{ skillId: "halfLight", amount: 2 }], description: "向政府狂吠！撕咬喂养你的手！" },
+  { id: "expressionist_tie", name: "表现主义领带", type: "衣物", slot: "颈饰", modifiers: [{ skillId: "conceptualization", amount: 1 }, { skillId: "inlandEmpire", amount: 1 }], description: "鲜艳色彩与扭曲形态仿佛在向你低语。" },
+  { id: "masonic_talisman", name: "共济会护符", type: "衣物", slot: "颈饰", modifiers: [{ skillId: "inlandEmpire", amount: 3 }, { skillId: "logic", amount: -1 }], description: "凝聚百年智慧的抛光金属。" },
+  { id: "clerical_collar", name: "牧师领", type: "衣物", slot: "颈饰", modifiers: [{ skillId: "authority", amount: 1 }, { skillId: "suggestion", amount: -1 }], description: "这枚神圣徽章令你在人群中卓尔不群。" },
+  { id: "spiked_collar", name: "尖刺项圈", type: "衣物", slot: "颈饰", modifiers: [{ skillId: "halfLight", amount: 2 }], description: "向政府狂吠！撕咬喂养你的手！" },
 
   // 上衣
-  { id: "fishnet_tank_top", name: "渔网背心", type: "衣物", modifiers: [{ skillId: "painThreshold", amount: 2 }, { skillId: "halfLight", amount: -1 }], description: "安全词需另购。" },
-  { id: "golf_polo", name: "高尔夫POLO衫", type: "衣物", modifiers: [{ skillId: "composure", amount: 2 }], description: "将夏日假期视为一种生活方式。" },
-  { id: "metal_band_t_shirt", name: "金属乐队T恤", type: "衣物", modifiers: [{ skillId: "shivers", amount: 2 }], description: "硬核到连乐队名字都看不清。" },
-  { id: "sheer_shirt", name: "半透视衬衫", type: "衣物", modifiers: [{ skillId: "suggestion", amount: 2 }], description: "在不得体与正式感间游刃有余。" },
-  { id: "stained_undershirt", name: "汗渍背心", type: "衣物", modifiers: [{ skillId: "drama", amount: 2 }, { skillId: "volition", amount: -1 }], description: "那是芥末污渍？就当它是芥末酱吧。" },
-  { id: "white_shirt", name: "白衬衫", type: "衣物", modifiers: [{ skillId: "logic", amount: 1 }, { skillId: "composure", amount: 1 }, { skillId: "drama", amount: -2 }], description: "正式。办公室风。乏味。" },
+  { id: "fishnet_tank_top", name: "渔网背心", type: "衣物", slot: "上衣", modifiers: [{ skillId: "painThreshold", amount: 2 }, { skillId: "halfLight", amount: -1 }], description: "安全词需另购。" },
+  { id: "golf_polo", name: "高尔夫POLO衫", type: "衣物", slot: "上衣", modifiers: [{ skillId: "composure", amount: 2 }], description: "将夏日假期视为一种生活方式。" },
+  { id: "metal_band_t_shirt", name: "金属乐队T恤", type: "衣物", slot: "上衣", modifiers: [{ skillId: "shivers", amount: 2 }], description: "硬核到连乐队名字都看不清。" },
+  { id: "sheer_shirt", name: "半透视衬衫", type: "衣物", slot: "上衣", modifiers: [{ skillId: "suggestion", amount: 2 }], description: "在不得体与正式感间游刃有余。" },
+  { id: "stained_undershirt", name: "汗渍背心", type: "衣物", slot: "上衣", modifiers: [{ skillId: "drama", amount: 2 }, { skillId: "volition", amount: -1 }], description: "那是芥末污渍？就当它是芥末酱吧。" },
+  { id: "white_shirt", name: "白衬衫", type: "衣物", slot: "上衣", modifiers: [{ skillId: "logic", amount: 1 }, { skillId: "composure", amount: 1 }, { skillId: "drama", amount: -2 }], description: "正式。办公室风。乏味。" },
 
   // 鞋履
-  { id: "tactical_boots", name: "战术靴", type: "衣物", modifiers: [{ skillId: "endurance", amount: 1 }], description: "经战场考验的踢屁股装备。" },
-  { id: "cleats", name: "足球钉鞋", type: "衣物", modifiers: [{ skillId: "physicalInstrument", amount: 1 }, { skillId: "reactionSpeed", amount: 1 }], description: "像超级巨星般横扫赛场。" },
-  { id: "grandpa_slippers", name: "爷爷的睡鞋", type: "衣物", modifiers: [{ skillId: "composure", amount: 1 }, { skillId: "reactionSpeed", amount: -1 }], description: "这双舒适的睡鞋曾有过辉煌岁月。" },
-  { id: "tourist_sandals", name: "游客凉鞋", type: "衣物", modifiers: [{ skillId: "shivers", amount: 1 }], description: "内含白袜。" },
+  { id: "tactical_boots", name: "战术靴", type: "衣物", slot: "鞋履", modifiers: [{ skillId: "endurance", amount: 1 }], description: "经战场考验的踢屁股装备。" },
+  { id: "cleats", name: "足球钉鞋", type: "衣物", slot: "鞋履", modifiers: [{ skillId: "physicalInstrument", amount: 1 }, { skillId: "reactionSpeed", amount: 1 }], description: "像超级巨星般横扫赛场。" },
+  { id: "grandpa_slippers", name: "爷爷的睡鞋", type: "衣物", slot: "鞋履", modifiers: [{ skillId: "composure", amount: 1 }, { skillId: "reactionSpeed", amount: -1 }], description: "这双舒适的睡鞋曾有过辉煌岁月。" },
+  { id: "tourist_sandals", name: "游客凉鞋", type: "衣物", slot: "鞋履", modifiers: [{ skillId: "shivers", amount: 1 }], description: "内含白袜。" },
 
   // 工具
   { id: "crowbar", name: "撬棍", type: "工具", modifiers: [{ skillId: "physicalInstrument", amount: 2 }], description: "杠杆原理的真实力量。" },
